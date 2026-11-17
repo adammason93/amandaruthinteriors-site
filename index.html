@@ -58,15 +58,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=4">
+<link rel="stylesheet" href="assets/css/style.css?v=5">
 
 </head>
 <body>
 <header class="site-header">
   <div class="header-inner">
-    <a class="logo" href="index.html"><picture><source media="(max-width: 800px)" srcset="assets/images/logo-header-mobile.webp"><img src="assets/images/8c6e1d_0086a4ef3c1d4245b5baf57708b212f8~mv2.webp" alt="Amanda Ruth Interiors" width="516" height="143"></picture></a>
+    <a class="logo" href="index.html"><picture><source media="(max-width: 800px)" srcset="assets/images/logo-header-mobile.webp"><img src="assets/images/logo-header-desktop.webp" alt="Amanda Ruth Interiors" width="516" height="143"></picture></a>
     <nav class="nav-desktop" aria-label="Primary">
-      <a href="index.html" aria-current="page" aria-label="Home">HOME</a><a href="our-services.html" aria-label="Our Services">OURSERVICES</a><a href="about-us.html" aria-label="About Us">ABOUTUS</a><a href="portfolio.html" aria-label="Portfolio">PORTFOLIO</a><a href="contact.html" aria-label="Contact Us">CONTACT US</a>
+      <a href="index.html" aria-current="page" aria-label="Home">HOME</a><a href="our-services.html" aria-label="Our Services">OUR SERVICES</a><a href="about-us.html" aria-label="About Us">ABOUT US</a><a href="portfolio.html" aria-label="Portfolio">PORTFOLIO</a><a href="contact.html" aria-label="Contact Us">CONTACT US</a>
     </nav>
     <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span></button>
   </div>
@@ -74,10 +74,15 @@
 </header>
 
 <section class="page-hero home-hero">
-  <picture class="hero-bg">
-    <source media="(max-width: 800px)" srcset="assets/images/hero-home-mobile.webp">
-    <img class="hero-bg" src="assets/images/hero-home.webp" alt="Luxury bathroom with gold fittings, designed by Amanda Ruth Interiors">
-  </picture>
+  <div class="hero-slides" aria-hidden="true">
+    <picture class="hero-slide is-active" data-slide="0">
+      <source media="(max-width: 800px)" srcset="assets/images/hero-home-mobile.webp">
+      <img src="assets/images/hero-home.webp" alt="" width="2560" height="2320">
+    </picture>
+    <img class="hero-slide" data-slide="1" data-src="assets/images/8c6e1d_34c00cf6418a406a96b84b93fd137b5b~mv2.webp" alt="" width="1627" height="2400">
+    <img class="hero-slide" data-slide="2" data-src="assets/images/8c6e1d_63da56667df24546b0b687651ac95931~mv2.webp" alt="" width="1800" height="2400">
+    <img class="hero-slide" data-slide="3" data-src="assets/images/8c6e1d_35c6ad576ee14ddc9e1dace04d4ffdee~mv2.webp" alt="" width="2400" height="1800">
+  </div>
   <div class="hero-content">
     <img class="ar-mark" src="assets/images/8c6e1d_2707ef1548554ef693f8ae87c596f22b~mv2.webp" alt="Amanda Ruth Interiors monogram">
     <h1>AMANDA RUTH<span class="line2">INTERIORS</span></h1>
@@ -125,13 +130,13 @@
 </section>
 <section class="section-projects">
   <h2>COMPLETED PROJECTS</h2>
-  <div class="project-grid">
-    <a class="project-card tall" href="project-master-bedroom-alwoodley.html"><img src="assets/images/8c6e1d_695672fca1354f5fbc439b7825b96c08~mv2.webp" alt="Master Bedroom Project" style="object-position:50% 50%"><span>MASTER BEDROOM<br>PROJECT</span></a>
-<a class="project-card tall" href="project-kitchen.html"><img src="assets/images/8c6e1d_34c00cf6418a406a96b84b93fd137b5b~mv2.webp" alt="Kitchen Project" style="object-position:50% 50%"><span>KITCHEN PROJECT</span></a>
-<a class="project-card tall" href="project-living-room-alwoodley.html"><img src="assets/images/8c6e1d_324b56cd56a54dfe804a11db3e13b015~mv2.webp" alt="Living Room Project" style="object-position:50% 50%"><span>LIVING ROOM<br>PROJECT</span></a>
-<a class="project-card mid" href="project-master-ensuite.html"><img src="assets/images/8c6e1d_4d6cc835f42f4bf3b2615c056cde2d17~mv2.webp" alt="Master En-suite Project" style="object-position:50% 50%"><span>MASTER EN-SUITE<br>PROJECT</span></a>
-<a class="project-card mid" href="project-master-bedroom.html"><img src="assets/images/8c6e1d_3b4d12fa8cc14f31a4612b4fe434f4f7~mv2.webp" alt="Master Bedroom Project" style="object-position:50% 50%"><span>MASTER BEDROOM<br>PROJECT</span></a>
-<a class="project-card mid" href="project-dining-area.html"><img src="assets/images/8c6e1d_88c923ad537140ec87a9cc631082bfc4~mv2.webp" alt="Dining Area Project" style="object-position:50% 50%"><span>DINING AREA<br>PROJECT</span></a>
+    <div class="project-grid">
+    <a class="project-card tall" href="project-master-bedroom-alwoodley.html"><span class="folio-media"><img src="assets/images/8c6e1d_695672fca1354f5fbc439b7825b96c08~mv2.webp" alt="Master Bedroom in Alwoodley, West Yorkshire" style="object-position:50% 50%"><span class="tile-view">View project</span></span><span class="tile-caption"><span class="tile-name">Master Bedroom</span><span class="tile-place">Alwoodley, West Yorkshire</span></span></a>
+    <a class="project-card tall" href="project-kitchen.html"><span class="folio-media"><img src="assets/images/8c6e1d_34c00cf6418a406a96b84b93fd137b5b~mv2.webp" alt="Kitchen in Middleton Tyas, North Yorkshire" style="object-position:50% 50%"><span class="tile-view">View project</span></span><span class="tile-caption"><span class="tile-name">Kitchen</span><span class="tile-place">Middleton Tyas, North Yorkshire</span></span></a>
+    <a class="project-card tall" href="project-living-room-alwoodley.html"><span class="folio-media"><img src="assets/images/8c6e1d_324b56cd56a54dfe804a11db3e13b015~mv2.webp" alt="Living Room in Alwoodley, West Yorkshire" style="object-position:50% 50%"><span class="tile-view">View project</span></span><span class="tile-caption"><span class="tile-name">Living Room</span><span class="tile-place">Alwoodley, West Yorkshire</span></span></a>
+    <a class="project-card mid" href="project-master-ensuite.html"><span class="folio-media"><img src="assets/images/8c6e1d_4d6cc835f42f4bf3b2615c056cde2d17~mv2.webp" alt="Master En-suite in Ripponden, West Yorkshire" style="object-position:50% 50%"><span class="tile-view">View project</span></span><span class="tile-caption"><span class="tile-name">Master En-suite</span><span class="tile-place">Ripponden, West Yorkshire</span></span></a>
+    <a class="project-card mid" href="project-master-bedroom.html"><span class="folio-media"><img src="assets/images/8c6e1d_3b4d12fa8cc14f31a4612b4fe434f4f7~mv2.webp" alt="Master Bedroom in Ripponden, West Yorkshire" style="object-position:50% 50%"><span class="tile-view">View project</span></span><span class="tile-caption"><span class="tile-name">Master Bedroom</span><span class="tile-place">Ripponden, West Yorkshire</span></span></a>
+    <a class="project-card mid" href="project-dining-area.html"><span class="folio-media"><img src="assets/images/8c6e1d_88c923ad537140ec87a9cc631082bfc4~mv2.webp" alt="Dining Area in Ripponden, West Yorkshire" style="object-position:50% 50%"><span class="tile-view">View project</span></span><span class="tile-caption"><span class="tile-name">Dining Area</span><span class="tile-place">Ripponden, West Yorkshire</span></span></a>
   </div>
 </section>
 <section class="section-quote">
@@ -179,6 +184,6 @@
   </div>
   <p class="copyright">© 2026 Amanda Ruth Interiors Limited. All rights reserved.</p>
 </footer>
-<script src="assets/js/main.js?v=4"></script>
+<script src="assets/js/main.js?v=5"></script>
 </body>
 </html>

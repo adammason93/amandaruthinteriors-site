@@ -350,3 +350,73 @@
       /* Keep the static project-photo grid */
     });
 })();
+
+(function () {
+  var root = document.querySelector('.home-hero .hero-slides');
+  if (!root) return;
+  var slides = Array.prototype.slice.call(root.querySelectorAll('.hero-slide'));
+  if (slides.length < 2) return;
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var HOLD = 6000;
+  var FADE = 1500;
+  var index = 0;
+  var timer = null;
+  var fading = false;
+  var loaded = false;
+
+  function loadRest() {
+    if (loaded) return;
+    loaded = true;
+    slides.forEach(function (slide, i) {
+      if (i === 0) return;
+      if (slide.tagName === 'IMG' && slide.dataset.src && !slide.getAttribute('src')) {
+        slide.src = slide.dataset.src;
+      }
+      slide.querySelectorAll('img[data-src]').forEach(function (img) {
+        if (!img.getAttribute('src')) img.src = img.dataset.src;
+      });
+    });
+  }
+
+  if (reduce) return; // bathroom only; do not fetch the rest
+
+  function show(next) {
+    if (fading || next === index) return;
+    fading = true;
+    var current = slides[index];
+    var incoming = slides[next];
+    incoming.classList.add('is-active');
+    current.classList.add('is-leaving');
+    current.classList.remove('is-active');
+    window.setTimeout(function () {
+      current.classList.remove('is-leaving');
+      index = next;
+      fading = false;
+      schedule();
+    }, FADE);
+  }
+
+  function schedule() {
+    clearTimeout(timer);
+    if (document.hidden) return;
+    timer = window.setTimeout(function () {
+      show((index + 1) % slides.length);
+    }, HOLD);
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      clearTimeout(timer);
+    } else {
+      schedule();
+    }
+  });
+
+  function start() {
+    loadRest();
+    schedule();
+  }
+  if (document.readyState === 'complete') start();
+  else window.addEventListener('load', start);
+})();
