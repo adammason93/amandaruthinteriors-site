@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.amandaruthinteriors.co.uk/sitemap.xml
