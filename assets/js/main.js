@@ -219,3 +219,79 @@
 
   document.querySelectorAll('.reveal, .reveal-img').forEach(function (el) { io.observe(el); });
 })();
+
+(function () {
+  var grid = document.querySelector('[data-instagram-feed], .section-instagram .ig-grid');
+  if (!grid) return;
+  var FEED = 'https://feeds.behold.so/zqerimg2uGGnb2QIHjU0';
+
+  function altFrom(post) {
+    var cap = (post.prunedCaption || post.caption || '').replace(/\s+/g, ' ').trim();
+    if (!cap) return 'Amanda Ruth Interiors on Instagram';
+    if (cap.length > 140) cap = cap.slice(0, 137) + '...';
+    return cap;
+  }
+
+  function imageUrl(post) {
+    var type = (post.mediaType || '').toUpperCase();
+    if (type.indexOf('VIDEO') !== -1 && post.thumbnailUrl) return post.thumbnailUrl;
+    var sizes = post.sizes || {};
+    if (sizes.medium && sizes.medium.mediaUrl) return sizes.medium.mediaUrl;
+    if (sizes.large && sizes.large.mediaUrl) return sizes.large.mediaUrl;
+    return post.thumbnailUrl || post.mediaUrl;
+  }
+
+  function applyMotion(root) {
+    if (!document.documentElement.classList.contains('has-motion')) return;
+    if (!('IntersectionObserver' in window)) {
+      root.querySelectorAll('img').forEach(function (img) { img.classList.add('is-in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-in');
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    root.querySelectorAll('img').forEach(function (img, i) {
+      img.classList.add('reveal-img');
+      img.style.transitionDelay = Math.min(i * 90, 360) + 'ms';
+      io.observe(img);
+    });
+  }
+
+  fetch(FEED, { mode: 'cors' })
+    .then(function (res) {
+      if (!res.ok) throw new Error('feed ' + res.status);
+      return res.json();
+    })
+    .then(function (data) {
+      var posts = (data && data.posts) || [];
+      if (!posts.length) return;
+      var frag = document.createDocumentFragment();
+      posts.forEach(function (post) {
+        var src = imageUrl(post);
+        var href = post.permalink;
+        if (!src || !href) return;
+        var a = document.createElement('a');
+        a.href = href;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        var img = document.createElement('img');
+        img.src = src;
+        img.alt = altFrom(post);
+        img.loading = 'eager';
+        img.decoding = 'async';
+        a.appendChild(img);
+        frag.appendChild(a);
+      });
+      if (!frag.childNodes.length) return;
+      grid.innerHTML = '';
+      grid.appendChild(frag);
+      applyMotion(grid);
+    })
+    .catch(function () {
+      /* Keep the static project-photo grid */
+    });
+})();
