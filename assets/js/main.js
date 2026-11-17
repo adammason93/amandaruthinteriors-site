@@ -1,19 +1,74 @@
 (function () {
   var toggle = document.querySelector('.nav-toggle');
+  var nav = document.querySelector('.nav-mobile');
+  var lastScroll = 0;
+
+  function menuFocusables() {
+    var list = [];
+    if (toggle) list.push(toggle);
+    if (nav) nav.querySelectorAll('a').forEach(function (a) { list.push(a); });
+    return list;
+  }
+
   function setOpen(open) {
+    open = !!open;
     document.body.classList.toggle('menu-open', open);
     if (toggle) {
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     }
+    if (nav) {
+      nav.setAttribute('aria-hidden', open ? 'false' : 'true');
+      if ('inert' in nav) nav.inert = !open;
+    }
+    if (open) {
+      lastScroll = window.scrollY || 0;
+      document.body.style.position = 'fixed';
+      document.body.style.top = '-' + lastScroll + 'px';
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+      var first = nav && nav.querySelector('a');
+      if (first) window.setTimeout(function () { first.focus(); }, 50);
+    } else {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      window.scrollTo(0, lastScroll);
+      if (toggle && document.activeElement && nav && nav.contains(document.activeElement)) {
+        toggle.focus();
+      }
+    }
   }
+
   if (toggle) {
     toggle.addEventListener('click', function () {
       setOpen(!document.body.classList.contains('menu-open'));
     });
   }
-  document.querySelectorAll('.nav-mobile a').forEach(function (a) {
-    a.addEventListener('click', function () { setOpen(false); });
+  if (nav) {
+    nav.addEventListener('click', function (e) {
+      if (e.target === nav) setOpen(false);
+    });
+    nav.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { setOpen(false); });
+    });
+  }
+  document.addEventListener('keydown', function (e) {
+    if (!document.body.classList.contains('menu-open')) return;
+    if (e.key === 'Tab') {
+      var items = menuFocusables();
+      if (!items.length) return;
+      var i = items.indexOf(document.activeElement);
+      if (e.shiftKey) {
+        if (i <= 0) { e.preventDefault(); items[items.length - 1].focus(); }
+      } else if (i === items.length - 1) {
+        e.preventDefault();
+        items[0].focus();
+      }
+    }
   });
 
   // FormSubmit: point the thank-you redirect at this host (works on GitHub Pages and the live domain)
