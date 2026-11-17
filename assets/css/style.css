@@ -31,6 +31,7 @@ button { font-family: inherit; }
   height: var(--header-h);
   width: 100%;
   flex-shrink: 0;
+  transition: height 0.4s ease, box-shadow 0.4s ease;
 }
 .header-inner {
   display: flex;
@@ -39,6 +40,7 @@ button { font-family: inherit; }
   max-width: 1280px;
   margin: 0 auto;
   position: relative;
+  transition: height 0.4s ease;
 }
 .logo {
   display: flex;
@@ -47,6 +49,7 @@ button { font-family: inherit; }
   height: 143px;
   flex-shrink: 0;
   overflow: hidden;
+  transition: width 0.4s ease, height 0.4s ease;
 }
 .logo picture {
   display: block;
@@ -58,6 +61,7 @@ button { font-family: inherit; }
   height: 143px;
   object-fit: contain;
   object-position: 50% 50%;
+  transition: width 0.4s ease, height 0.4s ease;
 }
 .nav-desktop {
   display: flex;
@@ -1670,4 +1674,307 @@ body.menu-open .nav-toggle span::after {
   body.menu-open .nav-toggle span::after { transform: none; }
   body.menu-open .nav-toggle span::before { transform: rotate(45deg); }
   body.menu-open .nav-toggle span::after { transform: rotate(-45deg); }
+}
+
+
+/* ---------- v6 upgrades ---------- */
+/* Deep footer taupe derived from brand bronze #7A6955.
+   Cream #FDFCFB on #3F372E is ~11.4:1 (WCAG AA/AAA for body text). */
+:root { --footer-bg: #3f372e; }
+
+/* Header shrinks after ~80px scroll. --header-h stays at the at-rest
+   height so the home hero fixed-pin math does not jump or leave a gap. */
+body.header-compact .site-header {
+  height: 84px;
+  box-shadow: 0 8px 24px rgba(26, 26, 26, 0.08);
+}
+body.header-compact .header-inner { height: 84px; }
+body.header-compact .logo,
+body.header-compact .logo img {
+  width: 297px;
+  height: 82px;
+}
+
+/* New footer */
+.site-footer {
+  background: var(--footer-bg);
+  color: var(--cream);
+  padding: 64px 0 0;
+}
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 0.9fr 1.2fr 0.9fr;
+  gap: 40px 48px;
+  padding: 8px 67px 40px;
+  align-items: start;
+  min-height: 0;
+}
+.footer-brand { margin: 0; }
+.footer-brand a { display: inline-block; }
+.footer-brand img,
+.footer-brand .footer-mark,
+.footer-mark {
+  width: 148px;
+  max-width: 100%;
+  height: auto;
+  opacity: 0.92;
+}
+/* Footer items are observed for reveal, but the IO rootMargin hides the
+   copyright at the bottom of the viewport, so keep them visible. */
+.site-footer .reveal,
+.site-footer .reveal-img {
+  opacity: 1 !important;
+  transform: none !important;
+}
+.footer-col h3 {
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 8px 0 20px;
+  color: var(--cream);
+}
+.footer-col a,
+.footer-col p {
+  display: block;
+  font-size: 16px;
+  font-weight: 300;
+  margin: 0 0 12px;
+  line-height: 1.45;
+  color: var(--cream);
+}
+.footer-col a:hover,
+.back-to-top:hover { color: var(--sand); }
+.footer-ig { letter-spacing: 0.08em; }
+.footer-nav a {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+.socials { display: flex; gap: 10px; margin-top: 16px; }
+.socials a {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(253, 252, 251, 0.10);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+.socials a:hover { background: rgba(253, 252, 251, 0.18); }
+.socials svg { width: 14px; height: 14px; fill: var(--cream); }
+.footer-base {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 67px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid rgba(253, 252, 251, 0.14);
+}
+.copyright {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--cream);
+  opacity: 0.8;
+}
+.back-to-top {
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cream);
+  white-space: nowrap;
+}
+
+/* Next project banner */
+.next-project {
+  position: relative;
+  display: block;
+  height: 56vh;
+  min-height: 380px;
+  max-height: 640px;
+  overflow: hidden;
+  color: var(--cream);
+  background: var(--footer-bg);
+}
+.next-project img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+.has-motion .next-project:hover img,
+.has-motion .next-project:focus-visible img { transform: scale(1.04); }
+.next-project-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(
+    to bottom,
+    rgba(20, 16, 12, 0.18) 0%,
+    rgba(20, 16, 12, 0.42) 100%
+  );
+  padding: 32px 24px;
+}
+.next-project-label {
+  font-size: 13px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  font-weight: 300;
+}
+.next-project-name {
+  font-size: clamp(32px, 5vw, 56px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 300;
+  line-height: 1.15;
+}
+.next-project-place {
+  font-size: 15px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 12px;
+  font-weight: 300;
+}
+
+/* Project galleries: brochure slide-up as they enter view */
+.has-motion .gallery-2x2 img.reveal-img,
+.has-motion .gallery-wide img.reveal-img {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.85s ease, transform 0.85s ease;
+}
+.has-motion .gallery-2x2 img.reveal-img.is-in,
+.has-motion .gallery-wide img.reveal-img.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* About intro: portrait placeholder + existing copy + signature */
+.about-intro { padding: 72px 48px 80px; }
+.about-intro-lead {
+  max-width: 920px;
+  margin: 0 auto 56px;
+  text-align: center;
+}
+.about-intro-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.85fr) 1.15fr;
+  gap: 64px 72px;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.about-portrait {
+  margin: 0;
+  background: var(--cream);
+  border: 1px solid var(--sand);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(122, 105, 85, 0.08);
+}
+.about-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+p.about-signature,
+.about-signature {
+  font-family: "Great Vibes", cursive;
+  font-size: 56px;
+  color: var(--brown);
+  margin: 28px 0 0;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 1100px) {
+  body.header-compact .site-header,
+  body.header-compact .header-inner { height: 72px; }
+  body.header-compact .logo,
+  body.header-compact .logo img { width: 236px; height: 65px; }
+  .footer-inner,
+  .footer-base { padding-left: 32px; padding-right: 32px; }
+  .about-intro { padding: 56px 32px 64px; }
+  .about-intro-grid { gap: 40px; }
+}
+
+@media (max-width: 800px) {
+  body.header-compact .site-header,
+  body.header-compact .header-inner {
+    height: 48px;
+    min-height: 48px;
+  }
+  body.header-compact .logo,
+  body.header-compact .logo picture,
+  body.header-compact .logo img {
+    height: 24px;
+    width: auto;
+    max-width: 200px;
+  }
+  .footer-inner {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 36px;
+    padding: 8px 24px 32px;
+  }
+  .footer-brand { order: 0; }
+  .footer-brand img,
+  .footer-mark { width: 120px; max-width: 100%; opacity: 0.92; margin: 0 auto; height: auto; }
+  .footer-col a,
+  .footer-col p {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+  .footer-col h3 { margin-bottom: 12px; }
+  .socials { justify-content: center; }
+  .socials a { width: 44px; height: 44px; }
+  .socials svg { width: 16px; height: 16px; }
+  .footer-base {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px 24px 28px;
+  }
+  .back-to-top { min-height: 44px; display: inline-flex; align-items: center; }
+  .next-project { height: 70svh; min-height: 360px; max-height: 560px; }
+  .next-project-name { letter-spacing: 0.1em; }
+  .about-intro { padding: 48px 24px 56px; }
+  .about-intro-lead { margin-bottom: 36px; }
+  .about-intro-grid { grid-template-columns: 1fr; gap: 32px; }
+  .about-portrait { max-width: 320px; width: 100%; margin: 0 auto; }
+  p.about-signature,
+  .about-signature { font-size: 48px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header,
+  .header-inner,
+  .logo,
+  .logo img,
+  .next-project img {
+    transition: none;
+  }
 }

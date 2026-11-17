@@ -212,7 +212,8 @@
   ].join(',');
 
   var skip = function (el) {
-    if (!el || el.closest('.site-header, .lightbox, .honeypot')) return true;
+    if (!el || el.closest('.site-header, .lightbox, .honeypot, .site-footer')) return true;
+    if (el.classList.contains('about-signature')) return true;
     if (el.closest('.home-hero')) return true; // load animation handles these
     return false;
   };
@@ -419,4 +420,19 @@
   }
   if (document.readyState === 'complete') start();
   else window.addEventListener('load', start);
+})();
+
+(function () {
+  var ticking = false;
+  function update() {
+    ticking = false;
+    document.body.classList.toggle('header-compact', window.scrollY > 80);
+  }
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(update);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  update();
 })();
