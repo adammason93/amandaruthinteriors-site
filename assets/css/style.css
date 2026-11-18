@@ -2729,3 +2729,28 @@ body.header-compact .site-header { margin-bottom: 74px; }
   transform: none !important;
   will-change: auto;
 }
+
+/* ==========================================================
+   Inner-page heroes: soft placeholder, then a gentle fade (v17)
+   The photo stays hidden until fully downloaded and decoded, so it never
+   paints in strips; a blurred 32px copy of itself sits underneath meanwhile.
+   ========================================================== */
+.page-hero:not(.home-hero) { background-color: #4a3f36; }
+.page-hero:not(.home-hero)::before {
+  content: "";
+  position: absolute;
+  inset: -30px;
+  background: var(--hero-ph, none) var(--hero-pos, 50% 50%) / cover no-repeat;
+  filter: blur(18px);
+  transform: scale(1.04);
+  pointer-events: none;
+}
+.hero-js .page-hero:not(.home-hero) img.hero-bg {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.hero-js .page-hero:not(.home-hero) img.hero-bg.is-loaded { opacity: 1; }
+.hero-js .page-hero:not(.home-hero) img.hero-bg.is-instant { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-js .page-hero:not(.home-hero) img.hero-bg { transition: none; }
+}

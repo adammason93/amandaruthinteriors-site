@@ -1,0 +1,5 @@
+# Let browsers reuse images, video, CSS and JS between page views instead of
+# re-checking every file with the server on each click (Pages default is max-age=0).
+# CSS/JS/hero video are cache-busted with ?v=; images change name when replaced.
+/assets/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800

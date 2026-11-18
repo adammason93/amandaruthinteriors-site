@@ -62,8 +62,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("hero-js")</script>
+<link rel="preload" as="image" href="assets/images/hero-about.webp" imagesrcset="assets/images/hero/hero-about-960.webp 960w, assets/images/hero/hero-about-1600.webp 1600w, assets/images/hero-about.webp 2560w" imagesizes="100vw" fetchpriority="high">
 <script>(function(){if(!("onpagereveal" in window)&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("pt-fade")})();</script>
-<link rel="stylesheet" href="assets/css/style.css?v=16">
+<link rel="stylesheet" href="assets/css/style.css?v=17">
 
 </head>
 <body class="page-about-us">
@@ -78,8 +80,8 @@
   <nav class="nav-mobile" id="mobile-menu" aria-label="Mobile" aria-hidden="true"><a href="index.html" aria-label="Home">HOME</a><a href="our-services.html" aria-label="Our Services">OUR SERVICES</a><a href="about-us.html" aria-current="page" aria-label="About Us">ABOUT US</a><a href="portfolio.html" aria-label="Portfolio">PORTFOLIO</a><a href="contact.html" aria-label="Contact Us">CONTACT US</a></nav>
 </header>
 
-<section class="page-hero about-hero">
-  <img class="hero-bg" src="assets/images/hero-about.webp" alt="Material and fabric samples at Amanda Ruth Interiors">
+<section class="page-hero about-hero" style="--hero-ph:url(data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAADwAwCdASogAA4APt1cp0yopSOiMAgBEBuJYgCw7BRxGn/yyunffaQAAP7D10OoKb0udRaoc8rtj0S++SRTGBOh+oGIw2SOWrb5obNOszmFSmpSAasEeYMSi5cq4OV+y2jeEL+2MRnDCvcKcMAAAA==);--hero-pos:50% 50%">
+  <img class="hero-bg" src="assets/images/hero-about.webp" srcset="assets/images/hero/hero-about-960.webp 960w, assets/images/hero/hero-about-1600.webp 1600w, assets/images/hero-about.webp 2560w" sizes="100vw" width="2560" height="1120" fetchpriority="high" decoding="async" alt="Material and fabric samples at Amanda Ruth Interiors"><script>(function(i,t){function s(){if(performance.now()-t<120)i.classList.add("is-instant");i.classList.add("is-loaded")}function d(){i.decode?i.decode().then(s,s):s()}if(i.complete&&i.naturalWidth){i.classList.add("is-instant");s()}else{i.addEventListener("load",d,{once:true});i.addEventListener("error",s,{once:true});setTimeout(s,8000)}})(document.currentScript.previousElementSibling,performance.now())</script>
   <div class="hero-content">
     <h1>ABOUT US</h1>
   </div>
@@ -89,7 +91,7 @@
   <div class="about-intro-grid">
     <figure class="about-portrait">
       <!-- Replace this file with Ruth's portrait (4:5 recommended): assets/images/ruth-portrait.webp -->
-      <img src="assets/images/ruth-portrait.webp" width="1200" height="1500" alt="Ruth, Amanda Ruth Interiors">
+      <img src="assets/images/ruth-portrait.webp" width="1200" height="1500" alt="Ruth, Amanda Ruth Interiors" loading="lazy">
     </figure>
     <div class="prose about-intro-prose">
       <p>Amanda Ruth Interiors is a high-end interior design studio based in the North East &amp; Yorkshire that specialises in luxury residential interiors. We offer a highly personalised and friendly design service. Our focus is on creating beautiful homes that are bespoke to the individual client.</p>
@@ -100,8 +102,8 @@
   </div>
 </section>
 <div class="pair-photos">
-  <img src="assets/images/8c6e1d_16bc911cc7d64cf3b64657d0fd872eed~mv2.webp" alt="Amanda Ruth Interiors studio" style="object-position:56% 38%">
-  <img src="assets/images/8c6e1d_166d2237e6e845bdb959ad5a4dbeb1eb~mv2.webp" alt="Amanda Ruth Interiors studio, photograph 2" style="object-position:50% 50%">
+  <img src="assets/images/8c6e1d_16bc911cc7d64cf3b64657d0fd872eed~mv2.webp" alt="Amanda Ruth Interiors studio" style="object-position:56% 38%" loading="lazy">
+  <img src="assets/images/8c6e1d_166d2237e6e845bdb959ad5a4dbeb1eb~mv2.webp" alt="Amanda Ruth Interiors studio, photograph 2" style="object-position:50% 50%" loading="lazy">
 </div>
 <section class="band band-cream">
   <div class="split">
@@ -113,11 +115,11 @@
       <p>In 2016, Ruth began her professional journey as a Junior Interior Designer at a luxury interior design practice in Yorkshire. Three years later, she progressed to another prestigious design studio, where she further developed her creative vision, technical knowledge and confidence in delivering bespoke interiors. By 2019, Ruth had established herself as a mid-weight designer, contributing to some of Yorkshire's most distinguished residential properties. With a desire to establish a studio that truly reflected her own design philosophy, Ruth founded Amanda Ruth Interiors in 2022 alongside Noman, who joined as Co-Director. Together, they have built a design practice founded on creativity, individuality, exceptional quality and a meticulous attention to detail.</p>
       <p>Their complementary strengths and shared vision bring a considered, collaborative approach to every project. From the initial concept through to the finishing touches, each interior is thoughtfully curated to reflect the individuality, lifestyle and aspirations of the people who call it home. At Amanda Ruth Interiors, we believe true luxury lies in the details. Our aspiration is to create beautifully balanced interiors that seamlessly combine elegance, comfort and functionality — timeless spaces designed to be lived in, loved and to stand the test of time.</p>
     </div>
-    <img src="assets/images/8c6e1d_ae2d9c16566b4c03b96e5ed40e0f94d3~mv2.webp" alt="Ruth, Amanda Ruth Interiors" style="width:100%;height:692px;object-fit:cover">
+    <img src="assets/images/8c6e1d_ae2d9c16566b4c03b96e5ed40e0f94d3~mv2.webp" alt="Ruth, Amanda Ruth Interiors" style="width:100%;height:692px;object-fit:cover" loading="lazy">
   </div>
 </section>
 <section class="approach-row">
-  <img src="assets/images/8c6e1d_83a24a0a8e4847f8b618d69bd42f4385~mv2.webp" alt="Amanda Ruth Interiors studio, photograph 3" style="object-position:54% 58%">
+  <img src="assets/images/8c6e1d_83a24a0a8e4847f8b618d69bd42f4385~mv2.webp" alt="Amanda Ruth Interiors studio, photograph 3" style="object-position:54% 58%" loading="lazy">
   <div class="approach-copy">
     <h2>OUR APPROACH</h2>
     <p class="display">At Amanda Ruth Interiors, we pride ourselves on creating BEAUTIFUL, FUNCTIONAL and TIMELESS Interiors, individually tailored to each space and the way our clients live.</p>
@@ -125,7 +127,7 @@
   </div>
 </section>
 <section class="cta-banner">
-  <img src="assets/images/8c6e1d_a92d08758bfa42d99b1d7a2fa7d37a16~mv2.webp" alt="Amanda Ruth Interiors studio, photograph 4" style="object-position:50% 50%">
+  <img src="assets/images/8c6e1d_a92d08758bfa42d99b1d7a2fa7d37a16~mv2.webp" alt="Amanda Ruth Interiors studio, photograph 4" style="object-position:50% 50%" loading="lazy">
   <div class="inner">
     <h2>O U R&nbsp;&nbsp;L A T E S T&nbsp;&nbsp;P R O J E C T</h2>
     <a class="btn btn-light" href="project-master-bedroom-alwoodley.html">- TAKE A LOOK -</a>
@@ -136,7 +138,7 @@
   <div class="footer-inner">
     <div class="footer-brand">
       <a href="index.html" aria-label="Amanda Ruth Interiors home">
-        <img class="footer-mark" src="assets/images/8c6e1d_2707ef1548554ef693f8ae87c596f22b~mv2.webp" alt="Amanda Ruth Interiors monogram" width="246" height="137">
+        <img class="footer-mark" src="assets/images/8c6e1d_2707ef1548554ef693f8ae87c596f22b~mv2.webp" alt="Amanda Ruth Interiors monogram" width="246" height="137" loading="lazy">
       </a>
     </div>
     <div class="footer-col footer-contact">
@@ -165,6 +167,6 @@
     <a class="back-to-top" href="#top">Back to top</a>
   </div>
 </footer>
-<script src="assets/js/main.js?v=16"></script>
+<script src="assets/js/main.js?v=17"></script>
 </body>
 </html>

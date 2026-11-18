@@ -62,8 +62,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("hero-js")</script>
+<link rel="preload" as="image" href="assets/images/hero-services.webp" imagesrcset="assets/images/hero/hero-services-960.webp 960w, assets/images/hero/hero-services-1600.webp 1600w, assets/images/hero-services.webp 2560w" imagesizes="100vw" fetchpriority="high">
 <script>(function(){if(!("onpagereveal" in window)&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("pt-fade")})();</script>
-<link rel="stylesheet" href="assets/css/style.css?v=16">
+<link rel="stylesheet" href="assets/css/style.css?v=17">
 
 </head>
 <body>
@@ -78,8 +80,8 @@
   <nav class="nav-mobile" id="mobile-menu" aria-label="Mobile" aria-hidden="true"><a href="index.html" aria-label="Home">HOME</a><a href="our-services.html" aria-current="page" aria-label="Our Services">OUR SERVICES</a><a href="about-us.html" aria-label="About Us">ABOUT US</a><a href="portfolio.html" aria-label="Portfolio">PORTFOLIO</a><a href="contact.html" aria-label="Contact Us">CONTACT US</a></nav>
 </header>
 
-<section class="page-hero services-hero">
-  <img class="hero-bg" src="assets/images/hero-services.webp" alt="Sitting room interior by Amanda Ruth Interiors">
+<section class="page-hero services-hero" style="--hero-ph:url(data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADQAwCdASogAA8ALqVut1ujKKioiICkSgC06EHSW1q8oy3GLd+Q3cAA/vhPmPeP1FvSmM+8MtyydBNmzmq0DNZ7OLAGEL7zid72XVj0DrRmSkHfVrb4QL0aDKX8EpXu4sW77GqwAAA=);--hero-pos:50% 50%">
+  <img class="hero-bg" src="assets/images/hero-services.webp" srcset="assets/images/hero/hero-services-960.webp 960w, assets/images/hero/hero-services-1600.webp 1600w, assets/images/hero-services.webp 2560w" sizes="100vw" width="2560" height="1210" fetchpriority="high" decoding="async" alt="Sitting room interior by Amanda Ruth Interiors"><script>(function(i,t){function s(){if(performance.now()-t<120)i.classList.add("is-instant");i.classList.add("is-loaded")}function d(){i.decode?i.decode().then(s,s):s()}if(i.complete&&i.naturalWidth){i.classList.add("is-instant");s()}else{i.addEventListener("load",d,{once:true});i.addEventListener("error",s,{once:true});setTimeout(s,8000)}})(document.currentScript.previousElementSibling,performance.now())</script>
   <div class="hero-content">
     <h1>OUR SERVICES</h1>
     <a class="btn btn-light" href="contact.html">- CONTACT OUR TEAM -</a>
@@ -97,7 +99,7 @@
   </div>
 </section>
 <section class="stage band-cream">
-  <img src="assets/images/8c6e1d_3bbc6394d7eb48e19bf32b5373a2d784~mv2.webp" alt="Interior architecture and concept design" style="height:382px;object-fit:cover">
+  <img src="assets/images/8c6e1d_3bbc6394d7eb48e19bf32b5373a2d784~mv2.webp" alt="Interior architecture and concept design" style="height:382px;object-fit:cover" loading="lazy">
   <div>
     <h3>I N T E R I O R &nbsp;A R C H I T E C T U R E, &nbsp;S P A T I A L &nbsp;P L A N N I N G &nbsp;&amp;<br>C O N C E P T &nbsp;D E S I G N</h3>
     <p>Building on the detailed brief, we develop the initial concept designs, bringing together the interior architecture, spatial planning and overall design direction to establish a cohesive vision for your home.</p>
@@ -115,10 +117,10 @@
     <p>Detailed 2D visual elevations are also presented, allowing you to clearly understand the proposed design and visualise how the individual elements will come together within the finished space.</p>
     <p>Collaboration is an important part of this process. We encourage our clients to share their thoughts and feedback throughout, allowing us to refine each detail and ensure the final scheme feels cohesive, beautifully considered and entirely personal to you. Once the design has been fully approved, we progress into the costing and procurement stages.</p>
   </div>
-  <img src="assets/images/8c6e1d_e5cb7891218043a79ee667eeccc2fe80~mv2.webp" alt="FF&amp;E design and 2D visuals" style="height:475px;object-fit:cover">
+  <img src="assets/images/8c6e1d_e5cb7891218043a79ee667eeccc2fe80~mv2.webp" alt="FF&amp;E design and 2D visuals" style="height:475px;object-fit:cover" loading="lazy">
 </section>
 <section class="stage band-cream">
-  <img src="assets/images/8c6e1d_88c923ad537140ec87a9cc631082bfc4~mv2.webp" alt="Procurement" style="height:353px;object-fit:cover">
+  <img src="assets/images/8c6e1d_88c923ad537140ec87a9cc631082bfc4~mv2.webp" alt="Procurement" style="height:353px;object-fit:cover" loading="lazy">
   <div>
     <h3>P R O C U R E M E N T</h3>
     <p>Our dedicated FF&amp;E and Procurement team manages the entire procurement process in-house, providing a single point of coordination for the many individual elements required to deliver your interior.</p>
@@ -135,14 +137,14 @@
     <p>We then complete the final styling in-house, dressing each space and adding the carefully considered finishing touches that bring warmth, personality and a sense of completion to your home.</p>
     <p>The project concludes with the final handover — revealing a beautifully finished, fully considered home, ready for you and your family to enjoy. From concept to completion, every detail is considered, coordinated and brought together by Amanda Ruth Interiors.</p>
   </div>
-  <img src="assets/images/8c6e1d_add3e2e0ef3646a185821f984afad080~mv2.webp" alt="Delivery, installation and final styling" style="height:421px;object-fit:cover">
+  <img src="assets/images/8c6e1d_add3e2e0ef3646a185821f984afad080~mv2.webp" alt="Delivery, installation and final styling" style="height:421px;object-fit:cover" loading="lazy">
 </section>
 
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-brand">
       <a href="index.html" aria-label="Amanda Ruth Interiors home">
-        <img class="footer-mark" src="assets/images/8c6e1d_2707ef1548554ef693f8ae87c596f22b~mv2.webp" alt="Amanda Ruth Interiors monogram" width="246" height="137">
+        <img class="footer-mark" src="assets/images/8c6e1d_2707ef1548554ef693f8ae87c596f22b~mv2.webp" alt="Amanda Ruth Interiors monogram" width="246" height="137" loading="lazy">
       </a>
     </div>
     <div class="footer-col footer-contact">
@@ -171,6 +173,6 @@
     <a class="back-to-top" href="#top">Back to top</a>
   </div>
 </footer>
-<script src="assets/js/main.js?v=16"></script>
+<script src="assets/js/main.js?v=17"></script>
 </body>
 </html>

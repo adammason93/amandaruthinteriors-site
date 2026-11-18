@@ -1,3 +1,8 @@
+// Inner-page heroes fade themselves in (inline loader); this only guarantees they are never left hidden.
+window.addEventListener('load', function () {
+  document.querySelectorAll('.page-hero img.hero-bg').forEach(function (img) { img.classList.add('is-loaded'); });
+});
+
 // Reveal only after the image has decoded; timeout is a safety net for stalled loads.
 function revealLoadedImage(img) {
   function show() { img.classList.add('is-in'); }
@@ -262,7 +267,6 @@ function revealLoadedImage(img) {
     '.pair-photos img',
     '.about-visual img',
     '.ig-grid img',
-    '.page-hero:not(.home-hero) img.hero-bg',
     '.book-card img',
     '.section-services img', '.about-portrait img', 'img.about-portrait', '.notfound-photo img'
   ].join(',');
