@@ -213,7 +213,7 @@ function revealLoadedImage(img) {
     'main h1', 'main h2', 'main h3',
     '.display', '.eyebrow', '.hero-sub', '.hero-lead', '.hero-tag',
     '.prose p', '.about-copy p', '.about-copy h3', '.about-grid p', '.about-grid h2',
-    '.section-services h2', '.section-services .lede', '.section-services li',
+    '.section-services h2', '.section-services .lede', '.section-services li', '.services-copy p',
     '.project-intro .display', '.project-intro .body', '.project-intro .body p',
     '.ig-intro h2', '.ig-intro p',
     '.contact-card', '.contact-form-card h2', '.contact-form-card .help',
