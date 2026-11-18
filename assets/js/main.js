@@ -223,6 +223,8 @@ function revealLoadedImage(img) {
     '.page-hero .hero-content .hero-sub', '.page-hero .hero-content .hero-lead',
     '.page-hero .hero-content .btn', '.cta-banner .inner',
     '.quote-figure', '.section-cta .eyebrow', '.section-cta h2',
+    '.section-process h2', '.section-process .lede', '.process-step',
+    '.where-inner > *', '.faq-head > *', '.faq-item',
     'a.btn', 'button.btn'
   ].join(',');
 
