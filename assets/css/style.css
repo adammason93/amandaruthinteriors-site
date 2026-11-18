@@ -2136,3 +2136,73 @@ p.about-signature,
 @media (prefers-reduced-motion: reduce) {
   .project-grid .tile-view-label { transform: none; transition: none; }
 }
+
+/* ==========================================================
+   Hero type effects (v9)
+   ========================================================== */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+/* Logo: show the whole monogram (was object-fit: cover in a 246x137 box,
+   which trimmed ~9px off the top of the A and the bottom serifs) */
+.home-hero .ar-mark {
+  width: 246px;
+  height: auto;
+  aspect-ratio: 1582 / 994;
+  object-fit: contain;
+}
+.home-hero .hero-content { padding-top: 290px; }
+
+/* Typewriter tagline */
+.home-hero .hero-tag { margin-bottom: 14px; }
+.tw-c { visibility: hidden; }
+.tw-c.on { visibility: visible; }
+.tw-cursor, .rot-cursor { position: relative; display: inline; }
+.tw-cursor::after, .rot-cursor::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  bottom: -0.12em;
+  width: 1px;
+  height: 1.05em;
+  background: currentColor;
+  opacity: 0.85;
+  animation: tw-blink 1.05s steps(1, end) infinite;
+}
+.tw-cursor.is-done::after { animation: tw-fade 0.9s ease 0.9s forwards; }
+@keyframes tw-blink { 0%, 55% { opacity: 0.85; } 56%, 100% { opacity: 0; } }
+@keyframes tw-fade { from { opacity: 0.85; } to { opacity: 0; } }
+.has-motion .home-hero .hero-tag.tw { animation: none; opacity: 1; }
+
+/* Changing word line */
+.hero-rotator {
+  margin: 0 auto 30px;
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  color: #fffdf9;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 2px 18px rgba(0, 0, 0, 0.55);
+  white-space: nowrap;
+}
+.rot-slot { display: inline-block; text-align: left; white-space: nowrap; }
+.has-motion .hero-rotator.rot-js { opacity: 0; }
+.has-motion .hero-rotator.rot-js.is-on { opacity: 1; transition: opacity 1.1s ease; }
+
+@media (max-width: 800px) {
+  .home-hero .ar-mark { width: 100px; max-width: 28vw; height: auto; }
+  .home-hero .hero-tag { margin-bottom: 12px; }
+  .hero-rotator { font-size: clamp(17px, 4.6vw, 19px); margin-bottom: 26px; }
+}
+@media (min-width: 700px) and (max-width: 800px) {
+  .home-hero .ar-mark { width: 110px; max-width: 110px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tw-cursor::after, .rot-cursor::after { display: none; }
+}

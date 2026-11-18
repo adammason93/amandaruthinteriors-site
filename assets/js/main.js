@@ -456,3 +456,92 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   update();
 })();
+
+/* Hero: typewriter tagline, then a gently changing word */
+(function () {
+  var tag = document.querySelector('.home-hero [data-typewriter]');
+  var rot = document.querySelector('.home-hero [data-rotator]');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var START = 1050, TYPE = 34, HOLD = 2500, DEL = 55, RETYPE = 95, GAP = 380;
+
+  function startRotator() {
+    if (!rot) return;
+    var words = rot.getAttribute('data-rotator').split(',');
+    var slot = rot.querySelector('.rot-slot');
+    var word = rot.querySelector('.rot-word');
+    if (!slot || !word || words.length < 2) return;
+    // Reserve the widest word so the line never shifts
+    var widest = 0;
+    words.forEach(function (w) {
+      word.textContent = w;
+      widest = Math.max(widest, word.getBoundingClientRect().width);
+    });
+    slot.style.minWidth = Math.ceil(widest + 4) + 'px';
+    word.textContent = words[0];
+    var cursor = document.createElement('span');
+    cursor.className = 'rot-cursor';
+    slot.appendChild(cursor);
+    rot.classList.add('is-on');
+
+    var i = 0;
+    function del() {
+      var t = word.textContent;
+      if (!t.length) { i = (i + 1) % words.length; return setTimeout(type, GAP); }
+      word.textContent = t.slice(0, -1);
+      setTimeout(del, DEL);
+    }
+    function type() {
+      var target = words[i], t = word.textContent;
+      if (t.length === target.length) return setTimeout(del, HOLD);
+      word.textContent = target.slice(0, t.length + 1);
+      setTimeout(type, RETYPE);
+    }
+    setTimeout(del, HOLD);
+  }
+
+  function prepTagline() {
+    if (!tag) return null;
+    var text = tag.textContent.replace(/\s+/g, ' ').trim();
+    var sr = document.createElement('span');
+    sr.className = 'visually-hidden';
+    sr.textContent = text;
+    var vis = document.createElement('span');
+    vis.setAttribute('aria-hidden', 'true');
+    var chars = [];
+    text.split('').forEach(function (ch) {
+      var s = document.createElement('span');
+      s.className = 'tw-c';
+      s.textContent = ch;
+      vis.appendChild(s);
+      chars.push(s);
+    });
+    tag.textContent = '';
+    tag.appendChild(sr);
+    tag.appendChild(vis);
+    tag.classList.add('tw');
+    return chars;
+  }
+
+  if (rot) rot.classList.add('rot-js');
+  var chars = prepTagline();
+  var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+  ready.then(function () {
+    if (!chars) { setTimeout(startRotator, START); return; }
+    var cursor = document.createElement('span');
+    cursor.className = 'tw-cursor';
+    var n = 0;
+    function step() {
+      if (n < chars.length) {
+        chars[n].classList.add('on');
+        chars[n].after(cursor);
+        n++;
+        setTimeout(step, TYPE);
+      } else {
+        cursor.classList.add('is-done');
+        setTimeout(startRotator, 500);
+      }
+    }
+    setTimeout(function () { chars[0].before(cursor); step(); }, START);
+  });
+})();
