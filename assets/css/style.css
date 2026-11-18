@@ -3103,3 +3103,188 @@ body.header-compact .site-header { margin-bottom: 74px; }
 .contact-hero .hero-lead { max-width: 880px; font-size: 16px; }
 #enquiry { scroll-margin-top: 96px; }
 @media (max-width: 800px) { #enquiry { scroll-margin-top: 68px; } }
+
+/* ==========================================================
+   About page polish (v22): same language as the contact and
+   thank-you cards: linen and cream, fine rules, small spaced caps.
+   ========================================================== */
+.page-about-us .about-eyebrow {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--brown);
+}
+.page-about-us .caps { font-size: 0.8em; letter-spacing: 0.12em; }
+.page-about-us .about-rule {
+  display: block;
+  width: 56px;
+  height: 1px;
+  margin: 30px auto 0;
+  background: var(--taupe-deep);
+}
+
+/* Intro */
+.page-about-us .about-intro { background: var(--linen); padding: 88px 32px 96px; }
+.page-about-us .about-intro-head { max-width: 860px; margin: 0 auto 56px; text-align: center; }
+.page-about-us .about-intro-lead {
+  max-width: none;
+  margin: 0;
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.4;
+  color: #3f372e;
+  text-align: center;
+}
+.page-about-us .about-intro-card {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  background: var(--cream);
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(26, 26, 26, 0.06);
+  overflow: hidden;
+}
+.page-about-us .about-intro-photo { margin: 0; min-height: 100%; }
+.page-about-us .about-intro-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 560px;
+  object-fit: cover;
+  object-position: 50% 45%;
+}
+.page-about-us .about-intro-copy {
+  padding: 64px 64px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--ink);
+}
+.page-about-us .about-mark {
+  display: block;
+  width: 56px;
+  aspect-ratio: 1582 / 994;
+  margin: 0 0 28px;
+  background: var(--brown);
+  -webkit-mask: url("../images/8c6e1d_2707ef1548554ef693f8ae87c596f22b~mv2.webp") center / contain no-repeat;
+  mask: url("../images/8c6e1d_2707ef1548554ef693f8ae87c596f22b~mv2.webp") center / contain no-repeat;
+}
+.page-about-us .about-intro-body {
+  margin: 0 0 34px;
+  max-width: 32em;
+  font-size: 20px;
+  line-height: 1.65;
+  font-weight: 400;
+  color: #3a332c;
+}
+.page-about-us .about-quote {
+  margin: 0;
+  padding: 26px 0 0;
+  border-top: 1px solid rgba(122, 105, 85, 0.25);
+  position: relative;
+}
+.page-about-us .about-quote blockquote { margin: 0; }
+.page-about-us .about-quote blockquote p {
+  margin: 0;
+  font-size: 23px;
+  line-height: 1.5;
+  font-style: italic;
+  font-weight: 400;
+  color: #3f372e;
+}
+.page-about-us .about-quote figcaption {
+  margin-top: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--brown);
+}
+.page-about-us .about-quote figcaption::before { content: "—"; letter-spacing: 0; margin-right: 10px; }
+.page-about-us p.about-signature { margin: 18px 0 0; font-size: 50px; text-align: left; }
+
+/* Our story */
+.page-about-us .about-story { padding: 96px 64px; }
+.page-about-us .about-story .split {
+  max-width: 1120px;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 0 72px;
+  align-items: center;
+}
+.page-about-us .about-story h2 {
+  margin: 0 0 30px;
+  font-size: 44px;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: #3f372e;
+}
+.page-about-us .about-story h2::after { background: var(--taupe-deep); width: 56px; margin-top: 22px; }
+.page-about-us .about-story .prose p,
+.page-about-us .approach-copy p:not(.display) {
+  font-size: 18px;
+  line-height: 1.75;
+  font-weight: 400;
+  color: #3a332c;
+  max-width: 36em;
+}
+.page-about-us .about-story .prose p.about-eyebrow { font-size: 13px; line-height: 1.4; font-weight: 500; color: var(--brown); margin: 0 0 14px; }
+.page-about-us .about-story-photo {
+  margin: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(26, 26, 26, 0.08);
+  aspect-ratio: 4 / 5;
+}
+.page-about-us .about-story-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+
+/* Our approach */
+.page-about-us .approach-copy { padding: 72px 72px 72px 64px; background: var(--linen); }
+.page-about-us .approach-copy h2 { font-size: 44px; letter-spacing: 0.12em; color: #3f372e; margin: 0 0 34px; }
+.page-about-us .approach-copy h2::after { background: var(--taupe-deep); width: 56px; margin-top: 22px; }
+.page-about-us .approach-copy .display {
+  font-size: 32px;
+  line-height: 1.4;
+  font-weight: 300;
+  color: #3f372e;
+  margin: 0 0 30px;
+  max-width: 20em;
+}
+
+/* Latest project banner: real letter-spacing instead of typed spaces */
+.page-about-us .cta-banner h2.spaced-title { letter-spacing: 0.42em; margin-right: -0.42em; }
+
+@media (max-width: 1000px) {
+  .page-about-us .about-intro-copy { padding: 48px 44px 44px; }
+  .page-about-us .about-story { padding: 72px 40px; }
+  .page-about-us .about-story .split { gap: 0 48px; }
+  .page-about-us .approach-copy { padding: 56px 44px; }
+}
+@media (max-width: 800px) {
+  .page-about-us .about-intro { padding: 48px 16px 56px; }
+  .page-about-us .about-intro-head { margin-bottom: 32px; padding: 0 8px; }
+  .page-about-us .about-intro-lead { font-size: 25px; line-height: 1.45; }
+  .page-about-us .about-rule { margin-top: 22px; }
+  .page-about-us .about-intro-card { grid-template-columns: 1fr; border-radius: 14px; }
+  .page-about-us .about-intro-photo img { min-height: 0; height: auto; aspect-ratio: 4 / 3.4; }
+  .page-about-us .about-intro-copy { padding: 34px 24px 36px; text-align: center; }
+  .page-about-us .about-mark { width: 48px; margin: 0 auto 22px; }
+  .page-about-us .about-intro-body { font-size: 18px; margin: 0 auto 28px; }
+  .page-about-us .about-quote blockquote p { font-size: 20px; }
+  .page-about-us p.about-signature { text-align: center; font-size: 44px; }
+  .page-about-us .about-story { padding: 56px 24px; }
+  .page-about-us .about-story .split { grid-template-columns: 1fr; gap: 36px; }
+  .page-about-us .about-story h2 { font-size: 34px; }
+  .page-about-us .about-story .prose p,
+  .page-about-us .approach-copy p:not(.display) { font-size: 17px; }
+  .page-about-us .about-story-photo { aspect-ratio: 4 / 4.6; border-radius: 14px; }
+  .page-about-us .approach-copy { padding: 48px 24px 56px; }
+  .page-about-us .approach-copy h2 { font-size: 34px; }
+  .page-about-us .approach-copy .display { font-size: 25px; }
+  .page-about-us .cta-banner h2.spaced-title { letter-spacing: 0.3em; margin-right: -0.3em; font-size: 20px; }
+}
+.page-about-us .about-story .split { align-items: start; }
+.page-about-us .about-story-photo { position: sticky; top: 120px; }
+@media (max-width: 800px) { .page-about-us .about-story-photo { position: static; } }
