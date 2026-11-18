@@ -1262,7 +1262,7 @@ img.is-zoomable { cursor: zoom-in; }
 .has-motion .project-card:hover .reveal-img.is-in,
 .has-motion .ig-grid a:hover .reveal-img.is-in {
   transform: scale(1.04);
-  transition: transform 0.6s ease, opacity 0.8s ease;
+  transition: transform 0.6s ease, opacity 0.8s ease, filter 1.1s ease;
 }
 
 /* Home hero monogram + title (+ tag and button) fade in on load */
@@ -1646,9 +1646,10 @@ body.menu-open .nav-toggle span::after {
 ::view-transition-old(root) { animation: 0.32s ease-out both vt-fade-out; }
 ::view-transition-new(root) { animation: 0.42s ease-in both vt-fade-in; }
 @keyframes page-enter { from { opacity: 0; } to { opacity: 1; } }
-@supports not (view-transition-name: root) {
-  .has-motion body { animation: page-enter 0.45s ease both; }
-}
+/* Browsers without cross-document view transitions: fade in on load (class set in <head>) */
+.pt-fade body { animation: page-enter 0.45s ease both; }
+@keyframes page-leave { from { opacity: 1; } to { opacity: 0; } }
+.pt-fade body.page-leaving { animation: page-leave 0.28s ease forwards; }
 
 @media (prefers-reduced-motion: reduce) {
   .home-hero .hero-slide { transition: none !important; opacity: 0 !important; }
@@ -1856,7 +1857,7 @@ body.header-compact .logo img {
 .has-motion .gallery-wide img.reveal-img {
   opacity: 0;
   transform: translateY(32px);
-  transition: opacity 0.85s ease, transform 0.85s ease;
+  transition: opacity 0.85s ease, transform 0.85s ease, filter 1.1s ease;
 }
 .has-motion .gallery-2x2 img.reveal-img.is-in,
 .has-motion .gallery-wide img.reveal-img.is-in {
@@ -2021,10 +2022,10 @@ p.about-signature,
 /* 4. Projects: gentler zoom, refined label, view-all button */
 .project-grid .project-card img,
 .has-motion .project-grid .project-card .reveal-img.is-in {
-  transition: transform 1.1s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.8s ease;
+  transition: transform 1.1s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.8s ease, filter 1.1s ease;
 }
 .has-motion .project-grid .project-card:hover .reveal-img.is-in,
-.project-grid .project-card:hover img { transform: scale(1.05); transition: transform 1.1s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.8s ease; }
+.project-grid .project-card:hover img { transform: scale(1.05); transition: transform 1.1s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.8s ease, filter 1.1s ease; }
 .project-grid .tile-view {
   background: rgba(20, 16, 12, 0.22);
   font-size: 14px;
@@ -2206,3 +2207,169 @@ p.about-signature,
 @media (prefers-reduced-motion: reduce) {
   .tw-cursor::after, .rot-cursor::after { display: none; }
 }
+
+/* ==========================================================
+   Site polish (v10)
+   ========================================================== */
+:root { --gold: #a88f68; }
+
+/* Header: slimmer, translucent cream with blur once scrolled.
+   The blur lives on ::before so the fixed mobile menu inside the
+   header is not trapped by a backdrop-filter containing block. */
+.site-header {
+  background: transparent;
+  transition: height 0.45s ease, box-shadow 0.45s ease;
+}
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--cream);
+  transition: background-color 0.45s ease, backdrop-filter 0.45s ease, -webkit-backdrop-filter 0.45s ease;
+  pointer-events: none;
+}
+body.header-compact .site-header {
+  height: 72px;
+  box-shadow: 0 1px 0 rgba(122, 105, 85, 0.10), 0 10px 28px -14px rgba(26, 26, 26, 0.18);
+}
+body.header-compact .site-header::before {
+  background: rgba(253, 252, 251, 0.85);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  backdrop-filter: blur(14px) saturate(1.1);
+}
+body.header-compact .header-inner { height: 72px; }
+body.header-compact .logo,
+body.header-compact .logo img { width: 252px; height: 70px; }
+body.menu-open .site-header::before { background: var(--cream); }
+
+/* Nav underline: thin gold line that grows from the centre */
+.nav-desktop a { transition: color 0.35s ease; }
+.nav-desktop a::after {
+  bottom: 1px;
+  height: 1px;
+  background: var(--gold);
+  transform-origin: 50% 50%;
+  transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.nav-desktop a:hover,
+.nav-desktop a:focus-visible,
+.nav-desktop a[aria-current="page"] { color: var(--brown); }
+
+@media (max-width: 1100px) {
+  body.header-compact .site-header,
+  body.header-compact .header-inner { height: 64px; }
+  body.header-compact .logo,
+  body.header-compact .logo img { width: 220px; height: 61px; }
+}
+@media (max-width: 800px) {
+  .site-header { background: transparent; }
+  body.header-compact .site-header,
+  body.header-compact .header-inner { height: 48px; min-height: 48px; }
+  body.header-compact .logo,
+  body.header-compact .logo picture,
+  body.header-compact .logo img { height: 24px; width: auto; max-width: 200px; }
+  /* Mobile menu: short gold rule under the current page, centred */
+  .nav-mobile a { position: relative; }
+  .nav-mobile a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 6px;
+    width: 44px;
+    height: 1px;
+    margin-left: -22px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .nav-mobile a[aria-current="page"]::after,
+  .nav-mobile a:focus-visible::after { transform: scaleX(1); }
+}
+@media (hover: hover) and (max-width: 800px) {
+  .nav-mobile a:hover::after { transform: scaleX(1); }
+}
+
+/* Images: wait until loaded, then fade in with a soft blur-to-sharp */
+.has-motion .reveal-img {
+  filter: blur(10px);
+  transition: opacity 0.9s ease, transform 0.9s ease, filter 1.1s ease;
+}
+.has-motion .reveal-img.is-in { filter: none; }
+.has-motion .page-hero img.reveal-img { filter: none; }
+
+/* 404 */
+.notfound { background: var(--cream); }
+.notfound-grid {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 5fr 6fr;
+  gap: 72px;
+  align-items: center;
+  padding: 72px 48px 96px;
+}
+.notfound-photo {
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  box-shadow: 0 18px 40px -22px rgba(40, 30, 20, 0.45);
+}
+.notfound-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+.notfound-copy .eyebrow {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.notfound-copy h1 {
+  margin: 0 0 22px;
+  font-size: 56px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.notfound-copy h1::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 1px;
+  margin-top: 22px;
+  background: var(--gold);
+}
+.notfound-copy p { font-size: 21px; line-height: 1.6; margin: 0 0 32px; max-width: 30em; }
+.notfound-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+.btn-outline {
+  background: transparent;
+  color: var(--brown);
+  box-shadow: inset 0 0 0 1px var(--brown);
+}
+.btn-outline:hover { background: var(--brown); color: var(--cream); }
+@media (max-width: 800px) {
+  .notfound-grid { grid-template-columns: 1fr; gap: 32px; padding: 32px 24px 64px; }
+  .notfound-photo { aspect-ratio: 4 / 3; }
+  .notfound-copy { text-align: center; }
+  .notfound-copy h1 { font-size: 38px; }
+  .notfound-copy h1::after { margin: 18px auto 0; }
+  .notfound-copy p { font-size: 18px; margin-left: auto; margin-right: auto; }
+  .notfound-actions { justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header::before, .nav-desktop a::after, .nav-mobile a::after { transition: none; }
+  .has-motion .reveal-img { filter: none; }
+}
+
+/* Keep page content still while the header slims: the margin gives back
+   exactly the height the bar loses, so nothing below it moves. */
+.site-header { transition: height 0.45s ease, box-shadow 0.45s ease, margin-bottom 0.45s ease; }
+body.header-compact .site-header { margin-bottom: 74px; }
+@media (max-width: 1100px) { body.header-compact .site-header { margin-bottom: 46px; } }
+@media (max-width: 800px) {
+  body.header-compact .site-header { margin-bottom: 8px; }
+  /* The page is pinned while the menu is open; keep the bar (logo + close) on screen */
+  body.menu-open .site-header { position: fixed; top: 0; left: 0; right: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .site-header { transition: none; } }

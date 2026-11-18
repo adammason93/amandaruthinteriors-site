@@ -1,3 +1,17 @@
+// Reveal only after the image has decoded; timeout is a safety net for stalled loads.
+function revealLoadedImage(img) {
+  function show() { img.classList.add('is-in'); }
+  if (img.tagName !== 'IMG' || img.closest('.page-hero')) { show(); return; }
+  if (img.complete) {
+    if (img.decode && img.naturalWidth) img.decode().then(show, show);
+    else show();
+  } else {
+    img.addEventListener('load', show, { once: true });
+    img.addEventListener('error', show, { once: true });
+    window.setTimeout(show, 4500);
+  }
+}
+
 (function () {
   var toggle = document.querySelector('.nav-toggle');
   var nav = document.querySelector('.nav-mobile');
@@ -248,7 +262,7 @@
     '.ig-grid img',
     '.page-hero:not(.home-hero) img.hero-bg',
     '.book-card img',
-    '.section-services img'
+    '.section-services img', '.about-portrait img', 'img.about-portrait', '.notfound-photo img'
   ].join(',');
 
   var images = document.querySelectorAll(imgSel);
@@ -267,7 +281,7 @@
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-in');
+      revealLoadedImage(entry.target);
       // release will-change after the transition
       window.setTimeout(function () { entry.target.style.willChange = 'auto'; }, 900);
       io.unobserve(entry.target);
@@ -307,7 +321,7 @@
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-in');
+        revealLoadedImage(entry.target);
         io.unobserve(entry.target);
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
@@ -543,5 +557,46 @@
       }
     }
     setTimeout(function () { chars[0].before(cursor); step(); }, START);
+  });
+})();
+
+/* Page fades: native cross-document View Transitions where available;
+   a short exit fade elsewhere, without intercepting browser behaviours. */
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var nativeTransitions = 'onpagereveal' in window;
+  var leaving = false, navTimer, recoveryTimer;
+
+  function resetPage() {
+    clearTimeout(navTimer);
+    clearTimeout(recoveryTimer);
+    leaving = false;
+    document.body.classList.remove('page-leaving');
+  }
+  window.addEventListener('pageshow', function (e) {
+    resetPage();
+    if (e.persisted) {
+      // A restored page must not keep an unfinished reveal/fade from before navigation.
+      document.querySelectorAll('.reveal, .reveal-img').forEach(function (el) { el.classList.add('is-in'); });
+    }
+  });
+
+  document.addEventListener('click', function (e) {
+    if (reduce.matches || nativeTransitions || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a || a.hasAttribute('download') || a.hasAttribute('ping') || (a.target && a.target.toLowerCase() !== '_self') || a.closest('.lightbox') || a.dataset.noTransition !== undefined) return;
+    var url;
+    try { url = new URL(a.href, location.href); } catch (_) { return; }
+    if (url.origin !== location.origin || !/^https?:$/.test(url.protocol)) return;
+    // Leave in-page anchors, hash links, same-page URLs and non-page files alone.
+    if (url.hash || (url.pathname === location.pathname && url.search === location.search)) return;
+    if (!/\/$|\.html?$/i.test(url.pathname)) return;
+    if (leaving) return;
+    e.preventDefault();
+    leaving = true;
+    document.body.classList.add('page-leaving');
+    navTimer = setTimeout(function () { window.location.assign(url.href); }, 280);
+    // Slow/failed navigations must never strand the visitor on a blank page.
+    recoveryTimer = setTimeout(resetPage, 1800);
   });
 })();
