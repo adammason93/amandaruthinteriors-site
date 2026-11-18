@@ -637,7 +637,7 @@ function revealLoadedImage(img) {
     var poster = mobileMq.matches ? 'assets/images/hero-candle-poster-mobile.webp' : 'assets/images/hero-candle-poster.webp';
     video.setAttribute('poster', poster);
     video.muted = true;
-    video.preload = 'auto';
+    video.preload = 'metadata';
     video.load();
     sync();
   }
