@@ -126,6 +126,13 @@ function revealLoadedImage(img) {
         if (lbl) lbl.textContent = 'Sending…';
       }
     });
+    // Message box grows with its text (underline style, no scrollbars)
+    var msg = enquiry.querySelector('textarea');
+    if (msg) {
+      var grow = function () { msg.style.height = 'auto'; msg.style.height = msg.scrollHeight + 'px'; };
+      msg.addEventListener('input', grow);
+      window.addEventListener('resize', grow);
+    }
     // Restore the button if the page comes back from the back/forward cache
     window.addEventListener('pageshow', function () {
       var btn = enquiry.querySelector('.form-submit');
@@ -264,8 +271,8 @@ function revealLoadedImage(img) {
     '.section-services h2', '.section-services .lede', '.section-services li', '.services-copy p',
     '.project-intro .display', '.project-intro .body', '.project-intro .body p',
     '.ig-intro h2', '.ig-intro p',
-    '.contact-card', '.contact-form-card h2', '.contact-form-card .help',
-    '.form-field', '.book-card', '.footer-col', '.copyright',
+    '.enquiry-card',
+    '.book-card', '.footer-col', '.copyright',
     '.stage h3', '.stage p', '.split .display',
     '.page-hero .hero-content h1', '.page-hero .hero-content h2',
     '.page-hero .hero-content .hero-sub', '.page-hero .hero-content .hero-lead',
