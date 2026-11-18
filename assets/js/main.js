@@ -602,3 +602,71 @@ function revealLoadedImage(img) {
     recoveryTimer = setTimeout(resetPage, 1800);
   });
 })();
+
+/* Home hero: ambient candle loop over a matching still.
+   Nothing is downloaded for reduced motion or Save-Data; the still stays. */
+(function () {
+  var video = document.querySelector('.home-hero .hero-video');
+  if (!video) return;
+  var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ''))) return;
+
+  var mobileMq = window.matchMedia(video.getAttribute('data-mobile-media'));
+  var slide = video.closest('.hero-slide');
+  var heroVisible = true;
+
+  function base() {
+    return video.getAttribute(mobileMq.matches ? 'data-src-mobile' : 'data-src-desktop');
+  }
+  function load() {
+    var b = base();
+    if (video.dataset.loaded === b) return;
+    video.dataset.loaded = b;
+    video.classList.remove('is-playing');
+    video.innerHTML = '';
+    var canWebm = video.canPlayType('video/webm; codecs="vp9"');
+    if (canWebm) {
+      var w = document.createElement('source');
+      w.src = b + '.webm'; w.type = 'video/webm';
+      video.appendChild(w);
+    }
+    var m = document.createElement('source');
+    m.src = b + '.mp4'; m.type = 'video/mp4';
+    video.appendChild(m);
+    var poster = mobileMq.matches ? 'assets/images/hero-candle-poster-mobile.webp' : 'assets/images/hero-candle-poster.webp';
+    video.setAttribute('poster', poster);
+    video.muted = true;
+    video.preload = 'auto';
+    video.load();
+    sync();
+  }
+  function shouldPlay() {
+    return heroVisible && !document.hidden && (!slide || slide.classList.contains('is-active') || slide.classList.contains('is-leaving'));
+  }
+  function sync() {
+    if (shouldPlay()) {
+      var pr = video.play();
+      if (pr && pr.catch) pr.catch(function () { /* autoplay refused: the still remains */ });
+    } else if (!video.paused) {
+      video.pause();
+    }
+  }
+  video.addEventListener('playing', function () { video.classList.add('is-playing'); });
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      heroVisible = entries[0].isIntersecting;
+      sync();
+    }, { threshold: 0.01 }).observe(document.querySelector('.home-hero'));
+  }
+  document.addEventListener('visibilitychange', sync);
+  if (slide && 'MutationObserver' in window) {
+    new MutationObserver(sync).observe(slide, { attributes: true, attributeFilter: ['class'] });
+  }
+  if (mobileMq.addEventListener) mobileMq.addEventListener('change', load);
+
+  // Let the still paint first, then fetch the loop
+  if (document.readyState === 'complete') load();
+  else window.addEventListener('load', load);
+})();
