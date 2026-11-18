@@ -287,6 +287,7 @@ function revealLoadedImage(img) {
     if (!el || el.closest('.site-header, .lightbox, .honeypot, .site-footer')) return true;
     if (el.classList.contains('about-signature')) return true;
     if (el.closest('.home-hero')) return true; // load animation handles these
+    if (el.closest('.enquiry-card') && !el.classList.contains('enquiry-card')) return true; // the card reveals as one piece
     return false;
   };
 

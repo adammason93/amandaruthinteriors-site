@@ -3010,3 +3010,96 @@ body.header-compact .site-header { margin-bottom: 74px; }
   .thank-you h1 { font-size: 30px; }
   .thank-you-actions .btn { width: 100%; }
 }
+
+/* ==========================================================
+   Contact page: form higher up (v21)
+   Slim title band, compact card head; on phones the form comes
+   straight after the heading and the contact details follow it.
+   ========================================================== */
+.page-hero.contact-hero { height: 172px; }
+.contact-hero .hero-content { padding: 20px 24px; }
+.contact-hero h1 { font-size: 50px; letter-spacing: 0.14em; }
+.contact-hero .hero-lead { margin-top: 6px; font-size: 17px; max-width: 640px; }
+.hero-jump {
+  display: inline-block;
+  margin-top: 10px;
+  padding-bottom: 3px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--cream);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(253, 252, 251, 0.6);
+  transition: border-color 0.3s ease;
+}
+.hero-jump:hover, .hero-jump:focus-visible { border-bottom-color: var(--cream); }
+.hero-jump span { display: inline-block; margin-left: 4px; }
+
+.contact-wrap { padding: 28px 24px 96px; }
+.enquiry-card {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "head form" "info form";
+}
+.enquiry-head,
+.enquiry-info { border-right: 1px solid rgba(122, 105, 85, 0.22); color: var(--ink); }
+.enquiry-head { grid-area: head; padding: 44px 56px 0 60px; }
+.enquiry-info { grid-area: info; padding: 0 56px 40px 60px; }
+.enquiry-form-panel { grid-area: form; padding: 44px 60px 40px 56px; justify-content: flex-start; }
+.enquiry-mark { width: 60px; margin: 0 0 18px; }
+.enquiry-head h2 {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1.05;
+  color: var(--ink);
+}
+.enquiry-head .enquiry-rule { margin: 18px 0 20px; }
+.enquiry-info .help { margin: 0 0 20px; max-width: 26em; font-size: 18px; line-height: 1.6; font-weight: 300; }
+.enquiry-info .enquiry-detail { padding: 11px 0 10px; }
+.enquiry-form-title { margin-bottom: 30px; }
+#enquiry-form .form-field { margin-bottom: 30px; }
+#enquiry-form .form-field textarea { min-height: 84px; }
+
+@media (max-width: 960px) {
+  .enquiry-card { grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: "head" "form" "info"; }
+  .enquiry-head, .enquiry-info { border-right: 0; text-align: center; }
+  .enquiry-head { padding: 40px 40px 0; }
+  .enquiry-mark { margin: 0 auto 16px; }
+  .enquiry-head .enquiry-rule { margin: 16px auto 4px; }
+  .enquiry-form-panel { padding: 24px 40px 36px; }
+  .enquiry-info { padding: 32px 40px 44px; border-top: 1px solid rgba(122, 105, 85, 0.22); background: rgba(245, 241, 234, 0.45); }
+  .enquiry-info .help { margin: 0 auto 24px; }
+}
+@media (max-width: 800px) {
+  .page-hero.contact-hero { height: 132px; }
+  .contact-hero .hero-content { padding: 12px 20px; }
+  .contact-hero h1 { font-size: 30px; letter-spacing: 0.12em; }
+  .contact-hero .hero-lead { display: none; }
+  .hero-jump { margin-top: 10px; font-size: 12px; letter-spacing: 0.22em; }
+  .contact-wrap { padding: 16px 12px 56px; }
+  .enquiry-head { padding: 24px 22px 0; }
+  .enquiry-mark { width: 48px; margin-bottom: 10px; }
+  .enquiry-eyebrow { margin-bottom: 8px; }
+  .enquiry-head h2 { font-size: 28px; letter-spacing: 0.16em; }
+  .enquiry-head .enquiry-rule { margin: 14px auto 0; }
+  .enquiry-form-panel { padding: 20px 22px 32px; }
+  .enquiry-form-title { font-size: 23px; margin-bottom: 16px; }
+  #enquiry-form .form-field { margin-bottom: 20px; }
+  #enquiry-form .form-field textarea { min-height: 72px; }
+  #enquiry-form .form-actions { gap: 12px; }
+  .enquiry-info { padding: 28px 22px 36px; }
+  .enquiry-info .help { font-size: 17px; }
+}
+@media (max-width: 380px) {
+  .contact-hero h1 { font-size: 26px; }
+}
+/* Slim band: deepen the photo a touch so the title and link stay crisp */
+.contact-hero img.hero-bg { filter: brightness(0.74); }
+.contact-hero .hero-lead { max-width: 760px; }
+.contact-hero .hero-lead { max-width: 880px; font-size: 16px; }
+#enquiry { scroll-margin-top: 96px; }
+@media (max-width: 800px) { #enquiry { scroll-margin-top: 68px; } }
