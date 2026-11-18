@@ -1986,13 +1986,13 @@ p.about-signature,
 /* 2. Hero: soft shade behind the centre content, clearer tagline */
 .home-hero .hero-content::before {
   background:
-    radial-gradient(ellipse 640px 360px at 50% 470px, rgba(20, 16, 12, 0.42) 0%, rgba(20, 16, 12, 0.18) 55%, rgba(20, 16, 12, 0) 100%),
+    radial-gradient(ellipse 820px 420px at 50% 530px, rgba(20, 16, 12, 0.56) 0%, rgba(20, 16, 12, 0.30) 50%, rgba(20, 16, 12, 0) 100%),
     linear-gradient(to bottom, rgba(20, 16, 12, 0.12) 0%, rgba(20, 16, 12, 0.24) 48%, rgba(20, 16, 12, 0.40) 100%);
 }
 .home-hero .hero-tag {
-  font-size: 22px;
-  font-weight: 400;
-  letter-spacing: 0.04em;
+  font-size: 23px;
+  font-weight: 500;
+  letter-spacing: 0.035em;
   line-height: 1.45;
   max-width: 34em;
   margin: 20px auto 26px;
@@ -2111,7 +2111,7 @@ p.about-signature,
 @media (max-width: 800px) {
   .home-hero .hero-content::before {
     background:
-      radial-gradient(ellipse 85% 42% at 50% 50%, rgba(20, 16, 12, 0.40) 0%, rgba(20, 16, 12, 0.16) 60%, rgba(20, 16, 12, 0) 100%),
+      radial-gradient(ellipse 90% 45% at 50% 50%, rgba(20, 16, 12, 0.50) 0%, rgba(20, 16, 12, 0.22) 60%, rgba(20, 16, 12, 0) 100%),
       linear-gradient(to bottom, rgba(20, 16, 12, 0.14) 0%, rgba(20, 16, 12, 0.28) 45%, rgba(20, 16, 12, 0.50) 100%);
   }
   .home-hero .hero-tag {
