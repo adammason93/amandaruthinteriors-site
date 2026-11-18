@@ -625,16 +625,17 @@ function revealLoadedImage(img) {
     video.dataset.loaded = b;
     video.classList.remove('is-playing');
     video.innerHTML = '';
+    var q = video.getAttribute('data-v') ? '?v=' + video.getAttribute('data-v') : '';
     var canWebm = video.canPlayType('video/webm; codecs="vp9"');
     if (canWebm) {
       var w = document.createElement('source');
-      w.src = b + '.webm'; w.type = 'video/webm';
+      w.src = b + '.webm' + q; w.type = 'video/webm';
       video.appendChild(w);
     }
     var m = document.createElement('source');
-    m.src = b + '.mp4'; m.type = 'video/mp4';
+    m.src = b + '.mp4' + q; m.type = 'video/mp4';
     video.appendChild(m);
-    var poster = mobileMq.matches ? 'assets/images/hero-candle-poster-mobile.webp' : 'assets/images/hero-candle-poster.webp';
+    var poster = mobileMq.matches ? 'assets/images/hero-candle-poster-mobile.webp' + q : 'assets/images/hero-candle-poster.webp' + q;
     video.setAttribute('poster', poster);
     video.muted = true;
     video.preload = 'metadata';
