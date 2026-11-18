@@ -3452,3 +3452,28 @@ body.header-compact .site-header { margin-bottom: 74px; }
 }
 .page-our-services .svc-stage-title, .page-our-services .svc-intro-lead { text-wrap: balance; }
 @media (max-width: 800px) { .page-our-services .svc-intro-body p { text-align: left; } }
+
+/* ==========================================================
+   Signature (v25): Ruth's signature as a vector that writes
+   itself (assets/js/signature.js). Home intro + About card.
+   ========================================================== */
+svg.sig-draw { display: block; height: auto; overflow: visible; }
+.section-about .home-sign { margin: 10px 0 30px; color: #3f372e; }
+.section-about .home-sign svg.sig-draw { width: 172px; }
+.section-about .home-sign-label {
+  margin: 12px 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #3f372e;
+}
+.page-about-us p.about-signature { color: var(--brown); line-height: 0; }
+.page-about-us p.about-signature svg.sig-draw { width: 128px; }
+@media (max-width: 800px) {
+  .section-about .home-sign { margin: 6px 0 26px; }
+  .section-about .home-sign svg.sig-draw { width: 150px; }
+  .section-about .home-sign-label { font-size: 11px; letter-spacing: 0.24em; }
+  .page-about-us p.about-signature svg.sig-draw { width: 116px; margin: 0 auto; }
+}
