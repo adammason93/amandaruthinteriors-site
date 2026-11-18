@@ -1,4 +1,4 @@
-/* Ruth's signature: draws itself once when scrolled into view.
+/* Ruth's signature: draws itself each time it scrolls into view (resets once fully out of view).
    The ink is a filled vector of the signature; a mask of centre-line strokes
    (traced from the letterforms, in pen order) is revealed with stroke-dashoffset,
    so the filled script appears as if written with a pen. Reduced motion: shown at once. */
@@ -56,19 +56,33 @@
     draw(0);
     ink.setAttribute('mask', 'url(#' + id + ')');
     svg.classList.add('sig-ready');
+    var raf = null, armed = true;
     var io = new IntersectionObserver(function (entries) {
-      if (!entries[0].isIntersecting) return;
-      io.disconnect();
+      var e = entries[entries.length - 1];
+      if (!e.isIntersecting) {
+        // fully out of view: reset so it writes again next time
+        if (raf) { cancelAnimationFrame(raf); raf = null; }
+        if (!armed) {
+          armed = true;
+          for (var i = 0; i < segs.length; i++) segs[i].f = -1;
+          draw(0);
+          ink.setAttribute('mask', 'url(#' + id + ')');
+          svg.classList.remove('sig-done');
+        }
+        return;
+      }
+      if (!armed || e.intersectionRatio < 0.6) return;
+      armed = false;
       var t0 = null;
       var tick = function (now) {
         if (t0 === null) t0 = now;
         var t = Math.min(1, (now - t0) / DUR);
         draw(ease(t) * total);
-        if (t < 1) requestAnimationFrame(tick);
-        else { ink.removeAttribute('mask'); svg.classList.add('sig-done'); }
+        if (t < 1) raf = requestAnimationFrame(tick);
+        else { raf = null; ink.removeAttribute('mask'); svg.classList.add('sig-done'); }
       };
-      requestAnimationFrame(tick);
-    }, { threshold: 0.6 });
+      raf = requestAnimationFrame(tick);
+    }, { threshold: [0, 0.6] });
     io.observe(svg);
   });
 })();
