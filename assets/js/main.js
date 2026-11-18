@@ -90,6 +90,49 @@ function revealLoadedImage(img) {
     }
   });
 
+  // Enquiry form: gentle inline validation (native validation stays as the no-JS fallback)
+  var enquiry = document.getElementById('enquiry-form');
+  if (enquiry) {
+    var MSG = {
+      name: 'Please enter your name.',
+      email: 'Please enter a valid email address.',
+      message: 'Please tell us a little about your project.'
+    };
+    var fields = Array.prototype.slice.call(enquiry.querySelectorAll('.form-field input, .form-field textarea'));
+    var touched = false;
+    enquiry.noValidate = true;
+    function check(el) {
+      var wrap = el.closest('.form-field');
+      var out = document.getElementById(el.id + '-error');
+      var bad = !el.checkValidity();
+      if (wrap) wrap.classList.toggle('is-invalid', bad);
+      el.setAttribute('aria-invalid', bad ? 'true' : 'false');
+      if (out) out.textContent = bad ? (el.validity.valueMissing && el.type === 'email' ? 'Please enter your email address.' : (MSG[el.name] || 'Please check this field.')) : '';
+      return !bad;
+    }
+    fields.forEach(function (el) {
+      el.addEventListener('blur', function () { if (touched || el.value) check(el); });
+      el.addEventListener('input', function () { if (el.closest('.form-field').classList.contains('is-invalid')) check(el); });
+    });
+    enquiry.addEventListener('submit', function (e) {
+      touched = true;
+      var firstBad = null;
+      fields.forEach(function (el) { if (!check(el) && !firstBad) firstBad = el; });
+      if (firstBad) { e.preventDefault(); firstBad.focus(); return; }
+      var btn = enquiry.querySelector('.form-submit');
+      if (btn) {
+        btn.setAttribute('aria-busy', 'true');
+        var lbl = btn.querySelector('.form-submit-label');
+        if (lbl) lbl.textContent = 'Sending…';
+      }
+    });
+    // Restore the button if the page comes back from the back/forward cache
+    window.addEventListener('pageshow', function () {
+      var btn = enquiry.querySelector('.form-submit');
+      if (btn) { btn.removeAttribute('aria-busy'); var l = btn.querySelector('.form-submit-label'); if (l) l.textContent = 'Send enquiry'; }
+    });
+  }
+
   // FormSubmit: point the thank-you redirect at this host (works on GitHub Pages and the live domain)
   var form = document.querySelector('form#enquiry-form, form[action*="formsubmit.co"]');
   if (form) {

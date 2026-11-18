@@ -2754,3 +2754,222 @@ body.header-compact .site-header { margin-bottom: 74px; }
 @media (prefers-reduced-motion: reduce) {
   .hero-js .page-hero:not(.home-hero) img.hero-bg { transition: none; }
 }
+
+/* ==========================================================
+   Enquiry form, refined (v19)
+   Same palette; quieter fields, small-caps labels, gold focus line.
+   ========================================================== */
+.contact-form-card {
+  padding: 56px 64px 52px;
+  border-radius: 18px;
+}
+.contact-form-card .form-head { text-align: center; margin: 0 0 40px; }
+.contact-form-card .form-eyebrow {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.8;
+}
+.contact-form-card h2 {
+  margin: 0;
+  font-size: 38px;
+  font-weight: 300;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.form-rule {
+  display: block;
+  width: 56px;
+  height: 1px;
+  margin: 20px auto 22px;
+  background: var(--brown);
+}
+.contact-form-card .help {
+  max-width: 34em;
+  margin: 0 auto;
+  font-size: 18px;
+  line-height: 1.6;
+  font-weight: 300;
+  color: var(--ink);
+}
+#enquiry-form .form-row { gap: 0 32px; }
+#enquiry-form .form-field { position: relative; margin: 0 0 30px; }
+#enquiry-form .form-field label {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+#enquiry-form .form-field label .optional {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  font-style: italic;
+  font-weight: 400;
+  opacity: 0.75;
+}
+#enquiry-form .form-field input,
+#enquiry-form .form-field textarea {
+  display: block;
+  width: 100%;
+  min-height: 50px;
+  margin: 0;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 3px;
+  background-color: rgba(253, 252, 251, 0.92);
+  /* resting underline + gold focus line that draws in from the left */
+  background-image: linear-gradient(var(--brown), var(--brown)), linear-gradient(rgba(122, 105, 85, 0.45), rgba(122, 105, 85, 0.45));
+  background-repeat: no-repeat;
+  background-position: left bottom, left bottom;
+  background-size: 0% 2px, 100% 1px;
+  box-shadow: none;
+  font-family: var(--font);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--ink);
+  -webkit-appearance: none;
+  appearance: none;
+  transition: background-size 0.45s ease, background-color 0.3s ease;
+}
+#enquiry-form .form-field textarea { min-height: 150px; line-height: 1.5; resize: vertical; }
+#enquiry-form .form-field input::placeholder,
+#enquiry-form .form-field textarea::placeholder { color: #8a8073; opacity: 1; font-style: italic; font-weight: 300; }
+#enquiry-form .form-field input:hover,
+#enquiry-form .form-field textarea:hover { background-color: #fdfcfb; }
+#enquiry-form .form-field input:focus,
+#enquiry-form .form-field textarea:focus {
+  outline: none;
+  background-color: #fdfcfb;
+  background-size: 100% 2px, 100% 1px;
+}
+#enquiry-form .form-field input:focus-visible,
+#enquiry-form .form-field textarea:focus-visible { outline: 1px solid transparent; }
+/* Chrome autofill keeps the cream field */
+#enquiry-form .form-field input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 40px #fdfcfb inset;
+  -webkit-text-fill-color: var(--ink);
+}
+/* Inline validation */
+#enquiry-form .field-error {
+  margin: 0;
+  max-height: 0;
+  overflow: hidden;
+  font-size: 15px;
+  font-style: italic;
+  line-height: 1.4;
+  color: #5a1e14;
+  transition: max-height 0.3s ease, margin 0.3s ease;
+}
+#enquiry-form .form-field.is-invalid .field-error { max-height: 3em; margin-top: 8px; }
+#enquiry-form .form-field.is-invalid input,
+#enquiry-form .form-field.is-invalid textarea {
+  background-image: linear-gradient(#8a3324, #8a3324), linear-gradient(#8a3324, #8a3324);
+  background-size: 100% 2px, 100% 1px;
+}
+#enquiry-form .form-field.is-invalid label { color: #5a1e14; }
+/* Actions */
+#enquiry-form .form-actions {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-top: 6px;
+}
+#enquiry-form .form-submit {
+  min-width: 220px;
+  min-height: 52px;
+  padding: 14px 40px;
+  border-radius: 50px;
+  font-size: 15px;
+  letter-spacing: 0.22em;
+  color: var(--cream);
+  background: #3f372e;
+  box-shadow: 0 6px 18px rgba(26, 26, 26, 0.12);
+  transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+}
+#enquiry-form .form-submit:hover { background: #2f2922; box-shadow: 0 10px 24px rgba(26, 26, 26, 0.18); transform: translateY(-1px); }
+#enquiry-form .form-submit:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
+#enquiry-form .form-submit[aria-busy="true"] { opacity: 0.75; cursor: progress; transform: none; }
+#enquiry-form .form-reassure {
+  margin: 0;
+  font-size: 17px;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ink);
+}
+#enquiry-form .form-note {
+  margin: 30px 0 0;
+  padding-top: 22px;
+  border-top: 1px solid rgba(26, 26, 26, 0.16);
+  font-size: 15px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--ink);
+  opacity: 1;
+}
+#enquiry-form .form-note a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+@media (max-width: 800px) {
+  .contact-form-card { padding: 40px 22px 34px; border-radius: 14px; }
+  .contact-form-card .form-head { margin-bottom: 30px; }
+  .contact-form-card h2 { font-size: 30px; letter-spacing: 0.14em; }
+  .contact-form-card .help { font-size: 17px; }
+  #enquiry-form .form-row { grid-template-columns: 1fr; }
+  #enquiry-form .form-field { margin-bottom: 24px; }
+  #enquiry-form .form-field input,
+  #enquiry-form .form-field textarea { font-size: 16px; min-height: 50px; border-radius: 3px; } /* 16px: no iOS zoom */
+  #enquiry-form .form-field textarea { min-height: 140px; }
+  #enquiry-form .form-actions { flex-direction: column; align-items: stretch; gap: 14px; text-align: center; }
+  #enquiry-form .form-submit { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #enquiry-form .form-field input,
+  #enquiry-form .form-field textarea,
+  #enquiry-form .field-error,
+  #enquiry-form .form-submit { transition: none; }
+}
+
+/* Thank-you page */
+.thank-you { max-width: none; padding: 72px 24px 110px; background: var(--linen); }
+.thank-you-card {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 64px 56px 60px;
+  background: var(--cream);
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(26, 26, 26, 0.06);
+  text-align: center;
+}
+.thank-you-mark {
+  display: block;
+  width: 92px;
+  aspect-ratio: 1582 / 994;
+  margin: 0 auto 26px;
+  background: var(--brown);
+  -webkit-mask: url("../images/8c6e1d_2707ef1548554ef693f8ae87c596f22b~mv2.webp") center / contain no-repeat;
+  mask: url("../images/8c6e1d_2707ef1548554ef693f8ae87c596f22b~mv2.webp") center / contain no-repeat;
+}
+.thank-you-eyebrow {
+  margin: 0 0 10px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--brown);
+}
+.thank-you h1 { margin: 0; font-size: 40px; letter-spacing: 0.18em; }
+.thank-you .form-rule { margin: 22px auto 24px; }
+.thank-you-card > p:not(.thank-you-eyebrow) { max-width: 30em; margin: 0 auto 34px; font-size: 19px; }
+.thank-you-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+@media (max-width: 800px) {
+  .thank-you { padding: 40px 16px 72px; }
+  .thank-you-card { padding: 44px 24px 40px; }
+  .thank-you h1 { font-size: 30px; }
+  .thank-you-actions .btn { width: 100%; }
+}
