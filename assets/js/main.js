@@ -208,6 +208,7 @@
     '.page-hero .hero-content h1', '.page-hero .hero-content h2',
     '.page-hero .hero-content .hero-sub', '.page-hero .hero-content .hero-lead',
     '.page-hero .hero-content .btn', '.cta-banner .inner',
+    '.quote-figure', '.section-cta .eyebrow', '.section-cta h2',
     'a.btn', 'button.btn'
   ].join(',');
 
@@ -280,6 +281,7 @@
   var grid = document.querySelector('[data-instagram-feed], .section-instagram .ig-grid');
   if (!grid) return;
   var FEED = 'https://feeds.behold.so/zqerimg2uGGnb2QIHjU0';
+  var TILES = 6;
 
   function altFrom(post) {
     var cap = (post.prunedCaption || post.caption || '').replace(/\s+/g, ' ').trim();
@@ -289,8 +291,7 @@
   }
 
   function imageUrl(post) {
-    var type = (post.mediaType || '').toUpperCase();
-    if (type.indexOf('VIDEO') !== -1 && post.thumbnailUrl) return post.thumbnailUrl;
+    // Behold's resized copies do not expire, so prefer them (videos too)
     var sizes = post.sizes || {};
     if (sizes.medium && sizes.medium.mediaUrl) return sizes.medium.mediaUrl;
     if (sizes.large && sizes.large.mediaUrl) return sizes.large.mediaUrl;
@@ -323,10 +324,11 @@
       return res.json();
     })
     .then(function (data) {
-      var posts = (data && data.posts) || [];
+      var posts = ((data && data.posts) || []).slice(0, TILES);
       if (!posts.length) return;
+      var fallbacks = Array.prototype.slice.call(grid.querySelectorAll('img')).map(function (i) { return i.getAttribute('src'); });
       var frag = document.createDocumentFragment();
-      posts.forEach(function (post) {
+      posts.forEach(function (post, n) {
         var src = imageUrl(post);
         var href = post.permalink;
         if (!src || !href) return;
@@ -339,9 +341,27 @@
         img.alt = altFrom(post);
         img.loading = 'eager';
         img.decoding = 'async';
+        var spare = fallbacks[n % (fallbacks.length || 1)];
+        img.addEventListener('error', function () {
+          if (spare && img.getAttribute('src') !== spare) img.src = spare;
+        });
         a.appendChild(img);
         frag.appendChild(a);
       });
+      // Keep the row full: top up with our own photos if the feed is short
+      var k = 0;
+      while (frag.childNodes.length < TILES && k < fallbacks.length) {
+        var fa = document.createElement('a');
+        fa.href = 'https://www.instagram.com/amandaruthinteriors';
+        fa.target = '_blank';
+        fa.rel = 'noopener noreferrer';
+        var fi = document.createElement('img');
+        fi.src = fallbacks[fallbacks.length - 1 - k];
+        fi.alt = 'Amanda Ruth Interiors on Instagram';
+        fa.appendChild(fi);
+        frag.appendChild(fa);
+        k++;
+      }
       if (!frag.childNodes.length) return;
       grid.innerHTML = '';
       grid.appendChild(frag);
