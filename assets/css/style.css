@@ -2720,3 +2720,12 @@ body.header-compact .site-header { margin-bottom: 74px; }
   .home-hero .hero-video { display: none; }
   .has-motion .home-hero .hero-media { animation: none !important; transform: none !important; }
 }
+
+/* Candle slide stays perfectly still (no Ken Burns) — v15 */
+.has-motion .home-hero .hero-slide.hero-slide-video .hero-media,
+.has-motion .home-hero .hero-slide.hero-slide-video img,
+.has-motion .home-hero .hero-slide.hero-slide-video video {
+  animation: none !important;
+  transform: none !important;
+  will-change: auto;
+}
