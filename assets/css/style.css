@@ -3477,3 +3477,120 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   .section-about .home-sign-label { font-size: 11px; letter-spacing: 0.24em; }
   .page-about-us p.about-signature svg.sig-draw { width: 116px; margin: 0 auto; }
 }
+
+/* Home client reviews: stacked slides so the band stays one height, then a gentle crossfade */
+.section-quote .reviews-stage {
+  display: grid;
+  grid-template-areas: "slide";
+  width: 100%;
+  max-width: 820px;
+}
+.section-quote .reviews-slide,
+.has-motion .section-quote .reviews-slide,
+.has-motion .section-quote .reviews-slide.reveal,
+.has-motion .section-quote .reviews-slide.reveal.is-in {
+  grid-area: slide;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 0;
+  transform: none;
+  transition: opacity 1s ease, visibility 0s linear 1s;
+  transition-delay: 0s;
+}
+.section-quote .reviews-slide.is-active,
+.has-motion .section-quote .reviews-slide.is-active,
+.has-motion .section-quote .reviews-slide.reveal.is-active,
+.has-motion .section-quote .reviews-slide.reveal.is-in.is-active,
+.section-quote:not(.is-ready) .reviews-slide:first-child,
+.has-motion .section-quote:not(.is-ready) .reviews-slide:first-child {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  z-index: 1;
+  transform: none;
+  transition: opacity 1s ease, visibility 0s linear 0s;
+  transition-delay: 0s;
+}
+.reviews-example-label {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(253, 252, 251, 0.7);
+}
+.reviews-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin-top: 28px;
+}
+.reviews-dot {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: inherit;
+}
+.reviews-dot::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  border: 1px solid rgba(253, 252, 251, 0.8);
+  background: transparent;
+  transition: background 0.4s ease, transform 0.4s ease;
+}
+.reviews-dot.is-active::before,
+.reviews-dot[aria-current="true"]::before {
+  background: var(--cream);
+  transform: scale(1.15);
+}
+.reviews-dot:focus-visible {
+  outline: 1px solid var(--cream);
+  outline-offset: -12px;
+  border-radius: 50%;
+}
+.section-quote:focus {
+  outline: none;
+}
+.section-quote:focus-visible {
+  outline: 1px solid rgba(253, 252, 251, 0.7);
+  outline-offset: -8px;
+}
+@media (max-width: 800px) {
+  .reviews-dots { margin-top: 20px; }
+  .reviews-example-label { font-size: 11px; letter-spacing: 0.24em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .section-quote .reviews-slide,
+  .has-motion .section-quote .reviews-slide,
+  .has-motion .section-quote .reviews-slide.reveal,
+  .has-motion .section-quote .reviews-slide.reveal.is-in,
+  .section-quote .reviews-slide.is-active,
+  .has-motion .section-quote .reviews-slide.is-active,
+  .has-motion .section-quote .reviews-slide.reveal.is-active,
+  .has-motion .section-quote .reviews-slide.reveal.is-in.is-active,
+  .section-quote:not(.is-ready) .reviews-slide:first-child,
+  .has-motion .section-quote:not(.is-ready) .reviews-slide:first-child,
+  .reviews-dot::before {
+    transition: none;
+  }
+}

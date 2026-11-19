@@ -277,7 +277,7 @@ function revealLoadedImage(img) {
     '.page-hero .hero-content h1', '.page-hero .hero-content h2',
     '.page-hero .hero-content .hero-sub', '.page-hero .hero-content .hero-lead',
     '.page-hero .hero-content .btn', '.cta-banner .inner',
-    '.quote-figure', '.section-cta .eyebrow', '.section-cta h2',
+    '.section-quote', '.section-cta .eyebrow', '.section-cta h2',
     '.section-process h2', '.section-process .lede', '.process-step',
     '.where-inner > *', '.faq-head > *', '.faq-item',
     'a.btn', 'button.btn'
@@ -288,6 +288,7 @@ function revealLoadedImage(img) {
     if (el.classList.contains('about-signature')) return true;
     if (el.closest('.home-hero')) return true; // load animation handles these
     if (el.closest('.enquiry-card') && !el.classList.contains('enquiry-card')) return true; // the card reveals as one piece
+    if (el.closest('.section-quote') && !el.classList.contains('section-quote')) return true; // the reviews band reveals as one piece
     return false;
   };
 

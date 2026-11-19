@@ -69,7 +69,7 @@
 <script>(function(){if(!("onpagereveal" in window)&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("pt-fade")})();</script>
 <link rel="preload" as="image" href="assets/images/hero-candle-poster.webp?v=25" media="not all and (max-width: 800px) and (max-aspect-ratio: 3/4)">
 <link rel="preload" as="image" href="assets/images/hero-candle-poster-mobile.webp?v=25" media="(max-width: 800px) and (max-aspect-ratio: 3/4)">
-<link rel="stylesheet" href="assets/css/style.css?v=25">
+<link rel="stylesheet" href="assets/css/style.css?v=27">
 
 </head>
 <body>
@@ -166,12 +166,28 @@
   </div>
   <p class="projects-more"><a class="btn" href="portfolio.html">VIEW ALL PROJECTS</a></p>
 </section>
-<section class="section-quote">
-  <figure class="quote-figure">
-  <span class="quote-mark" aria-hidden="true">&ldquo;</span>
-  <blockquote><p>Everything was perfect from the very first call to the final meeting and installation. Ruth is not only a talented and driven person but also remained very professional throughout the project. We love the design, its elegant, functional and well thought out. Ruth has made our house a home!</p></blockquote>
-  <figcaption><span class="quote-rule" aria-hidden="true"></span><cite>Private Client</cite></figcaption>
-  </figure>
+<section class="section-quote" data-reviews aria-roledescription="carousel" aria-labelledby="reviews-title">
+  <h2 id="reviews-title" class="visually-hidden">Client reviews</h2>
+  <div class="reviews-stage">
+    <figure class="quote-figure reviews-slide is-active" data-review-slide>
+      <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+      <blockquote><p>Everything was perfect from the very first call to the final meeting and installation. Ruth is not only a talented and driven person but also remained very professional throughout the project. We love the design, its elegant, functional and well thought out. Ruth has made our house a home!</p></blockquote>
+      <figcaption><span class="quote-rule" aria-hidden="true"></span><cite>Private Client</cite></figcaption>
+    </figure>
+    <figure class="quote-figure reviews-slide" data-review-slide aria-hidden="true">
+      <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+      <p class="reviews-example-label">Example</p>
+      <blockquote><p>Example review — Ruth to send the real wording from a happy client.</p></blockquote>
+      <figcaption><span class="quote-rule" aria-hidden="true"></span><cite>Client name, Town</cite></figcaption>
+    </figure>
+    <figure class="quote-figure reviews-slide" data-review-slide aria-hidden="true">
+      <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+      <p class="reviews-example-label">Example</p>
+      <blockquote><p>Example review — a second placeholder, for Ruth to replace with a real client’s words.</p></blockquote>
+      <figcaption><span class="quote-rule" aria-hidden="true"></span><cite>Client name, Town</cite></figcaption>
+    </figure>
+  </div>
+  <div class="reviews-dots" data-reviews-dots role="group" aria-label="Choose a review"></div>
 </section>
 <section class="section-where" aria-labelledby="where-title">
   <div class="where-inner">
@@ -273,5 +289,6 @@
 </footer>
 <script src="assets/js/main.js?v=25"></script>
 <script src="assets/js/signature.js?v=26" defer></script>
+<script src="assets/js/reviews.js?v=27" defer></script>
 </body>
 </html>
