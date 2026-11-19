@@ -3767,3 +3767,370 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   .ba-label { transition: none; }
   .ba-slider.is-nudging { transition: none; }
 }
+
+/* ==========================================================
+   From Design to Reality + Mood Boards (preview)
+   ========================================================== */
+.section-design,
+.section-moods {
+  background: var(--linen);
+  text-align: center;
+  scroll-margin-top: var(--header-h);
+}
+.section-design {
+  padding: 80px 48px 40px;
+  border-top: 1px solid rgba(168, 143, 104, 0.18);
+}
+.section-moods {
+  padding: 48px 0 88px;
+}
+.section-design .eyebrow,
+.section-moods .eyebrow {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.section-design h2,
+.section-moods h2 {
+  margin: 0 0 14px;
+  font-size: 36px;
+  font-weight: 300;
+  letter-spacing: 0.28em;
+  color: var(--ink);
+}
+.section-design h2::after,
+.section-moods h2::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 1px;
+  background: var(--gold);
+  margin: 18px auto 0;
+}
+.section-design .lede,
+.section-moods .lede {
+  max-width: 640px;
+  margin: 0 auto 48px;
+  font-size: 20px;
+  line-height: 1.55;
+  font-weight: 300;
+  color: #3f372e;
+}
+.section-moods .lede { margin-bottom: 40px; }
+
+.reality-list {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 72px;
+}
+.reality-card {
+  margin: 0;
+  text-align: left;
+}
+.reality-title {
+  margin: 0 0 22px;
+  font-size: 28px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  text-align: center;
+  color: var(--ink);
+}
+.reality-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1.76fr) minmax(0, 1fr);
+  gap: 28px 36px;
+  align-items: start;
+}
+.reality-pane { margin: 0; }
+.reality-label {
+  margin: 0 0 12px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--brown);
+  text-align: center;
+}
+.reality-media {
+  position: relative;
+  width: 100%;
+  background: var(--white);
+  box-shadow: 0 10px 28px rgba(26, 26, 26, 0.07);
+  overflow: hidden;
+}
+.reality-design .reality-media { aspect-ratio: 1284 / 913; }
+.reality-finished .reality-media { aspect-ratio: 4 / 5; }
+.reality-media picture,
+.reality-media img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.reality-media img {
+  object-fit: contain;
+  object-position: center;
+}
+.reality-finished .reality-media img {
+  object-fit: cover;
+  object-position: center 40%;
+}
+.reality-switch {
+  display: none;
+  justify-content: center;
+  gap: 0;
+  margin: 18px auto 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.reality-switch button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  margin: 0 12px;
+  padding: 6px 0 5px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--taupe-deep);
+  cursor: pointer;
+}
+.reality-switch button[aria-pressed="true"] {
+  color: var(--ink);
+  border-bottom-color: var(--gold);
+}
+.reality-switch button:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 4px;
+}
+
+@media (max-width: 800px) {
+  .section-design { padding: 56px 20px 28px; }
+  .section-moods { padding: 28px 0 64px; }
+  .section-design h2,
+  .section-moods h2 { font-size: 24px; letter-spacing: 0.18em; }
+  .section-design .lede,
+  .section-moods .lede { font-size: 18px; margin-bottom: 32px; }
+  .section-moods .lede { padding: 0 20px; }
+  .reality-list { gap: 56px; }
+  .reality-title { font-size: 22px; letter-spacing: 0.06em; margin-bottom: 16px; }
+  .reality-pair {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  /* Overlay + crossfade once JS is ready (without JS, both images stack) */
+  .section-design.is-ready .reality-pair {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .section-design.is-ready .reality-pane {
+    grid-area: 1 / 1;
+  }
+  .section-design.is-ready .reality-label { display: none; }
+  .section-design.is-ready .reality-media {
+    aspect-ratio: 4 / 5;
+  }
+  .section-design.is-ready .reality-finished {
+    opacity: 0;
+    transition: opacity 1.1s ease;
+    pointer-events: none;
+  }
+  .section-design.is-ready .reality-card.is-finished .reality-finished {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .section-design.is-ready .reality-switch { display: flex; }
+}
+
+/* Mood boards */
+.mood-strip-wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.mood-strip {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0 16px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px 24px;
+}
+.mood-card {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 16px 16px 20px;
+  border: 0;
+  background: var(--cream);
+  box-shadow: 0 10px 28px rgba(26, 26, 26, 0.07);
+  cursor: zoom-in;
+  text-align: left;
+  font-family: inherit;
+  color: inherit;
+}
+.mood-card:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 4px;
+}
+.mood-card img {
+  width: 100%;
+  height: auto;
+  background: var(--white);
+}
+.mood-name {
+  display: block;
+  margin: 14px 4px 0;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brown);
+  text-align: center;
+}
+.has-motion .mood-card {
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+.has-motion .mood-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(26, 26, 26, 0.1);
+}
+
+@media (max-width: 900px) {
+  .mood-strip-wrap {
+    padding: 0;
+  }
+  .mood-strip {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(78vw, 340px);
+    grid-template-columns: none;
+    gap: 16px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--taupe) transparent;
+    padding: 8px 20px 20px;
+  }
+  .mood-strip > li {
+    scroll-snap-align: start;
+    min-width: 0;
+  }
+  .mood-card { padding: 14px 14px 16px; }
+}
+
+/* Mood board lightbox */
+.mood-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 56px 40px;
+}
+.mood-lightbox[hidden] { display: none !important; }
+.mood-lightbox-stage {
+  margin: 0;
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.mood-lightbox-stage img {
+  max-width: min(100%, 1400px);
+  max-height: calc(100vh - 120px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  background: var(--white);
+}
+.mood-lightbox-caption {
+  margin: 14px 0 0;
+  color: var(--cream);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: 300;
+  max-width: 90vw;
+}
+.mood-lightbox-close,
+.mood-lightbox-prev,
+.mood-lightbox-next {
+  position: absolute;
+  background: transparent;
+  border: 0;
+  color: var(--cream);
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+}
+.mood-lightbox-close {
+  top: 12px;
+  right: 12px;
+  font-size: 36px;
+}
+.mood-lightbox-prev,
+.mood-lightbox-next {
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 32px;
+  padding: 8px 12px;
+}
+.mood-lightbox-prev { left: 4px; }
+.mood-lightbox-next { right: 4px; }
+.mood-lightbox-close:focus-visible,
+.mood-lightbox-prev:focus-visible,
+.mood-lightbox-next:focus-visible {
+  outline: 1px solid var(--cream);
+  outline-offset: 2px;
+}
+@media (max-width: 800px) {
+  .mood-lightbox { padding: 56px 12px 24px; }
+  .mood-lightbox-prev,
+  .mood-lightbox-next { font-size: 28px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-design.is-ready .reality-finished { transition: none; }
+  .has-motion .mood-card,
+  .has-motion .mood-card:hover {
+    transition: none;
+    transform: none;
+  }
+  /* Keep both design and finished visible; no auto-crossfade or overlay */
+  @media (max-width: 800px) {
+    .section-design.is-ready .reality-pair {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .section-design.is-ready .reality-pane { grid-area: auto; }
+    .section-design.is-ready .reality-label { display: block; }
+    .section-design.is-ready .reality-design .reality-media { aspect-ratio: 1284 / 913; }
+    .section-design.is-ready .reality-finished {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .section-design.is-ready .reality-switch { display: none; }
+  }
+}
