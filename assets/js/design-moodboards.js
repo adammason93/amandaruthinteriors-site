@@ -1,69 +1,280 @@
-/* Test page: From Design to Reality (wipe-in reveal + scroll parallax),
-   Mood Boards pin wall (staggered scroll-in) and a shared lightbox.
-   Reduced motion: everything shows at rest, with no reveal or parallax. */
+/* Test page: the Portfolio book (3D page turns) and a shared lightbox.
+   Desktop (>= 900px): an open two-page spread; each leaf carries two pages.
+   Phone: one page at a time; each leaf carries one page and a plain back.
+   Reduced motion: pages change with a short crossfade instead of a flip. */
 (function () {
   var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var wide = window.matchMedia ? window.matchMedia('(min-width: 900px)') : null;
 
   function reduced() {
     return !!(reduce && reduce.matches);
   }
 
-  function designReality() {
-    var section = document.querySelector('[data-dr2]');
-    var rooms = Array.prototype.slice.call(document.querySelectorAll('[data-dr-room]'));
-    if (!section || !rooms.length) return;
-    if (reduced() || !('IntersectionObserver' in window)) return;
+  function book() {
+    var root = document.querySelector('[data-book]');
+    if (!root) return;
+    var bookEl = root.querySelector('[data-bk-book]');
+    var store = root.querySelector('[data-bk-pages]');
+    var faces = Array.prototype.slice.call(store.querySelectorAll('.bk-page'));
+    var btnPrev = root.querySelector('[data-bk-prev]');
+    var btnNext = root.querySelector('[data-bk-next]');
+    var dotsEl = root.querySelector('[data-bk-dots]');
+    var countEl = root.querySelector('[data-bk-count]');
+    var live = root.querySelector('[data-bk-live]');
+    var DUR = 950;
+    var mode = '';
+    var leaves = [];
+    var k = 0;          // leaves turned
+    var maxK = 0;
+    var seq = 0;
+    var hinted = false;
+    var turnedOnce = false;
+    var announce = false;
 
-    section.classList.add('dr-motion');
+    var tag = document.createElement('span');
+    tag.className = 'bk-hint-tag';
+    tag.setAttribute('aria-hidden', 'true');
+    tag.textContent = 'Turn the page';
+    bookEl.appendChild(tag);
 
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-in');
-        io.unobserve(entry.target);
+    function isDesk() { return !wide || wide.matches; }
+
+    function blankBack() {
+      var b = document.createElement('div');
+      b.className = 'bk-page bk-paper bk-blank';
+      b.setAttribute('aria-hidden', 'true');
+      return b;
+    }
+
+    function side(cls, face) {
+      var d = document.createElement('div');
+      d.className = 'bk-side ' + cls;
+      if (face) d.appendChild(face);
+      return d;
+    }
+
+    function build() {
+      var want = isDesk() ? 'desk' : 'phone';
+      if (want === mode) return;
+      // keep the reader on roughly the same page across the switch
+      var facePos = mode === 'desk' ? Math.max(0, 2 * k - 1) : (mode === 'phone' ? k : 0);
+      leaves.forEach(function (l) { l.remove(); });
+      leaves = [];
+      faces.forEach(function (f) { store.appendChild(f); });
+      mode = want;
+      root.classList.toggle('bk-desk', mode === 'desk');
+      root.classList.toggle('bk-phone', mode === 'phone');
+      if (mode === 'desk') {
+        for (var i = 0; i < faces.length; i += 2) {
+          var leaf = document.createElement('div');
+          leaf.className = 'bk-leaf';
+          leaf.appendChild(side('bk-front', faces[i]));
+          leaf.appendChild(side('bk-back', faces[i + 1] || blankBack()));
+          leaves.push(leaf);
+        }
+        maxK = leaves.length;
+        k = Math.min(maxK, Math.ceil(facePos / 2));
+      } else {
+        faces.forEach(function (f) {
+          var leaf = document.createElement('div');
+          leaf.className = 'bk-leaf';
+          leaf.appendChild(side('bk-front', f));
+          leaf.appendChild(side('bk-back', blankBack()));
+          leaves.push(leaf);
+        });
+        maxK = leaves.length - 1;
+        k = Math.min(maxK, facePos);
+      }
+      leaves.forEach(function (l, i) {
+        if (i < k) l.classList.add('is-flipped');
+        bookEl.insertBefore(l, store);
       });
-    }, { threshold: 0.22, rootMargin: '0px 0px -6% 0px' });
-    rooms.forEach(function (room) { io.observe(room); });
+      root.classList.add('bk-ready');
+      buildDots();
+      settle();
+    }
 
-    // Scroll parallax: --p runs 0 to 1 as each room travels up the screen.
-    var ticking = false;
-    function update() {
-      ticking = false;
-      var vh = window.innerHeight || document.documentElement.clientHeight;
-      rooms.forEach(function (room) {
-        var r = room.getBoundingClientRect();
-        if (r.bottom < -200 || r.top > vh + 200) return;
-        var p = (vh - r.top) / (vh + r.height);
-        p = Math.max(0, Math.min(1, p));
-        room.style.setProperty('--p', p.toFixed(3));
+    function stops() { return maxK + 1; }
+
+    function stopLabel(i) {
+      if (mode === 'phone') return faces[i].getAttribute('data-bk-label');
+      if (i === 0) return 'Cover';
+      if (i === maxK) return 'Back cover';
+      var l = faces[2 * i - 1], r = faces[2 * i];
+      var a = l.getAttribute('data-bk-label'), b = r ? r.getAttribute('data-bk-label') : '';
+      if (i === 1) return 'Introduction and contents';
+      if (/the design$/.test(a)) return a.replace(/, the design$/, '');
+      return a.indexOf('Mood boards') === 0 ? 'Mood boards' : a + ', ' + b;
+    }
+
+    function countText() {
+      if (mode === 'phone') {
+        if (k === 0) return 'Cover';
+        if (k === maxK) return 'Back cover';
+        return 'Page ' + k + ' of ' + (maxK - 1);
+      }
+      if (k === 0) return 'Cover';
+      if (k === maxK) return 'Back cover';
+      return 'Pages ' + (2 * k - 1) + '\u2013' + (2 * k) + ' of ' + (faces.length - 2);
+    }
+
+    function buildDots() {
+      dotsEl.innerHTML = '';
+      for (var i = 0; i < stops(); i++) {
+        var d = document.createElement('button');
+        d.type = 'button';
+        d.className = 'bk-dot';
+        d.setAttribute('aria-label', 'Go to ' + stopLabel(i).replace(/&rsquo;/g, '\u2019'));
+        (function (n) { d.addEventListener('click', function () { goTo(n); }); })(i);
+        dotsEl.appendChild(d);
+      }
+    }
+
+    function visibleFaces() {
+      if (mode === 'phone') return [k];
+      return [2 * k - 1, 2 * k];
+    }
+
+    function loadAround() {
+      var lo, hi;
+      if (mode === 'phone') { lo = k - 1; hi = k + 2; }
+      else { lo = 2 * k - 3; hi = 2 * k + 4; }
+      for (var i = Math.max(0, lo); i <= Math.min(faces.length - 1, hi); i++) {
+        faces[i].querySelectorAll('img[data-src]').forEach(function (img) {
+          if (img.getAttribute('data-srcset')) img.srcset = img.getAttribute('data-srcset');
+          img.src = img.getAttribute('data-src');
+          img.removeAttribute('data-src');
+          img.removeAttribute('data-srcset');
+        });
+      }
+    }
+
+    function restack() {
+      leaves.forEach(function (l, i) {
+        if (l.classList.contains('is-turning')) return;
+        l.style.zIndex = l.classList.contains('is-flipped') ? (i + 1) : (leaves.length - i + 1);
       });
     }
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(update);
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
-    update();
-  }
 
-  function moodWall() {
-    var wall = document.querySelector('[data-mb-wall]');
-    if (!wall) return;
-    if (reduced() || !('IntersectionObserver' in window)) return;
-    var section = wall.closest('.section-moods');
-    if (section) section.classList.add('mb-motion');
-    var items = Array.prototype.slice.call(wall.querySelectorAll('.mb-item'));
-    var io = new IntersectionObserver(function (entries) {
-      var batch = entries.filter(function (e) { return e.isIntersecting; });
-      batch.forEach(function (entry, i) {
-        entry.target.style.setProperty('--d', (i * 140) + 'ms');
-        entry.target.classList.add('is-in');
-        io.unobserve(entry.target);
+    function settle() {
+      var vis = visibleFaces();
+      faces.forEach(function (f, i) {
+        var on = vis.indexOf(i) !== -1;
+        f.toggleAttribute('inert', !on);
+        if (on) f.removeAttribute('aria-hidden'); else f.setAttribute('aria-hidden', 'true');
       });
-    }, { threshold: 0.18, rootMargin: '0px 0px -6% 0px' });
-    items.forEach(function (it) { io.observe(it); });
+      restack();
+      var state = mode === 'desk' ? (k === 0 ? 'closed-front' : (k === maxK ? 'closed-back' : 'open')) : (k === maxK ? 'end' : 'open');
+      root.setAttribute('data-bk-state', state);
+      var flipped = k, remain = leaves.length - k;
+      bookEl.style.setProperty('--ls', String(mode === 'desk' ? Math.max(0, flipped - 1) : 0));
+      bookEl.style.setProperty('--rs', String(mode === 'desk' ? Math.max(0, remain - 1) : Math.max(0, maxK - k)));
+      btnPrev.disabled = k === 0;
+      btnNext.disabled = k === maxK;
+      Array.prototype.forEach.call(dotsEl.children, function (d, i) {
+        if (i === k) d.setAttribute('aria-current', 'page'); else d.removeAttribute('aria-current');
+      });
+      countEl.textContent = countText();
+      if (announce) live.textContent = countText() + ': ' + stopLabel(k).replace(/&rsquo;/g, '\u2019');
+      loadAround();
+    }
+
+    function turn(leaf, forward) {
+      seq += 1;
+      leaf.classList.remove('turn-fwd', 'turn-back');
+      void leaf.offsetWidth;
+      leaf.classList.add('is-turning', forward ? 'turn-fwd' : 'turn-back');
+      leaf.style.zIndex = String(leaves.length + 10 + seq);
+      leaf.classList.toggle('is-flipped', forward);
+      if (reduced()) {
+        root.classList.remove('bk-fade');
+        void root.offsetWidth;
+        root.classList.add('bk-fade');
+      }
+      window.clearTimeout(leaf._t);
+      leaf._t = window.setTimeout(function () {
+        leaf.classList.remove('is-turning', 'turn-fwd', 'turn-back');
+        restack();
+      }, reduced() ? 20 : DUR + 60);
+    }
+
+    function step(dir) {
+      if (dir > 0 && k < maxK) { turn(leaves[k], true); k += 1; }
+      else if (dir < 0 && k > 0) { k -= 1; turn(leaves[k], false); }
+      else return false;
+      announce = true;
+      if (!turnedOnce) { turnedOnce = true; root.classList.remove('bk-hint'); root.classList.add('bk-turned'); }
+      settle();
+      return true;
+    }
+
+    var jumpTimer = null;
+    function goTo(target) {
+      window.clearTimeout(jumpTimer);
+      target = Math.max(0, Math.min(maxK, target));
+      (function next() {
+        if (k === target) return;
+        step(target > k ? 1 : -1);
+        jumpTimer = window.setTimeout(next, reduced() ? 0 : 130);
+      })();
+    }
+
+    function faceIndexToStop(fi) {
+      return mode === 'phone' ? fi : Math.ceil(fi / 2);
+    }
+
+    btnPrev.addEventListener('click', function () { step(-1); });
+    btnNext.addEventListener('click', function () { step(1); });
+
+    root.addEventListener('click', function (e) {
+      var go = e.target.closest('[data-bk-goto]');
+      if (go) { goTo(faceIndexToStop(parseInt(go.getAttribute('data-bk-goto'), 10))); return; }
+      if (e.target.closest('button, a, .bk-controls')) return;
+      var pg = e.target.closest('.bk-leaf');
+      if (!pg) return;
+      if (mode === 'desk') {
+        step(pg.classList.contains('is-flipped') ? -1 : 1);
+      } else {
+        var r = bookEl.getBoundingClientRect();
+        step(e.clientX - r.left < r.width * 0.35 ? -1 : 1);
+      }
+    });
+
+    root.addEventListener('keydown', function (e) {
+      if (e.target.closest && e.target.closest('.mood-lightbox')) return;
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); step(1); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); step(-1); }
+      else if (e.key === 'Home' && e.target === root) { e.preventDefault(); goTo(0); }
+      else if (e.key === 'End' && e.target === root) { e.preventDefault(); goTo(maxK); }
+    });
+
+    var sx = 0, sy = 0, tracking = false;
+    bookEl.addEventListener('touchstart', function (e) {
+      if (!e.changedTouches[0]) return;
+      tracking = true; sx = e.changedTouches[0].clientX; sy = e.changedTouches[0].clientY;
+    }, { passive: true });
+    bookEl.addEventListener('touchend', function (e) {
+      if (!tracking || !e.changedTouches[0]) return;
+      tracking = false;
+      var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) step(dx < 0 ? 1 : -1);
+    }, { passive: true });
+
+    if (wide && wide.addEventListener) wide.addEventListener('change', function () { announce = false; build(); });
+    build();
+
+    // first view: a gentle corner peel says "turn me"
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting || hinted) return;
+          hinted = true;
+          io.disconnect();
+          if (!turnedOnce && !reduced()) window.setTimeout(function () { if (!turnedOnce) root.classList.add('bk-hint'); }, 700);
+        });
+      }, { threshold: 0.55 });
+      io.observe(bookEl);
+    }
   }
 
   function moodLightbox() {
@@ -181,7 +392,6 @@
     }, { passive: true });
   }
 
-  designReality();
-  moodWall();
+  book();
   moodLightbox();
 })();
