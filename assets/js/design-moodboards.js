@@ -101,10 +101,7 @@
       if (i === 0) return 'Cover';
       if (i === maxK) return 'Back cover';
       var l = faces[2 * i - 1], r = faces[2 * i];
-      var a = l.getAttribute('data-bk-label'), b = r ? r.getAttribute('data-bk-label') : '';
-      if (i === 1) return 'Introduction and contents';
-      if (/the design$/.test(a)) return a.replace(/, the design$/, '');
-      return a.indexOf('Mood boards') === 0 ? 'Mood boards' : a + ', ' + b;
+      return (r && r.getAttribute('data-bk-spread')) || l.getAttribute('data-bk-label');
     }
 
     function countText() {
@@ -175,6 +172,7 @@
         if (i === k) d.setAttribute('aria-current', 'page'); else d.removeAttribute('aria-current');
       });
       countEl.textContent = countText();
+      root.style.setProperty('--prog', maxK ? (k / maxK).toFixed(3) : '0');
       if (announce) live.textContent = countText() + ': ' + stopLabel(k).replace(/&rsquo;/g, '\u2019');
       loadAround();
     }
@@ -199,6 +197,9 @@
     }
 
     function step(dir) {
+      root.classList.remove('bk-tilting');
+      root.style.setProperty('--mx', '0');
+      root.style.setProperty('--my', '0');
       if (dir > 0 && k < maxK) { turn(leaves[k], true); k += 1; }
       else if (dir < 0 && k > 0) { k -= 1; turn(leaves[k], false); }
       else return false;
@@ -259,6 +260,28 @@
       var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
       if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) step(dx < 0 ? 1 : -1);
     }, { passive: true });
+
+    // the closed cover tilts a touch and its sheen follows the pointer
+    var tiltRaf = 0, tx = 0, ty = 0;
+    function applyTilt() {
+      tiltRaf = 0;
+      root.style.setProperty('--mx', tx.toFixed(3));
+      root.style.setProperty('--my', ty.toFixed(3));
+    }
+    root.addEventListener('pointermove', function (e) {
+      if (reduced() || e.pointerType === 'touch') return;
+      if (root.getAttribute('data-bk-state') !== 'closed-front' && root.getAttribute('data-bk-state') !== 'closed-back') return;
+      var r = bookEl.getBoundingClientRect();
+      tx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width - 0.5) * 2));
+      ty = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height - 0.5) * 2));
+      root.classList.add('bk-tilting');
+      if (!tiltRaf) tiltRaf = window.requestAnimationFrame(applyTilt);
+    });
+    root.addEventListener('pointerleave', function () {
+      tx = 0; ty = 0;
+      root.classList.remove('bk-tilting');
+      if (!tiltRaf) tiltRaf = window.requestAnimationFrame(applyTilt);
+    });
 
     if (wide && wide.addEventListener) wide.addEventListener('change', function () { announce = false; build(); });
     build();
