@@ -18,6 +18,7 @@
     var faces = Array.prototype.slice.call(store.querySelectorAll('.bk-page'));
     var btnPrev = root.querySelector('[data-bk-prev]');
     var btnNext = root.querySelector('[data-bk-next]');
+    var btnClose = root.querySelector('[data-bk-close]');
     var dotsEl = root.querySelector('[data-bk-dots]');
     var countEl = root.querySelector('[data-bk-count]');
     var live = root.querySelector('[data-bk-live]');
@@ -161,13 +162,19 @@
         if (on) f.removeAttribute('aria-hidden'); else f.setAttribute('aria-hidden', 'true');
       });
       restack();
-      var state = mode === 'desk' ? (k === 0 ? 'closed-front' : (k === maxK ? 'closed-back' : 'open')) : (k === maxK ? 'end' : 'open');
+      var state = mode === 'desk' ? (k === 0 ? 'closed-front' : (k === maxK ? 'closed-back' : 'open')) : (k === 0 ? 'closed-front' : (k === maxK ? 'end' : 'open'));
       root.setAttribute('data-bk-state', state);
       var flipped = k, remain = leaves.length - k;
       bookEl.style.setProperty('--ls', String(mode === 'desk' ? Math.max(0, flipped - 1) : 0));
       bookEl.style.setProperty('--rs', String(mode === 'desk' ? Math.max(0, remain - 1) : Math.max(0, maxK - k)));
       btnPrev.disabled = k === 0;
       btnNext.disabled = k === maxK;
+      if (btnClose) {
+        var shut = k === 0;
+        btnClose.classList.toggle('is-hidden', shut);
+        btnClose.setAttribute('aria-hidden', shut ? 'true' : 'false');
+        btnClose.tabIndex = shut ? -1 : 0;
+      }
       Array.prototype.forEach.call(dotsEl.children, function (d, i) {
         if (i === k) d.setAttribute('aria-current', 'page'); else d.removeAttribute('aria-current');
       });
@@ -196,27 +203,48 @@
       }, reduced() ? 20 : DUR + 60);
     }
 
+    // Idle sway on the closed cover (technique after a CSS 3D shelf book): freeze the
+    // swaying angle before opening so the cover turns from where it is, then sway again
+    // only once the book has settled closed.
+    var idleTimer = null;
+    function idleOff() {
+      window.clearTimeout(idleTimer);
+      if (!root.classList.contains('bk-idle')) return;
+      var t = window.getComputedStyle(bookEl).transform;
+      bookEl.style.transform = t === 'none' ? '' : t;
+      root.classList.remove('bk-idle');
+      void bookEl.offsetWidth;
+      bookEl.style.transform = '';
+    }
+    function idleOnLater() {
+      window.clearTimeout(idleTimer);
+      if (reduced()) return;
+      idleTimer = window.setTimeout(function () {
+        if (k === 0) root.classList.add('bk-idle');
+      }, DUR + 150);
+    }
+
     function step(dir) {
-      root.classList.remove('bk-tilting');
-      root.style.setProperty('--mx', '0');
-      root.style.setProperty('--my', '0');
+      if (k === 0) idleOff();
       if (dir > 0 && k < maxK) { turn(leaves[k], true); k += 1; }
       else if (dir < 0 && k > 0) { k -= 1; turn(leaves[k], false); }
       else return false;
       announce = true;
+      if (k === 0) idleOnLater();
       if (!turnedOnce) { turnedOnce = true; root.classList.remove('bk-hint'); root.classList.add('bk-turned'); }
       settle();
       return true;
     }
 
     var jumpTimer = null;
-    function goTo(target) {
+    function goTo(target, gap) {
       window.clearTimeout(jumpTimer);
+      gap = gap == null ? 130 : gap;
       target = Math.max(0, Math.min(maxK, target));
       (function next() {
         if (k === target) return;
         step(target > k ? 1 : -1);
-        jumpTimer = window.setTimeout(next, reduced() ? 0 : 130);
+        jumpTimer = window.setTimeout(next, reduced() ? 0 : gap);
       })();
     }
 
@@ -226,6 +254,12 @@
 
     btnPrev.addEventListener('click', function () { step(-1); });
     btnNext.addEventListener('click', function () { step(1); });
+    if (btnClose) btnClose.addEventListener('click', function () {
+      if (k === 0) return;
+      var hadFocus = document.activeElement === btnClose;
+      goTo(0, mode === 'phone' ? 60 : 110);
+      if (hadFocus) root.focus({ preventScroll: true });
+    });
 
     root.addEventListener('click', function (e) {
       var go = e.target.closest('[data-bk-goto]');
@@ -261,30 +295,16 @@
       if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) step(dx < 0 ? 1 : -1);
     }, { passive: true });
 
-    // the closed cover tilts a touch and its sheen follows the pointer
-    var tiltRaf = 0, tx = 0, ty = 0;
-    function applyTilt() {
-      tiltRaf = 0;
-      root.style.setProperty('--mx', tx.toFixed(3));
-      root.style.setProperty('--my', ty.toFixed(3));
-    }
-    root.addEventListener('pointermove', function (e) {
-      if (reduced() || e.pointerType === 'touch') return;
-      if (root.getAttribute('data-bk-state') !== 'closed-front' && root.getAttribute('data-bk-state') !== 'closed-back') return;
-      var r = bookEl.getBoundingClientRect();
-      tx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width - 0.5) * 2));
-      ty = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height - 0.5) * 2));
-      root.classList.add('bk-tilting');
-      if (!tiltRaf) tiltRaf = window.requestAnimationFrame(applyTilt);
+    if (wide && wide.addEventListener) wide.addEventListener('change', function () { announce = false; idleOff(); build(); if (k === 0) idleOnLater(); });
+    ['bk-3d-fore', 'bk-3d-bottom', 'bk-3d-back'].forEach(function (c) {
+      var f = document.createElement('span');
+      f.className = 'bk-3d ' + c;
+      f.setAttribute('aria-hidden', 'true');
+      bookEl.appendChild(f);
     });
-    root.addEventListener('pointerleave', function () {
-      tx = 0; ty = 0;
-      root.classList.remove('bk-tilting');
-      if (!tiltRaf) tiltRaf = window.requestAnimationFrame(applyTilt);
-    });
-
-    if (wide && wide.addEventListener) wide.addEventListener('change', function () { announce = false; build(); });
     build();
+    if (!reduced()) root.classList.add('bk-idle');
+    if (reduce && reduce.addEventListener) reduce.addEventListener('change', function () { if (reduced()) idleOff(); else if (k === 0) root.classList.add('bk-idle'); });
 
     // first view: a gentle corner peel says "turn me"
     if ('IntersectionObserver' in window) {
