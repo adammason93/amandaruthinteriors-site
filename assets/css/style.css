@@ -4851,3 +4851,22 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   .bk-intro-rule { margin-bottom: 12px; }
   .bk { --bw: min(460px, calc(100vw - 40px), calc((100vh - 200px) * 0.75), calc((100svh - 200px) * 0.75)); }
 }
+
+/* ---------- Book aligned to the About section's columns (desktop, test page only for now) ----------
+   About grid: max 1280px wide, padding 105px left / 90px right (32px / 32px up to 1100px), two equal columns, 40px gap.
+   The closed cover sits ~4% of the stage width in from the stage's left edge, so the stage is nudged so that
+   cover edge = photo edge. The intro moves to the start of the About text column. Opening slides the stage back
+   to centre in step with the book's own opening move. */
+@media (min-width: 1024px) {
+  .section-book--aligned .bk-ready.bk-desk .bk-stage { left: 0; transition: left var(--bk-dur) var(--bk-ease); }
+  .section-book--aligned .bk-ready.bk-desk[data-bk-state="closed-front"] .bk-stage {
+    left: calc(105px - min(100% + 48px, 1280px) / 2 + var(--bw) * 0.46);
+  }
+  .section-book--aligned .bk-ready.bk-desk .bk-intro { left: calc(50% + 27.5px); }
+}
+@media (min-width: 1024px) and (max-width: 1100px) {
+  .section-book--aligned .bk-ready.bk-desk[data-bk-state="closed-front"] .bk-stage {
+    left: calc(32px - min(100% + 48px, 1280px) / 2 + var(--bw) * 0.46);
+  }
+  .section-book--aligned .bk-ready.bk-desk .bk-intro { left: calc(50% + 20px); }
+}
