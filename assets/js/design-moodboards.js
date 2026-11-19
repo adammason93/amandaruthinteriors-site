@@ -32,11 +32,6 @@
     var turnedOnce = false;
     var announce = false;
 
-    var tag = document.createElement('span');
-    tag.className = 'bk-hint-tag';
-    tag.setAttribute('aria-hidden', 'true');
-    tag.textContent = 'Turn the page';
-    bookEl.appendChild(tag);
 
     function isDesk() { return !wide || wide.matches; }
 
@@ -162,6 +157,10 @@
         if (on) f.removeAttribute('aria-hidden'); else f.setAttribute('aria-hidden', 'true');
       });
       restack();
+      faces.forEach(function (f, i) {
+        if (f._sig === undefined) f._sig = !!f.querySelector('.bk-sig');
+        if (f._sig) f.classList.toggle('bk-sig-on', vis.indexOf(i) !== -1);
+      });
       var state = mode === 'desk' ? (k === 0 ? 'closed-front' : (k === maxK ? 'closed-back' : 'open')) : (k === 0 ? 'closed-front' : (k === maxK ? 'end' : 'open'));
       root.setAttribute('data-bk-state', state);
       var flipped = k, remain = leaves.length - k;
@@ -225,7 +224,7 @@
     }
 
     function step(dir) {
-      if (k === 0) idleOff();
+      if (k === 0) { idleOff(); releaseDrag(); }
       if (dir > 0 && k < maxK) { turn(leaves[k], true); k += 1; }
       else if (dir < 0 && k > 0) { k -= 1; turn(leaves[k], false); }
       else return false;
@@ -252,8 +251,118 @@
       return mode === 'phone' ? fi : Math.ceil(fi / 2);
     }
 
+    // Closed book: drag (mouse) or a mostly-horizontal swipe (touch) turns it in 3D so the
+    // spine, page edges and back board show. A press that moves less than 6px stays a click.
+    var ROT_Y = 45, ROT_X = 12, THRESH = 6;
+    var rot = { y: 0, x: 0, v: 0 }, drag = null, inertiaRaf = null, returnTimer = null, suppressUntil = 0;
+    function baseAngles() { return { y: -14, x: 3 }; }
+    function currentAngles() {
+      var t = window.getComputedStyle(bookEl).transform;
+      if (!t || t === 'none' || !window.DOMMatrix) return baseAngles();
+      var m = new DOMMatrix(t);
+      return { y: Math.atan2(m.m31, m.m11) * 180 / Math.PI, x: Math.atan2(m.m23, m.m22) * 180 / Math.PI };
+    }
+    function applyRot() {
+      rot.y = Math.max(-ROT_Y, Math.min(ROT_Y, rot.y));
+      rot.x = Math.max(-ROT_X, Math.min(ROT_X, rot.x));
+      bookEl.style.transform = (mode === 'desk' ? 'translateX(-25%) scale(0.9) ' : 'scale(0.95) ') +
+        'rotateX(' + rot.x.toFixed(2) + 'deg) rotateY(' + rot.y.toFixed(2) + 'deg)' + (mode === 'desk' ? ' translateX(-25%)' : '');
+    }
+    function stopMotion() {
+      if (inertiaRaf) { window.cancelAnimationFrame(inertiaRaf); inertiaRaf = null; }
+      window.clearTimeout(returnTimer); window.clearTimeout(idleTimer);
+    }
+    function beginRotate() {
+      stopMotion();
+      if (!root.classList.contains('bk-dragging')) {
+        var a = currentAngles();
+        rot.y = a.y; rot.x = a.x;
+        root.classList.remove('bk-idle', 'bk-return');
+        root.classList.add('bk-dragging');
+        applyRot();
+      }
+    }
+    function scheduleReturn(delay) {
+      window.clearTimeout(returnTimer);
+      if (reduced()) return; // reduced motion: the book stays where it was turned
+      returnTimer = window.setTimeout(function () {
+        if (k !== 0 || drag) return;
+        root.classList.add('bk-return');
+        root.classList.remove('bk-dragging');
+        bookEl.style.transform = '';
+        returnTimer = window.setTimeout(function () {
+          root.classList.remove('bk-return');
+          if (k === 0 && !reduced()) root.classList.add('bk-idle');
+        }, 1250);
+      }, delay);
+    }
+    function releaseDrag() {
+      stopMotion();
+      drag = null;
+      root.classList.remove('bk-return');
+      if (root.classList.contains('bk-dragging')) {
+        root.classList.remove('bk-dragging');
+        void bookEl.offsetWidth;
+        bookEl.style.transform = '';
+      }
+    }
+    function inertia() {
+      if (reduced() || Math.abs(rot.v) < 0.05) { scheduleReturn(900); return; }
+      (function tick() {
+        rot.y += rot.v;
+        rot.v *= 0.92;
+        if (rot.y > ROT_Y || rot.y < -ROT_Y) rot.v = 0;
+        applyRot();
+        if (Math.abs(rot.v) > 0.05) inertiaRaf = window.requestAnimationFrame(tick);
+        else { inertiaRaf = null; scheduleReturn(900); }
+      })();
+    }
+    bookEl.addEventListener('pointerdown', function (e) {
+      if (k !== 0 || (e.pointerType === 'mouse' && e.button !== 0)) return;
+      if (e.target.closest('button, a')) return;
+      drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, lx: e.clientX, lt: e.timeStamp, on: false, touch: e.pointerType !== 'mouse', y0: 0, x0: 0 };
+    });
+    bookEl.addEventListener('pointermove', function (e) {
+      if (!drag || e.pointerId !== drag.id) return;
+      var dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+      if (!drag.on) {
+        if (drag.touch && Math.abs(dy) > THRESH && Math.abs(dy) >= Math.abs(dx)) { drag = null; return; } // vertical: let the page scroll
+        if (Math.abs(dx) < THRESH && Math.abs(dy) < THRESH) return;
+        if (drag.touch && Math.abs(dx) < Math.abs(dy) * 1.2) return;
+        drag.on = true;
+        beginRotate();
+        drag.y0 = rot.y; drag.x0 = rot.x;
+        try { bookEl.setPointerCapture(e.pointerId); } catch (err) {}
+      }
+      var dt = Math.max(1, e.timeStamp - drag.lt);
+      var dStep = (e.clientX - drag.lx) * 0.32;
+      rot.v = rot.v * 0.4 + (dStep * 16 / dt) * 0.6;
+      drag.lx = e.clientX; drag.lt = e.timeStamp;
+      rot.y = drag.y0 + dx * 0.32;
+      rot.x = drag.x0 - dy * (drag.touch ? 0.06 : 0.12);
+      applyRot();
+    });
+    function endDrag(e) {
+      if (!drag || e.pointerId !== drag.id) return;
+      var was = drag.on;
+      if (was && e.timeStamp - drag.lt > 90) rot.v = 0;
+      drag = null;
+      if (!was) return;
+      suppressUntil = Date.now() + 400;
+      inertia();
+    }
+    bookEl.addEventListener('pointerup', endDrag);
+    bookEl.addEventListener('dragstart', function (e) { if (k === 0) e.preventDefault(); });
+    bookEl.addEventListener('pointercancel', endDrag);
+
     btnPrev.addEventListener('click', function () { step(-1); });
     btnNext.addEventListener('click', function () { step(1); });
+    var btnOpen = root.querySelector('[data-bk-open]');
+    if (btnOpen) btnOpen.addEventListener('click', function () {
+      if (k !== 0) return;
+      step(1);
+      root.focus({ preventScroll: true });
+    });
     if (btnClose) btnClose.addEventListener('click', function () {
       if (k === 0) return;
       var hadFocus = document.activeElement === btnClose;
@@ -262,6 +371,7 @@
     });
 
     root.addEventListener('click', function (e) {
+      if (Date.now() < suppressUntil && e.target.closest('.bk-book')) { e.preventDefault(); return; }
       var go = e.target.closest('[data-bk-goto]');
       if (go) { goTo(faceIndexToStop(parseInt(go.getAttribute('data-bk-goto'), 10))); return; }
       if (e.target.closest('button, a, .bk-controls')) return;
@@ -277,6 +387,16 @@
 
     root.addEventListener('keydown', function (e) {
       if (e.target.closest && e.target.closest('.mood-lightbox')) return;
+      if (k === 0 && e.target === root && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+        e.preventDefault();
+        beginRotate();
+        rot.v = 0;
+        rot.y += e.key === 'ArrowRight' ? -9 : 9;
+        applyRot();
+        scheduleReturn(1600);
+        return;
+      }
+      if (k === 0 && e.target === root && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); step(1); return; }
       if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); step(1); }
       else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); step(-1); }
       else if (e.key === 'Home' && e.target === root) { e.preventDefault(); goTo(0); }
@@ -285,7 +405,7 @@
 
     var sx = 0, sy = 0, tracking = false;
     bookEl.addEventListener('touchstart', function (e) {
-      if (!e.changedTouches[0]) return;
+      if (!e.changedTouches[0] || k === 0) { tracking = false; return; }
       tracking = true; sx = e.changedTouches[0].clientX; sy = e.changedTouches[0].clientY;
     }, { passive: true });
     bookEl.addEventListener('touchend', function (e) {
@@ -295,8 +415,8 @@
       if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) step(dx < 0 ? 1 : -1);
     }, { passive: true });
 
-    if (wide && wide.addEventListener) wide.addEventListener('change', function () { announce = false; idleOff(); build(); if (k === 0) idleOnLater(); });
-    ['bk-3d-fore', 'bk-3d-bottom', 'bk-3d-back'].forEach(function (c) {
+    if (wide && wide.addEventListener) wide.addEventListener('change', function () { announce = false; idleOff(); releaseDrag(); build(); if (k === 0) idleOnLater(); });
+    ['bk-3d-spine', 'bk-3d-fore', 'bk-3d-bottom', 'bk-3d-back'].forEach(function (c) {
       var f = document.createElement('span');
       f.className = 'bk-3d ' + c;
       f.setAttribute('aria-hidden', 'true');
@@ -304,7 +424,7 @@
     });
     build();
     if (!reduced()) root.classList.add('bk-idle');
-    if (reduce && reduce.addEventListener) reduce.addEventListener('change', function () { if (reduced()) idleOff(); else if (k === 0) root.classList.add('bk-idle'); });
+    if (reduce && reduce.addEventListener) reduce.addEventListener('change', function () { if (reduced()) { idleOff(); stopMotion(); } else if (k === 0) root.classList.add('bk-idle'); });
 
     // first view: a gentle corner peel says "turn me"
     if ('IntersectionObserver' in window) {

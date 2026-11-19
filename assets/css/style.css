@@ -3777,7 +3777,7 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   --bk-dur: 0.95s;
   --bk-ease: cubic-bezier(0.645, 0.045, 0.355, 1);
   position: relative;
-  padding: 60px 24px 52px;
+  padding: 40px 24px 34px;
   background:
     radial-gradient(ellipse at 50% 55%, #f8f4ec 0%, var(--bk-bg) 55%, #ece5d8 100%);
   border-top: 1px solid rgba(168, 143, 104, 0.18);
@@ -3786,24 +3786,72 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   scroll-margin-top: var(--header-h);
 }
 .bk-anchor { position: absolute; top: 0; left: 0; scroll-margin-top: var(--header-h); }
-.bk-head { margin: 0 0 26px; }
+/* intro block: beside the closed book on desktop, stacked above it on phones */
 .bk-headkick {
-  margin: 0 0 10px;
-  font-size: 13px;
+  margin: 0 0 14px;
+  font-size: 12px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: var(--gold);
 }
 .bk-heading {
   margin: 0;
-  font-size: clamp(26px, 2.8vw, 38px);
+  font-size: clamp(40px, 4.1vw, 60px);
+  line-height: 1;
   font-weight: 300;
-  letter-spacing: 0.3em;
+  font-family: inherit;
+  text-transform: none;
+  letter-spacing: 0.01em;
   color: var(--ink);
 }
-.bk { position: relative; outline: none; }
+.bk-intro-rule { display: block; width: 56px; height: 1px; margin: 24px 0; background: var(--gold); }
+.bk-intro-copy { margin: 0; max-width: 390px; font-size: 18px; line-height: 1.6; color: var(--ink); opacity: 0.85; }
+.bk-opener { margin-top: 32px; }
+.bk-open { padding: 12px 30px; font-size: 14px; }
+.bk { position: relative; outline: none; --bw: max(600px, min(960px, calc(100vw - 140px), calc((100vh - 250px) * 1.5), calc((100svh - 250px) * 1.5))); }
+@media (min-width: 900px) {
+  .bk-intro {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    left: calc(50% + 28px);
+    width: calc(var(--bw) / 2 - 40px);
+    height: calc(var(--bw) / 1.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    transition: opacity 0.5s ease 0.35s, transform 0.6s ease 0.35s, visibility 0s linear 0.35s;
+  }
+  .bk-ready:not([data-bk-state="closed-front"]) .bk-intro {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(28px);
+    transition: opacity 0.3s ease, transform 0.4s ease, visibility 0s linear 0.4s;
+  }
+  .bk:not(.bk-ready) .bk-intro { position: static; width: auto; height: auto; align-items: center; text-align: center; margin-bottom: 28px; }
+  .bk-ready[data-bk-state="closed-front"] .bk-controls { opacity: 0; visibility: hidden; }
+  .bk-controls { transition: opacity 0.4s ease 0.3s, visibility 0s; }
+  /* the surface the closed book rests on */
+  .bk-stage::before {
+    content: "";
+    position: absolute;
+    z-index: -2;
+    left: -10%;
+    right: 40%;
+    top: 70%;
+    bottom: -14%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(208, 190, 162, 0.7) 0%, rgba(220, 205, 180, 0.4) 45%, rgba(230, 218, 199, 0) 72%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+  .bk-ready[data-bk-state="closed-front"] .bk-stage::before { opacity: 1; transition-delay: 0.3s; }
+  .bk-desk[data-bk-state="closed-front"] .bk-stage::after { left: 6%; right: 56%; bottom: -30px; height: 54px; background: radial-gradient(ellipse at 50% 35%, rgba(50, 36, 22, 0.34), transparent 70%); }
+}
 .bk-stage {
-  --bw: max(620px, min(960px, calc(100vw - 140px), calc((100vh - 350px) * 1.5), calc((100svh - 350px) * 1.5)));
   position: relative;
   width: var(--bw);
   aspect-ratio: 3 / 2;
@@ -3825,7 +3873,6 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   z-index: -1;
   transition: left var(--bk-dur) var(--bk-ease), right var(--bk-dur) var(--bk-ease);
 }
-.bk-desk[data-bk-state="closed-front"] .bk-stage::after,
 .bk-desk[data-bk-state="closed-back"] .bk-stage::after { left: 26%; right: 26%; }
 
 .bk-book {
@@ -3834,8 +3881,8 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   transform-style: preserve-3d;
   transition: transform var(--bk-dur) var(--bk-ease);
 }
-.bk-desk[data-bk-state="closed-front"] .bk-book { transform: translateX(-25%) rotateX(3deg) rotateY(-14deg); }
-.bk-phone[data-bk-state="closed-front"] .bk-book { transform: rotateX(2deg) rotateY(-6deg) scale(0.95); }
+.bk-desk[data-bk-state="closed-front"] .bk-book { transform: translateX(-25%) scale(0.9) rotateX(3deg) rotateY(-14deg) translateX(-25%); }
+.bk-phone[data-bk-state="closed-front"] .bk-book { transform: scale(0.95) rotateX(2deg) rotateY(-6deg); }
 .bk-desk[data-bk-state="closed-back"] .bk-book { transform: translateX(25%); }
 /* closed book as a 3D object: the cover sits on a block of pages with a back board.
    The fore-edge and bottom-edge faces show only while the book is closed at the front. */
@@ -3882,13 +3929,50 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   box-shadow: 0 30px 50px -20px rgba(30, 20, 12, 0.5);
 }
 .bk-phone .bk-3d-bottom, .bk-phone .bk-3d-back { left: 0; width: 100%; }
+.bk-3d-spine {
+  top: 0;
+  height: 100%;
+  left: calc(50% - var(--bk-t));
+  width: var(--bk-t);
+  transform-origin: right center;
+  transform: rotateY(-90deg);
+  background: linear-gradient(90deg, #1f1914 0%, #3a3027 45%, #2a221b 100%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+.bk-phone .bk-3d-spine { left: calc(var(--bk-t) * -1); }
+.bk-ready[data-bk-state="closed-front"] .bk-book::after { opacity: 0; }
+/* closed book can be turned by hand */
+.bk-ready[data-bk-state="closed-front"] .bk-book,
+.bk-ready[data-bk-state="closed-front"] .bk-leaf { cursor: grab; }
+.bk-ready[data-bk-state="closed-front"] .bk-book { touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+.bk-dragging .bk-book, .bk-dragging .bk-leaf { cursor: grabbing !important; }
+.bk-dragging .bk-book { transition: none !important; animation: none !important; }
+.bk-return .bk-book { transition: transform 1.2s cubic-bezier(0.25, 0.8, 0.3, 1); }
+.bk-drag-hint {
+  margin: 14px 0 0;
+  height: 18px;
+  font-size: 13px;
+  line-height: 18px;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  color: var(--brown);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.bk-ready[data-bk-state="closed-front"] .bk-drag-hint { opacity: 0.85; }
+.bk-dh-touch { display: none; }
+@media (hover: none) and (pointer: coarse) {
+  .bk-dh-fine { display: none; }
+  .bk-dh-touch { display: inline; }
+}
+.bk:not(.bk-ready) .bk-drag-hint { display: none; }
 @keyframes bkIdleDesk {
-  0%, 100% { transform: translateX(-25%) rotateX(3deg) rotateY(-14deg); }
-  50% { transform: translateX(-25%) rotateX(5deg) rotateY(-24deg); }
+  0%, 100% { transform: translateX(-25%) scale(0.9) rotateX(3deg) rotateY(-14deg) translateX(-25%); }
+  50% { transform: translateX(-25%) scale(0.9) rotateX(5deg) rotateY(-24deg) translateX(-25%); }
 }
 @keyframes bkIdlePhone {
-  0%, 100% { transform: rotateX(2deg) rotateY(-6deg) scale(0.95); }
-  50% { transform: rotateX(4deg) rotateY(-12deg) scale(0.95); }
+  0%, 100% { transform: scale(0.95) rotateX(2deg) rotateY(-6deg); }
+  50% { transform: scale(0.95) rotateX(4deg) rotateY(-12deg); }
 }
 @keyframes bkSheenIdle {
   0%, 100% { background-position: 62% 0; }
@@ -4021,7 +4105,7 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   align-items: center;
   justify-content: center;
   gap: 22px;
-  margin-top: 34px;
+  margin-top: 26px;
 }
 .bk-arrow-btn {
   width: 46px;
@@ -4541,12 +4625,20 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
 
 /* phone: a single portrait page */
 @media (max-width: 899px) {
-  .section-book { padding: 44px 0 40px; }
-  .bk-head { margin-bottom: 20px; padding: 0 20px; }
-  .bk-headkick { font-size: 11px; letter-spacing: 0.26em; }
-  .bk-heading { letter-spacing: 0.22em; }
+  .section-book { padding: 30px 0 32px; }
+  .bk { display: flex; flex-direction: column; align-items: center; }
+  .bk-intro { display: contents; }
+  .bk-headkick { order: 1; font-size: 11px; letter-spacing: 0.26em; margin-bottom: 10px; padding: 0 20px; }
+  .bk-heading { order: 1; font-size: 34px; }
+  .bk-intro-rule { order: 1; margin: 16px auto; width: 44px; }
+  .bk-intro-copy { order: 1; max-width: 330px; padding: 0 24px; font-size: 15.5px; line-height: 1.55; margin-bottom: 18px; }
+  .bk-stage { order: 2; }
+  .bk-opener { order: 3; margin-top: 24px; }
+  .bk-controls { order: 4; }
+  .bk > [data-bk-live] { order: 5; }
+  .bk-ready:not([data-bk-state="closed-front"]) .bk-opener { display: none; }
+  .bk-ready[data-bk-state="closed-front"] .bk-controls { display: none; }
   .bk-stage {
-    --bw: min(460px, calc(100vw - 48px), calc((100vh - 250px) * 0.75), calc((100svh - 250px) * 0.75));
     aspect-ratio: 3 / 4;
     perspective: 1700px;
   }
@@ -4557,7 +4649,8 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   .bk-phone .bk-cast { left: 0; width: 100%; }
   .bk-phone .bk-book::before { display: none; }
   .bk-ready.bk-phone .bk-book::after { width: calc(var(--rs, 0) * 0.5px + 2px); }
-  .bk-controls { gap: 10px; margin-top: 26px; padding: 0 12px; }
+  .bk-controls { gap: 10px; margin-top: 12px; padding: 0 12px; }
+  .bk-drag-hint { margin-top: 12px; font-size: 12.5px; }
   .bk-stage { --bk-t: 9px; }
   .bk-phone .bk-toc-row { padding: 1.15cqw 0; }
   .bk-close, .bk-close-spacer { width: 44px; }
@@ -4582,7 +4675,7 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
 @keyframes bkFade { from { opacity: 0.2; } to { opacity: 1; } }
 
 @media (max-width: 899px) {
-  .bk-stage { --bw: min(460px, calc(100vw - 32px), calc((100vh - 230px) * 0.75), calc((100svh - 230px) * 0.75)); }
+  .bk { --bw: min(460px, calc(100vw - 48px), calc((100vh - 360px) * 0.75), calc((100svh - 360px) * 0.75)); }
   .bk-dots { display: none; }
   .bk-bar { display: block; width: 160px; height: 2px; margin: 8px auto 0; background: rgba(168, 158, 140, 0.35); }
   .bk-bar span { display: block; height: 100%; width: calc(var(--prog, 0) * 100%); background: var(--brown); transition: width 0.5s ease; }
@@ -4592,6 +4685,44 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
 }
 @media (prefers-reduced-motion: reduce) {
   .bk-book, .bk-cv-sheen { animation: none !important; }
+}
+/* About us spread */
+.bk-about-photo .bk-full img { object-position: center 28%; }
+.bk-about-photo .bk-zoombtn { bottom: 13cqw; }
+.bk-about-cap { position: absolute; left: 9cqw; right: 14cqw; bottom: 11cqw; z-index: 2; }
+.bk-about-cap .bk-kicker-light { margin-bottom: 2cqw; }
+.bk-about-cap .bk-deck-light { margin: 0; line-height: 1.4; }
+.bk-about .bk-pg { padding-top: 12cqw; padding-bottom: 11.5cqw; }
+.bk-about .bk-display-md { margin-bottom: 4cqw; }
+.bk-about-lead { font-size: max(12px, 3.2cqw); line-height: 1.5; margin-bottom: 3.6cqw; }
+.bk-founders { margin: 0; display: grid; grid-template-columns: 1.5fr 1fr; gap: 4cqw; }
+.bk-founders dt { font-size: max(14px, 4.6cqw); line-height: 1.1; font-style: italic; font-weight: 300; color: #2f2620; }
+.bk-founders dd { margin: 1cqw 0 0; font-size: max(7.5px, 1.75cqw); line-height: 1.55; letter-spacing: 0.2em; text-transform: uppercase; color: #7a6955; }
+.bk-about .bk-hair { margin: 4.2cqw 0; }
+.bk-about .bk-sc { margin-bottom: 1.4cqw; }
+.bk-about-approach { margin-top: 0; }
+.bk-about-foot { margin-top: auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 4cqw; }
+.bk-sig-wrap { display: block; flex: none; }
+.bk-sig { display: block; width: 27cqw; height: auto; overflow: visible; color: #4a3c30; }
+.bk-about-link {
+  margin-bottom: 0.6cqw;
+  padding-bottom: 1cqw;
+  border-bottom: 1px solid rgba(168, 143, 104, 0.6);
+  font-size: max(9px, 2cqw);
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #7a6955;
+  text-decoration: none;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+.bk-about-link:hover { color: #2f2620; border-color: #2f2620; }
+.bk-about-link:focus-visible { outline: 1px solid #a88f68; outline-offset: 3px; }
+@keyframes bkSig { from { clip-path: inset(-20% 100% -20% 0); } to { clip-path: inset(-20% -6% -20% 0); } }
+@media (prefers-reduced-motion: no-preference) {
+  .bk-about .bk-sig { clip-path: inset(-20% 100% -20% 0); }
+  .bk-about.bk-sig-on .bk-sig { animation: bkSig 2.2s cubic-bezier(0.45, 0.05, 0.35, 1) 0.4s forwards; }
 }
 /* Mood board lightbox */
 
