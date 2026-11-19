@@ -3879,6 +3879,7 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
+  pointer-events: none; /* hit-test the leaves, not the book plane they share */
   transition: transform var(--bk-dur) var(--bk-ease);
 }
 .bk-desk[data-bk-state="closed-front"] .bk-book { transform: translateX(-25%) scale(0.9) rotateX(3deg) rotateY(-14deg) translateX(-25%); }
@@ -4004,6 +4005,7 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
 .bk-desk[data-bk-state="open"] .bk-book::after { transition: width var(--bk-dur) var(--bk-ease), opacity 0.3s ease calc(var(--bk-dur) * 0.7); }
 
 .bk-leaf {
+  pointer-events: auto;
   position: absolute;
   top: 0;
   left: 50%;
@@ -4615,7 +4617,7 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
 
 /* without JS: a simple row of pages */
 .bk:not(.bk-ready) .bk-stage { width: auto; aspect-ratio: auto; perspective: none; }
-.bk:not(.bk-ready) .bk-book { position: relative; }
+.bk:not(.bk-ready) .bk-book { position: relative; pointer-events: auto; }
 .bk:not(.bk-ready) .bk-pages { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 8px 4px 20px; }
 .bk:not(.bk-ready) .bk-page { position: relative; flex: none; width: min(78vw, 360px); aspect-ratio: 3 / 4; scroll-snap-align: center; }
 .bk:not(.bk-ready) .bk-controls,
