@@ -3782,6 +3782,7 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
     radial-gradient(ellipse at 50% 55%, #f8f4ec 0%, var(--bk-bg) 55%, #ece5d8 100%);
   border-top: 1px solid rgba(168, 143, 104, 0.18);
   text-align: center;
+  overflow: hidden; /* fallback for Safari < 16, which ignores clip */
   overflow: clip;
   scroll-margin-top: var(--header-h);
 }
@@ -3883,7 +3884,6 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   transition: transform var(--bk-dur) var(--bk-ease);
 }
 .bk-desk[data-bk-state="closed-front"] .bk-book { transform: translateX(-25%) scale(0.9) rotateX(3deg) rotateY(-14deg) translateX(-25%); }
-.bk-phone[data-bk-state="closed-front"] .bk-book { transform: scale(0.95) rotateX(2deg) rotateY(-6deg); }
 .bk-desk[data-bk-state="closed-back"] .bk-book { transform: translateX(25%); }
 /* closed book as a 3D object: the cover sits on a block of pages with a back board.
    The fore-edge and bottom-edge faces show only while the book is closed at the front. */
@@ -3970,10 +3970,6 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
 @keyframes bkIdleDesk {
   0%, 100% { transform: translateX(-25%) scale(0.9) rotateX(3deg) rotateY(-14deg) translateX(-25%); }
   50% { transform: translateX(-25%) scale(0.9) rotateX(5deg) rotateY(-24deg) translateX(-25%); }
-}
-@keyframes bkIdlePhone {
-  0%, 100% { transform: scale(0.95) rotateX(2deg) rotateY(-6deg); }
-  50% { transform: scale(0.95) rotateX(4deg) rotateY(-12deg); }
 }
 @keyframes bkSheenIdle {
   0%, 100% { background-position: 62% 0; }
@@ -4646,8 +4642,9 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
     perspective: 1700px;
   }
   .bk-stage::after { left: 6%; right: 6%; }
-  .bk-phone .bk-leaf { left: 0; width: 100%; transition: transform var(--bk-dur) var(--bk-ease), opacity 0.2s ease; }
-  .bk-phone .bk-leaf.is-flipped { opacity: 0; pointer-events: none; transition: transform var(--bk-dur) var(--bk-ease), opacity 0.35s ease calc(var(--bk-dur) * 0.6); }
+  .bk-phone .bk-leaf { left: 0; width: 100%; transition: transform var(--bk-dur) var(--bk-ease); }
+  .bk-phone .bk-leaf.is-flipped { pointer-events: none; }
+  .bk-phone .bk-leaf.is-flipped:not(.is-turning) { visibility: hidden; }
   .bk-phone .bk-front::before { background: linear-gradient(90deg, rgba(70, 52, 35, 0.2) 0, rgba(70, 52, 35, 0.05) 2.5%, rgba(70, 52, 35, 0) 7%); }
   .bk-phone .bk-cast { left: 0; width: 100%; }
   .bk-phone .bk-book::before { display: none; }
@@ -4668,6 +4665,36 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   @keyframes bkPeelSm { 0%, 100% { width: 0; height: 0; } 35%, 60% { width: 52px; height: 52px; } }
 }
 
+/* Phones (iOS Safari safe): the book is one flat layer, so pages stack by z-index rather
+   than by 3D depth sorting; each leaf still turns in 3D under the book's own perspective.
+   No opacity on turning leaves (opacity flattens 3D in Safari and shows both faces), and the
+   stage clips anything that swings past the spine. The closed cover stays nearly straight. */
+.bk-phone .bk-book { transform-style: flat; -webkit-transform-style: flat; perspective: 2800px; -webkit-perspective: 2800px; }
+.bk-phone .bk-3d { display: none; }
+.bk-phone .bk-front { -webkit-transform: translateZ(0.1px); transform: translateZ(0.1px); }
+.bk-phone .bk-back { -webkit-transform: rotateY(180deg) translateZ(0.1px); transform: rotateY(180deg) translateZ(0.1px); }
+.bk-ready.bk-phone .bk-stage { -webkit-clip-path: inset(-30px -30px -30px 0); clip-path: inset(-30px -30px -30px 0); }
+.bk-ready.bk-phone[data-bk-state="closed-front"] .bk-book::after { opacity: 1; }
+.bk-phone[data-bk-state="closed-front"] .bk-book { transform: translateY(-10%) scale(0.8) rotateX(1deg) rotateY(-2deg); }
+@keyframes bkIdlePhone {
+  0%, 100% { transform: translateY(-10%) scale(0.8) rotateX(1deg) rotateY(-2deg); }
+  50% { transform: translateY(-10%) scale(0.8) rotateX(1.5deg) rotateY(-5deg); }
+}
+/* closed on a phone: the cover sits in the top 80% of the page frame and the Open button
+   takes the space below it, so cover and button are on screen together */
+.bk-ready.bk-phone[data-bk-state="closed-front"] .bk-stage::after { bottom: calc(20% - 22px); left: 14%; right: 14%; }
+.bk-ready.bk-phone .bk-opener { position: relative; z-index: 6; margin-top: calc(var(--bw) * -0.2667 + 6px); min-height: calc(var(--bw) * 0.2667 - 6px); }
+/* small pages (short phones): lower the type floors so every page still fits */
+@container (max-width: 300px) {
+  .bk-body, .bk-drop, .bk-about-lead { font-size: max(10.5px, 3.3cqw); line-height: 1.45; }
+  .bk-deck { font-size: max(11.5px, 4.3cqw); }
+  .bk-deck-sm { font-size: max(11px, 3.6cqw); }
+  .bk-deck-light { font-size: max(11px, 3.8cqw); }
+  .bk-founders dt { font-size: max(12px, 4.6cqw); }
+  .bk-about-approach { display: none; }
+  .bk-q p { font-size: max(10.5px, 3.4cqw); }
+}
+
 /* reduced motion: no flip, a quick crossfade instead */
 @media (prefers-reduced-motion: reduce) {
   .bk-leaf, .bk-book, .bk-stage::after, .bk-phone .bk-leaf, .bk-phone .bk-leaf.is-flipped { transition: none !important; }
@@ -4678,7 +4705,7 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
 @keyframes bkFade { from { opacity: 0.2; } to { opacity: 1; } }
 
 @media (max-width: 899px) {
-  .bk { --bw: min(460px, calc(100vw - 48px), calc((100vh - 360px) * 0.75), calc((100svh - 360px) * 0.75)); }
+  .bk { --bw: min(460px, calc(100vw - 40px), calc((100vh - 280px) * 0.75), calc((100svh - 280px) * 0.75)); }
   .bk-dots { display: none; }
   .bk-bar { display: block; width: 160px; height: 2px; margin: 8px auto 0; background: rgba(168, 158, 140, 0.35); }
   .bk-bar span { display: block; height: 100%; width: calc(var(--prog, 0) * 100%); background: var(--brown); transition: width 0.5s ease; }
@@ -4808,3 +4835,19 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   .mood-lightbox-next { font-size: 28px; }
 }
 
+
+/* Portfolio book in the Our Services slot (test page only for now): services sand background */
+.section-book.section-book--sand {
+  --bk-bg: var(--sand);
+  background: var(--sand);
+  border-top: 0;
+}
+.section-book--sand + .section-services { border-top: 1px solid rgba(168, 143, 104, 0.22); }
+
+/* short phone screens (Safari with its toolbars showing): drop the intro copy so the closed
+   book and its Open button fit on one screen */
+@media (max-width: 899px) and (max-height: 760px) {
+  .bk-intro-copy { display: none; }
+  .bk-intro-rule { margin-bottom: 12px; }
+  .bk { --bw: min(460px, calc(100vw - 40px), calc((100vh - 200px) * 0.75), calc((100svh - 200px) * 0.75)); }
+}

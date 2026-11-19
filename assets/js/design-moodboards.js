@@ -255,7 +255,7 @@
     // spine, page edges and back board show. A press that moves less than 6px stays a click.
     var ROT_Y = 45, ROT_X = 12, THRESH = 6;
     var rot = { y: 0, x: 0, v: 0 }, drag = null, inertiaRaf = null, returnTimer = null, suppressUntil = 0;
-    function baseAngles() { return { y: -14, x: 3 }; }
+    function baseAngles() { return mode === 'phone' ? { y: -2, x: 1 } : { y: -14, x: 3 }; }
     function currentAngles() {
       var t = window.getComputedStyle(bookEl).transform;
       if (!t || t === 'none' || !window.DOMMatrix) return baseAngles();
@@ -263,9 +263,10 @@
       return { y: Math.atan2(m.m31, m.m11) * 180 / Math.PI, x: Math.atan2(m.m23, m.m22) * 180 / Math.PI };
     }
     function applyRot() {
-      rot.y = Math.max(-ROT_Y, Math.min(ROT_Y, rot.y));
+      var lim = mode === 'phone' ? 28 : ROT_Y; // phones: keep the turned cover inside the frame
+      rot.y = Math.max(-lim, Math.min(lim, rot.y));
       rot.x = Math.max(-ROT_X, Math.min(ROT_X, rot.x));
-      bookEl.style.transform = (mode === 'desk' ? 'translateX(-25%) scale(0.9) ' : 'scale(0.95) ') +
+      bookEl.style.transform = (mode === 'desk' ? 'translateX(-25%) scale(0.9) ' : 'translateY(-10%) scale(0.8) ') +
         'rotateX(' + rot.x.toFixed(2) + 'deg) rotateY(' + rot.y.toFixed(2) + 'deg)' + (mode === 'desk' ? ' translateX(-25%)' : '');
     }
     function stopMotion() {
@@ -311,7 +312,8 @@
       (function tick() {
         rot.y += rot.v;
         rot.v *= 0.92;
-        if (rot.y > ROT_Y || rot.y < -ROT_Y) rot.v = 0;
+        var lim = mode === 'phone' ? 28 : ROT_Y;
+        if (rot.y > lim || rot.y < -lim) rot.v = 0;
         applyRot();
         if (Math.abs(rot.v) > 0.05) inertiaRaf = window.requestAnimationFrame(tick);
         else { inertiaRaf = null; scheduleReturn(900); }
