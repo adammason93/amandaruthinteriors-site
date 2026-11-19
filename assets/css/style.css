@@ -4098,6 +4098,7 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
 }
 .bk-hint .bk-hint-tag { opacity: 1; }
 .bk-turned .bk-hint-tag { opacity: 0; }
+.bk[data-bk-state="closed-front"] .bk-peel,
 .bk-desk[data-bk-state="closed-back"] .bk-peel,
 .bk-phone[data-bk-state="end"] .bk-peel { display: none; }
 
