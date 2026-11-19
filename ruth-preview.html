@@ -69,7 +69,7 @@
 <script>(function(){if(!("onpagereveal" in window)&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("pt-fade")})();</script>
 <link rel="preload" as="image" href="assets/images/hero-candle-poster.webp?v=25" media="not all and (max-width: 800px) and (max-aspect-ratio: 3/4)">
 <link rel="preload" as="image" href="assets/images/hero-candle-poster-mobile.webp?v=25" media="(max-width: 800px) and (max-aspect-ratio: 3/4)">
-<link rel="stylesheet" href="assets/css/style.css?v=29">
+<link rel="stylesheet" href="assets/css/style.css?v=30">
 
 </head>
 <body>
@@ -211,137 +211,157 @@
     <figcaption class="transform-note">Example before image — for preview only</figcaption>
   </figure>
 </section>
-<section class="section-design" id="design-reality" aria-labelledby="design-reality-title">
-  <p class="eyebrow">The work</p>
-  <h2 id="design-reality-title">FROM DESIGN TO REALITY</h2>
-  <p class="lede">Design drawings, shown beside the rooms they became.</p>
-  <div class="reality-list">
-    <article class="reality-card" data-reality-card>
-      <h3 class="reality-title">The Snug</h3>
-      <div class="reality-pair">
-        <figure class="reality-pane reality-design">
-          <figcaption class="reality-label">The design</figcaption>
-          <div class="reality-media">
+<section class="section-design dr" id="design-reality" aria-labelledby="design-reality-title" data-dr2>
+  <header class="dr-head">
+    <p class="eyebrow">The work</p>
+    <h2 id="design-reality-title">FROM DESIGN TO REALITY</h2>
+    <p class="lede">Every room starts life on paper. Here are three of Ruth&rsquo;s drawings, beside the rooms they became.</p>
+  </header>
+  <ol class="dr-list">
+    <li class="dr-room dr-left" data-dr-room>
+      <div class="dr-stage">
+        <figure class="dr-photo">
+          <div class="dr-photo-frame">
             <picture>
-              <source type="image/webp" srcset="assets/images/design-reality/snug-design-720.webp 720w, assets/images/design-reality/snug-design-1200.webp 1200w" sizes="(max-width: 800px) 92vw, 640px">
-              <img src="assets/images/design-reality/snug-design-720.webp" width="720" height="512" alt="Design drawing of a snug: a pale sectional sofa, nested coffee tables and a floor lamp against a dark slatted wall, with an abstract painting and wall lights" loading="lazy" decoding="async">
-            </picture>
-          </div>
-        </figure>
-        <figure class="reality-pane reality-finished">
-          <figcaption class="reality-label">The finished room</figcaption>
-          <div class="reality-media">
-            <picture>
-              <source type="image/webp" srcset="assets/images/design-reality/snug-finished-720.webp 720w, assets/images/design-reality/snug-finished-1200.webp 1200w" sizes="(max-width: 800px) 92vw, 420px">
+              <source type="image/webp" srcset="assets/images/design-reality/snug-finished-720.webp 720w, assets/images/design-reality/snug-finished-1200.webp 1200w" sizes="(max-width: 900px) 86vw, 560px">
               <img src="assets/images/design-reality/snug-finished-720.webp" width="720" height="900" alt="The finished snug, with a pale sectional sofa, dark slatted wall, abstract painting, glowing wall light and nested coffee tables" loading="lazy" decoding="async">
             </picture>
           </div>
+          <figcaption class="dr-tag dr-tag-photo">The finished room</figcaption>
         </figure>
-      </div>
-      <div class="reality-switch" data-reality-switch role="group" aria-label="Show the design or the finished room">
-        <button type="button" aria-pressed="true">The design</button>
-        <button type="button" aria-pressed="false">The finished room</button>
-      </div>
-    </article>
-    <article class="reality-card" data-reality-card>
-      <h3 class="reality-title">A Girl&rsquo;s Bedroom</h3>
-      <div class="reality-pair">
-        <figure class="reality-pane reality-design">
-          <figcaption class="reality-label">The design</figcaption>
-          <div class="reality-media">
+        <figure class="dr-drawing">
+          <button type="button" class="dr-paper" data-mood-open data-group="design" data-full="assets/images/design-reality/snug-design-1200.webp" data-caption="The Snug &middot; the design" aria-label="Enlarge the design drawing: The Snug">
             <picture>
-              <source type="image/webp" srcset="assets/images/design-reality/girls-design-720.webp 720w, assets/images/design-reality/girls-design-1200.webp 1200w" sizes="(max-width: 800px) 92vw, 640px">
-              <img src="assets/images/design-reality/girls-design-720.webp" width="720" height="505" alt="Elevation drawings of a girl&rsquo;s bedroom, including a pink-panelled bed wall with shelves, a window, dark doors and a dressing table with a round mirror" loading="lazy" decoding="async">
+              <source type="image/webp" srcset="assets/images/design-reality/snug-design-720.webp 720w, assets/images/design-reality/snug-design-1200.webp 1200w" sizes="(max-width: 900px) 74vw, 500px">
+              <img src="assets/images/design-reality/snug-design-720.webp" width="720" height="512" alt="Design drawing of a snug: a pale sectional sofa, nested coffee tables and a floor lamp against a dark slatted wall, with an abstract painting and wall lights" loading="lazy" decoding="async">
             </picture>
-          </div>
+            <span class="dr-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>
+          </button>
+          <figcaption class="dr-tag dr-tag-drawing">The design</figcaption>
         </figure>
-        <figure class="reality-pane reality-finished">
-          <figcaption class="reality-label">The finished room</figcaption>
-          <div class="reality-media">
+      </div>
+      <div class="dr-copy">
+        <span class="dr-num" aria-hidden="true">01</span>
+        <h3 class="dr-title">The Snug</h3>
+        <span class="dr-rule" aria-hidden="true"></span>
+        <p class="dr-text">A dark slatted feature wall, a deep pale sofa and soft brass light, planned on paper first.</p>
+        <p class="dr-steps"><span>The design</span><span class="dr-arrow" aria-hidden="true"></span><span>The finished room</span></p>
+      </div>
+    </li>
+    <li class="dr-room dr-right" data-dr-room>
+      <div class="dr-stage">
+        <figure class="dr-photo">
+          <div class="dr-photo-frame">
             <picture>
-              <source type="image/webp" srcset="assets/images/design-reality/girls-finished-720.webp 720w, assets/images/design-reality/girls-finished-1200.webp 1200w" sizes="(max-width: 800px) 92vw, 420px">
+              <source type="image/webp" srcset="assets/images/design-reality/girls-finished-720.webp 720w, assets/images/design-reality/girls-finished-1200.webp 1200w" sizes="(max-width: 900px) 86vw, 560px">
               <img src="assets/images/design-reality/girls-finished-720.webp" width="720" height="900" alt="The finished girl&rsquo;s bedroom, with blush-pink panelling, brass-bracketed shelves, a timber dressing table and a round gold-framed mirror" loading="lazy" decoding="async">
             </picture>
           </div>
+          <figcaption class="dr-tag dr-tag-photo">The finished room</figcaption>
         </figure>
-      </div>
-      <div class="reality-switch" data-reality-switch role="group" aria-label="Show the design or the finished room">
-        <button type="button" aria-pressed="true">The design</button>
-        <button type="button" aria-pressed="false">The finished room</button>
-      </div>
-    </article>
-    <article class="reality-card" data-reality-card>
-      <h3 class="reality-title">The Master En-suite</h3>
-      <div class="reality-pair">
-        <figure class="reality-pane reality-design">
-          <figcaption class="reality-label">The design</figcaption>
-          <div class="reality-media">
+        <figure class="dr-drawing">
+          <button type="button" class="dr-paper" data-mood-open data-group="design" data-full="assets/images/design-reality/girls-design-1200.webp" data-caption="A Girl&rsquo;s Bedroom &middot; the design" aria-label="Enlarge the design drawing: A Girl&rsquo;s Bedroom">
             <picture>
-              <source type="image/webp" srcset="assets/images/design-reality/ensuite-design-720.webp 720w, assets/images/design-reality/ensuite-design-1200.webp 1200w" sizes="(max-width: 800px) 92vw, 640px">
-              <img src="assets/images/design-reality/ensuite-design-720.webp" width="720" height="511" alt="Elevation drawings of a master en-suite, showing a marble shower, a double vanity with two mirrors, a freestanding bath and a panelled door" loading="lazy" decoding="async">
+              <source type="image/webp" srcset="assets/images/design-reality/girls-design-720.webp 720w, assets/images/design-reality/girls-design-1200.webp 1200w" sizes="(max-width: 900px) 74vw, 500px">
+              <img src="assets/images/design-reality/girls-design-720.webp" width="720" height="505" alt="Elevation drawings of a girl&rsquo;s bedroom, including a pink-panelled bed wall with shelves, a window, dark doors and a dressing table with a round mirror" loading="lazy" decoding="async">
             </picture>
-          </div>
+            <span class="dr-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>
+          </button>
+          <figcaption class="dr-tag dr-tag-drawing">The design</figcaption>
         </figure>
-        <figure class="reality-pane reality-finished">
-          <figcaption class="reality-label">The finished room</figcaption>
-          <div class="reality-media">
+      </div>
+      <div class="dr-copy">
+        <span class="dr-num" aria-hidden="true">02</span>
+        <h3 class="dr-title">A Girl&rsquo;s Bedroom</h3>
+        <span class="dr-rule" aria-hidden="true"></span>
+        <p class="dr-text">Blush-pink panelling, floating shelves and a dressing table with a round gold mirror.</p>
+        <p class="dr-steps"><span>The design</span><span class="dr-arrow" aria-hidden="true"></span><span>The finished room</span></p>
+      </div>
+    </li>
+    <li class="dr-room dr-left" data-dr-room>
+      <div class="dr-stage">
+        <figure class="dr-photo">
+          <div class="dr-photo-frame">
             <picture>
-              <source type="image/webp" srcset="assets/images/design-reality/ensuite-finished-720.webp 720w, assets/images/design-reality/ensuite-finished-1200.webp 1200w" sizes="(max-width: 800px) 92vw, 420px">
+              <source type="image/webp" srcset="assets/images/design-reality/ensuite-finished-720.webp 720w, assets/images/design-reality/ensuite-finished-1200.webp 1200w" sizes="(max-width: 900px) 86vw, 560px">
               <img src="assets/images/design-reality/ensuite-finished-720.webp" width="720" height="900" alt="The finished master en-suite, with a marble double vanity, two brass-framed mirrors, wall-mounted taps and a glass shower" loading="lazy" decoding="async">
             </picture>
           </div>
+          <figcaption class="dr-tag dr-tag-photo">The finished room</figcaption>
+        </figure>
+        <figure class="dr-drawing">
+          <button type="button" class="dr-paper" data-mood-open data-group="design" data-full="assets/images/design-reality/ensuite-design-1200.webp" data-caption="The Master En-suite &middot; the design" aria-label="Enlarge the design drawing: The Master En-suite">
+            <picture>
+              <source type="image/webp" srcset="assets/images/design-reality/ensuite-design-720.webp 720w, assets/images/design-reality/ensuite-design-1200.webp 1200w" sizes="(max-width: 900px) 74vw, 500px">
+              <img src="assets/images/design-reality/ensuite-design-720.webp" width="720" height="511" alt="Elevation drawings of a master en-suite, showing a marble shower, a double vanity with two mirrors, a freestanding bath and a panelled door" loading="lazy" decoding="async">
+            </picture>
+            <span class="dr-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>
+          </button>
+          <figcaption class="dr-tag dr-tag-drawing">The design</figcaption>
         </figure>
       </div>
-      <div class="reality-switch" data-reality-switch role="group" aria-label="Show the design or the finished room">
-        <button type="button" aria-pressed="true">The design</button>
-        <button type="button" aria-pressed="false">The finished room</button>
+      <div class="dr-copy">
+        <span class="dr-num" aria-hidden="true">03</span>
+        <h3 class="dr-title">The Master En-suite</h3>
+        <span class="dr-rule" aria-hidden="true"></span>
+        <p class="dr-text">Marble, brass-framed mirrors and a double vanity, worked out elevation by elevation.</p>
+        <p class="dr-steps"><span>The design</span><span class="dr-arrow" aria-hidden="true"></span><span>The finished room</span></p>
       </div>
-    </article>
-  </div>
+    </li>
+  </ol>
+  <p class="dr-note">Drawings and photographs are taken from different viewpoints. Tap a drawing to see it full size.</p>
 </section>
-<section class="section-moods" id="mood-boards" aria-labelledby="mood-boards-title">
-  <p class="eyebrow">The scheme</p>
-  <h2 id="mood-boards-title">MOOD BOARDS</h2>
-  <p class="lede">Every project begins with a carefully curated scheme.</p>
-  <div class="mood-strip-wrap">
-    <ul class="mood-strip">
-      <li>
-        <button type="button" class="mood-card" data-mood-open data-full="assets/images/moodboards/living-room-1200.webp" data-caption="Living room proposal">
-          <img src="assets/images/moodboards/living-room-720.webp" srcset="assets/images/moodboards/living-room-720.webp 720w, assets/images/moodboards/living-room-1200.webp 1200w" sizes="(max-width: 900px) 78vw, 360px" width="720" height="513" alt="Mood board titled Living Room Proposal, with a pale sofa, grey chairs, a marble coffee table, a sideboard with lamps and a round mirror" loading="lazy" decoding="async">
-          <span class="mood-name">Living room</span>
-        </button>
-      </li>
-      <li>
-        <button type="button" class="mood-card" data-mood-open data-full="assets/images/moodboards/mens-bathroom-1200.webp" data-caption="Men&rsquo;s bathroom concept">
-          <img src="assets/images/moodboards/mens-bathroom-720.webp" srcset="assets/images/moodboards/mens-bathroom-720.webp 720w, assets/images/moodboards/mens-bathroom-1200.webp 1200w" sizes="(max-width: 900px) 78vw, 360px" width="720" height="498" alt="Mood board for a men&rsquo;s bathroom concept, with a dark vanity, an oval mirror, smoked-glass tiles, a black tap and a fluted wall light" loading="lazy" decoding="async">
-          <span class="mood-name">Men&rsquo;s bathroom</span>
-        </button>
-      </li>
-      <li>
-        <button type="button" class="mood-card" data-mood-open data-full="assets/images/moodboards/ladies-bathroom-916.webp" data-caption="Ladies&rsquo; bathroom concept">
-          <img src="assets/images/moodboards/ladies-bathroom-720.webp" srcset="assets/images/moodboards/ladies-bathroom-720.webp 720w, assets/images/moodboards/ladies-bathroom-916.webp 916w" sizes="(max-width: 900px) 78vw, 360px" width="720" height="509" alt="Mood board for a ladies&rsquo; bathroom concept, with a dark timber vanity, a bronze oval mirror, a bronze tap and a fluted wall light" loading="lazy" decoding="async">
-          <span class="mood-name">Ladies&rsquo; bathroom</span>
-        </button>
-      </li>
-      <li>
-        <button type="button" class="mood-card" data-mood-open data-full="assets/images/moodboards/vanity-design-904.webp" data-caption="Vanity design">
-          <img src="assets/images/moodboards/vanity-design-720.webp" srcset="assets/images/moodboards/vanity-design-720.webp 720w, assets/images/moodboards/vanity-design-904.webp 904w" sizes="(max-width: 900px) 78vw, 360px" width="720" height="508" alt="Annotated vanity design, with a dark timber vanity, two bronze oval mirrors, wall lights and labelled fittings" loading="lazy" decoding="async">
-          <span class="mood-name">Vanity design</span>
-        </button>
-      </li>
-      <li>
-        <button type="button" class="mood-card" data-mood-open data-full="assets/images/moodboards/downstairs-wc-896.webp" data-caption="Downstairs WC">
-          <img src="assets/images/moodboards/downstairs-wc-720.webp" srcset="assets/images/moodboards/downstairs-wc-720.webp 720w, assets/images/moodboards/downstairs-wc-896.webp 896w" sizes="(max-width: 900px) 78vw, 360px" width="720" height="514" alt="Mood board for a downstairs WC, with a back-lit mirror, dark marble, black taps and a black toilet" loading="lazy" decoding="async">
-          <span class="mood-name">Downstairs WC</span>
-        </button>
-      </li>
-      <li>
-        <button type="button" class="mood-card" data-mood-open data-full="assets/images/moodboards/toilet-area-899.webp" data-caption="Toilet area">
-          <img src="assets/images/moodboards/toilet-area-720.webp" srcset="assets/images/moodboards/toilet-area-720.webp 720w, assets/images/moodboards/toilet-area-899.webp 899w" sizes="(max-width: 900px) 78vw, 360px" width="720" height="510" alt="Mood board for a toilet area, showing a concealed cistern, a floor-mounted toilet and bronze accessories" loading="lazy" decoding="async">
-          <span class="mood-name">Toilet area</span>
-        </button>
-      </li>
-    </ul>
+<section class="section-moods mb" id="mood-boards" aria-labelledby="mood-boards-title" data-mb2>
+  <div class="mb-inner">
+  <header class="mb-head">
+    <p class="eyebrow">The scheme</p>
+    <h2 id="mood-boards-title">MOOD BOARDS</h2>
+    <p class="lede">Every project begins with a carefully curated scheme: finishes, fittings and furniture, gathered together on one board.</p>
+  </header>
+  <ul class="mb-wall" data-mb-wall>
+    <li class="mb-item mb-item-1 mb-feature">
+      <button type="button" class="mb-card" data-mood-open data-group="moods" data-full="assets/images/moodboards/living-room-1200.webp" data-caption="Living room proposal">
+        <span class="mb-tape" aria-hidden="true"></span>
+        <img src="assets/images/moodboards/living-room-720.webp" srcset="assets/images/moodboards/living-room-720.webp 720w, assets/images/moodboards/living-room-1200.webp 1200w" sizes="(max-width: 900px) 84vw, 680px" width="720" height="513" alt="Mood board titled Living Room Proposal, with a pale sofa, grey chairs, a marble coffee table, a sideboard with lamps and a round mirror" loading="lazy" decoding="async">
+        <span class="mb-caption"><span class="mb-no">No. 01</span><span class="mb-name">Living room</span></span>
+      </button>
+    </li>
+    <li class="mb-item mb-item-2">
+      <button type="button" class="mb-card" data-mood-open data-group="moods" data-full="assets/images/moodboards/mens-bathroom-1200.webp" data-caption="Men&rsquo;s bathroom concept">
+        <span class="mb-tape" aria-hidden="true"></span>
+        <img src="assets/images/moodboards/mens-bathroom-720.webp" srcset="assets/images/moodboards/mens-bathroom-720.webp 720w, assets/images/moodboards/mens-bathroom-1200.webp 1200w" sizes="(max-width: 900px) 78vw, 420px" width="720" height="498" alt="Mood board for a men&rsquo;s bathroom concept, with a dark vanity, an oval mirror, smoked-glass tiles, a black tap and a fluted wall light" loading="lazy" decoding="async">
+        <span class="mb-caption"><span class="mb-no">No. 02</span><span class="mb-name">Men&rsquo;s bathroom</span></span>
+      </button>
+    </li>
+    <li class="mb-item mb-item-3">
+      <button type="button" class="mb-card" data-mood-open data-group="moods" data-full="assets/images/moodboards/ladies-bathroom-916.webp" data-caption="Ladies&rsquo; bathroom concept">
+        <span class="mb-tape" aria-hidden="true"></span>
+        <img src="assets/images/moodboards/ladies-bathroom-720.webp" srcset="assets/images/moodboards/ladies-bathroom-720.webp 720w, assets/images/moodboards/ladies-bathroom-916.webp 916w" sizes="(max-width: 900px) 78vw, 420px" width="720" height="509" alt="Mood board for a ladies&rsquo; bathroom concept, with a dark timber vanity, a bronze oval mirror, a bronze tap and a fluted wall light" loading="lazy" decoding="async">
+        <span class="mb-caption"><span class="mb-no">No. 03</span><span class="mb-name">Ladies&rsquo; bathroom</span></span>
+      </button>
+    </li>
+    <li class="mb-item mb-item-4">
+      <button type="button" class="mb-card" data-mood-open data-group="moods" data-full="assets/images/moodboards/vanity-design-904.webp" data-caption="Vanity design">
+        <span class="mb-tape" aria-hidden="true"></span>
+        <img src="assets/images/moodboards/vanity-design-720.webp" srcset="assets/images/moodboards/vanity-design-720.webp 720w, assets/images/moodboards/vanity-design-904.webp 904w" sizes="(max-width: 900px) 78vw, 420px" width="720" height="508" alt="Annotated vanity design, with a dark timber vanity, two bronze oval mirrors, wall lights and labelled fittings" loading="lazy" decoding="async">
+        <span class="mb-caption"><span class="mb-no">No. 04</span><span class="mb-name">Vanity design</span></span>
+      </button>
+    </li>
+    <li class="mb-item mb-item-5">
+      <button type="button" class="mb-card" data-mood-open data-group="moods" data-full="assets/images/moodboards/downstairs-wc-896.webp" data-caption="Downstairs WC">
+        <span class="mb-tape" aria-hidden="true"></span>
+        <img src="assets/images/moodboards/downstairs-wc-720.webp" srcset="assets/images/moodboards/downstairs-wc-720.webp 720w, assets/images/moodboards/downstairs-wc-896.webp 896w" sizes="(max-width: 900px) 78vw, 420px" width="720" height="514" alt="Mood board for a downstairs WC, with a back-lit mirror, dark marble, black taps and a black toilet" loading="lazy" decoding="async">
+        <span class="mb-caption"><span class="mb-no">No. 05</span><span class="mb-name">Downstairs WC</span></span>
+      </button>
+    </li>
+    <li class="mb-item mb-item-6">
+      <button type="button" class="mb-card" data-mood-open data-group="moods" data-full="assets/images/moodboards/toilet-area-899.webp" data-caption="Toilet area">
+        <span class="mb-tape" aria-hidden="true"></span>
+        <img src="assets/images/moodboards/toilet-area-720.webp" srcset="assets/images/moodboards/toilet-area-720.webp 720w, assets/images/moodboards/toilet-area-899.webp 899w" sizes="(max-width: 900px) 78vw, 420px" width="720" height="510" alt="Mood board for a toilet area, showing a concealed cistern, a floor-mounted toilet and bronze accessories" loading="lazy" decoding="async">
+        <span class="mb-caption"><span class="mb-no">No. 06</span><span class="mb-name">Toilet area</span></span>
+      </button>
+    </li>
+  </ul>
   </div>
 </section>
 <section class="section-quote" data-reviews aria-roledescription="carousel" aria-labelledby="reviews-title">
@@ -469,6 +489,6 @@
 <script src="assets/js/signature.js?v=26" defer></script>
 <script src="assets/js/before-after.js?v=28" defer></script>
 <script src="assets/js/reviews.js?v=27" defer></script>
-<script src="assets/js/design-moodboards.js?v=29" defer></script>
+<script src="assets/js/design-moodboards.js?v=30" defer></script>
 </body>
 </html>

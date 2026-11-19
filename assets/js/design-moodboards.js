@@ -1,5 +1,6 @@
-/* Home: From Design to Reality crossfade, and Mood Boards lightbox.
-   Reduced motion: no auto-crossfade; both images stay visible on small screens. */
+/* Test page: From Design to Reality (wipe-in reveal + scroll parallax),
+   Mood Boards pin wall (staggered scroll-in) and a shared lightbox.
+   Reduced motion: everything shows at rest, with no reveal or parallax. */
 (function () {
   var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
 
@@ -8,59 +9,61 @@
   }
 
   function designReality() {
-    var section = document.querySelector('.section-design');
-    var cards = Array.prototype.slice.call(document.querySelectorAll('[data-reality-card]'));
-    if (!section || !cards.length) return;
+    var section = document.querySelector('[data-dr2]');
+    var rooms = Array.prototype.slice.call(document.querySelectorAll('[data-dr-room]'));
+    if (!section || !rooms.length) return;
+    if (reduced() || !('IntersectionObserver' in window)) return;
 
-    section.classList.add('is-ready');
+    section.classList.add('dr-motion');
 
-    cards.forEach(function (card) {
-      var buttons = Array.prototype.slice.call(card.querySelectorAll('[data-reality-switch] button'));
-      var pair = card.querySelector('.reality-pair');
-      var userTouched = false;
-      var revealed = false;
-
-      function showFinished(on) {
-        card.classList.toggle('is-finished', on);
-        buttons.forEach(function (btn, i) {
-          var pressed = (i === 1) === on;
-          btn.setAttribute('aria-pressed', pressed ? 'true' : 'false');
-        });
-      }
-
-      showFinished(false);
-
-      buttons.forEach(function (btn, i) {
-        btn.addEventListener('click', function () {
-          userTouched = true;
-          showFinished(i === 1);
-        });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-in');
+        io.unobserve(entry.target);
       });
+    }, { threshold: 0.22, rootMargin: '0px 0px -6% 0px' });
+    rooms.forEach(function (room) { io.observe(room); });
 
-      if (pair) {
-        pair.addEventListener('click', function (e) {
-          if (e.target.closest('[data-reality-switch]')) return;
-          if (window.matchMedia && !window.matchMedia('(max-width: 800px)').matches) return;
-          if (reduced()) return;
-          userTouched = true;
-          showFinished(!card.classList.contains('is-finished'));
-        });
-      }
+    // Scroll parallax: --p runs 0 to 1 as each room travels up the screen.
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      rooms.forEach(function (room) {
+        var r = room.getBoundingClientRect();
+        if (r.bottom < -200 || r.top > vh + 200) return;
+        var p = (vh - r.top) / (vh + r.height);
+        p = Math.max(0, Math.min(1, p));
+        room.style.setProperty('--p', p.toFixed(3));
+      });
+    }
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+  }
 
-      if (reduced() || !('IntersectionObserver' in window)) return;
-
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting || revealed || userTouched) return;
-          revealed = true;
-          io.unobserve(card);
-          window.setTimeout(function () {
-            if (!userTouched && !reduced()) showFinished(true);
-          }, 650);
-        });
-      }, { threshold: 0.4, rootMargin: '0px 0px -8% 0px' });
-      io.observe(card);
-    });
+  function moodWall() {
+    var wall = document.querySelector('[data-mb-wall]');
+    if (!wall) return;
+    if (reduced() || !('IntersectionObserver' in window)) return;
+    var section = wall.closest('.section-moods');
+    if (section) section.classList.add('mb-motion');
+    var items = Array.prototype.slice.call(wall.querySelectorAll('.mb-item'));
+    var io = new IntersectionObserver(function (entries) {
+      var batch = entries.filter(function (e) { return e.isIntersecting; });
+      batch.forEach(function (entry, i) {
+        entry.target.style.setProperty('--d', (i * 140) + 'ms');
+        entry.target.classList.add('is-in');
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -6% 0px' });
+    items.forEach(function (it) { io.observe(it); });
   }
 
   function moodLightbox() {
@@ -89,13 +92,11 @@
     var index = 0;
     var lastFocus = null;
 
-    function item(i) {
-      return triggers[(i + triggers.length) % triggers.length];
-    }
+    var group = triggers;
 
     function show(i) {
-      index = (i + triggers.length) % triggers.length;
-      var t = item(index);
+      index = (i + group.length) % group.length;
+      var t = group[index];
       var img = t.querySelector('img');
       lbImg.src = t.getAttribute('data-full') || (img && (img.currentSrc || img.src)) || '';
       var caption = t.getAttribute('data-caption') || (img && img.getAttribute('alt')) || '';
@@ -104,9 +105,17 @@
       lbCap.hidden = !caption;
     }
 
-    function open(i) {
+    function open(trigger) {
       lastFocus = document.activeElement;
-      show(i);
+      var g = trigger.getAttribute('data-group') || '';
+      group = triggers.filter(function (t) { return (t.getAttribute('data-group') || '') === g; });
+      var many = group.length > 1;
+      btnPrev.hidden = !many;
+      btnNext.hidden = !many;
+      lb.setAttribute('aria-label', g === 'design' ? 'Design drawing' : 'Mood board');
+      btnPrev.setAttribute('aria-label', g === 'design' ? 'Previous drawing' : 'Previous mood board');
+      btnNext.setAttribute('aria-label', g === 'design' ? 'Next drawing' : 'Next mood board');
+      show(group.indexOf(trigger));
       lb.removeAttribute('hidden');
       document.body.classList.add('lightbox-open');
       btnClose.focus();
@@ -120,8 +129,8 @@
       if (lastFocus && lastFocus.focus) lastFocus.focus();
     }
 
-    triggers.forEach(function (t, i) {
-      t.addEventListener('click', function () { open(i); });
+    triggers.forEach(function (t) {
+      t.addEventListener('click', function () { open(t); });
     });
 
     btnClose.addEventListener('click', close);
@@ -137,15 +146,16 @@
       else if (e.key === 'ArrowLeft') { e.preventDefault(); show(index - 1); }
       else if (e.key === 'ArrowRight') { e.preventDefault(); show(index + 1); }
       else if (e.key === 'Tab') {
-        var first = focusables[0];
-        var last = focusables[focusables.length - 1];
+        var live = focusables.filter(function (b) { return !b.hidden; });
+        var first = live[0];
+        var last = live[live.length - 1];
         if (e.shiftKey && document.activeElement === first) {
           e.preventDefault();
           last.focus();
         } else if (!e.shiftKey && document.activeElement === last) {
           e.preventDefault();
           first.focus();
-        } else if (focusables.indexOf(document.activeElement) === -1) {
+        } else if (live.indexOf(document.activeElement) === -1) {
           e.preventDefault();
           first.focus();
         }
@@ -172,5 +182,6 @@
   }
 
   designReality();
+  moodWall();
   moodLightbox();
 })();
