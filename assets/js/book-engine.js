@@ -1,0 +1,577 @@
+/* Reusable Amanda Ruth portfolio book (3D page turns).
+   Live index.html keeps loading assets/js/design-moodboards.js?v=36 and must not
+   load this file. Call window.initAmandaRuthBook(root, options) on a [data-book]
+   element whose pages already live in [data-bk-pages].
+   options.mergeSpreadFaces: on phones, skip [data-bk-spread] right-hand faces so
+   a landscape board is one page, not two halves.
+   options.nudgeOnStart: play the v2 cover nudge after the book is mounted.
+   Returns { destroy, goTo, step, nudge, root }. */
+(function () {
+  var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var wide = window.matchMedia ? window.matchMedia('(min-width: 900px)') : null;
+
+  function reduced() {
+    return !!(reduce && reduce.matches);
+  }
+
+  function initAmandaRuthBook(root, options) {
+    if (!root) return null;
+    options = options || {};
+    var bookEl = root.querySelector('[data-bk-book]');
+    var store = root.querySelector('[data-bk-pages]');
+    if (!bookEl || !store) return null;
+    function allFaces() { return Array.prototype.slice.call(store.querySelectorAll('.bk-page')); }
+    var faces = [];
+    var ac = new AbortController();
+    var onEvt = { signal: ac.signal };
+    function clearLeafTimers() {
+      leaves.forEach(function (l) { window.clearTimeout(l._t); });
+    }
+    var btnPrev = root.querySelector('[data-bk-prev]');
+    var btnNext = root.querySelector('[data-bk-next]');
+    var btnClose = root.querySelector('[data-bk-close]');
+    var dotsEl = root.querySelector('[data-bk-dots]');
+    var countEl = root.querySelector('[data-bk-count]');
+    var live = root.querySelector('[data-bk-live]');
+    var DUR = 950;
+    var mode = '';
+    var leaves = [];
+    var k = 0;          // leaves turned
+    var maxK = 0;
+    var seq = 0;
+    var hinted = false;
+    var turnedOnce = false;
+    var announce = false;
+    // Book v2 (test page only, marked with data-book-v2): page dots per spread on phones too,
+    // a one-off cover nudge, and video pages that play only while their spread is open.
+    var v2 = root.hasAttribute('data-book-v2');
+    var inView = false;
+
+
+    function isDesk() { return !wide || wide.matches; }
+
+    function blankBack() {
+      var b = document.createElement('div');
+      b.className = 'bk-page bk-paper bk-blank';
+      b.setAttribute('aria-hidden', 'true');
+      return b;
+    }
+
+    function side(cls, face) {
+      var d = document.createElement('div');
+      d.className = 'bk-side ' + cls;
+      if (face) d.appendChild(face);
+      return d;
+    }
+
+    function spreadDotsMode() {
+      return v2 && !(options.mergeSpreadFaces && mode === 'phone');
+    }
+
+    function build() {
+      var want = isDesk() ? 'desk' : 'phone';
+      if (want === mode) return;
+      // keep the reader on roughly the same page across the switch
+      var facePos = mode === 'desk' ? Math.max(0, 2 * k - 1) : (mode === 'phone' ? k : 0);
+      leaves.forEach(function (l) { l.remove(); });
+      leaves = [];
+      allFaces().forEach(function (f) { store.appendChild(f); });
+      mode = want;
+      faces = allFaces();
+      if (options.mergeSpreadFaces && mode === 'phone') {
+        faces = faces.filter(function (f) { return !f.hasAttribute('data-bk-spread'); });
+      }
+      root.classList.toggle('bk-desk', mode === 'desk');
+      root.classList.toggle('bk-phone', mode === 'phone');
+      if (mode === 'desk') {
+        for (var i = 0; i < faces.length; i += 2) {
+          var leaf = document.createElement('div');
+          leaf.className = 'bk-leaf';
+          leaf.appendChild(side('bk-front', faces[i]));
+          leaf.appendChild(side('bk-back', faces[i + 1] || blankBack()));
+          leaves.push(leaf);
+        }
+        maxK = leaves.length;
+        k = Math.min(maxK, Math.ceil(facePos / 2));
+      } else {
+        faces.forEach(function (f) {
+          var leaf = document.createElement('div');
+          leaf.className = 'bk-leaf';
+          leaf.appendChild(side('bk-front', f));
+          leaf.appendChild(side('bk-back', blankBack()));
+          leaves.push(leaf);
+        });
+        maxK = leaves.length - 1;
+        k = Math.min(maxK, facePos);
+      }
+      leaves.forEach(function (l, i) {
+        if (i < k) l.classList.add('is-flipped');
+        bookEl.insertBefore(l, store);
+      });
+      root.classList.add('bk-ready');
+      buildDots();
+      settle();
+    }
+
+    function stops() { return maxK + 1; }
+
+    function stopLabel(i) {
+      if (mode === 'phone') return faces[i].getAttribute('data-bk-label');
+      if (i === 0) return 'Cover';
+      if (i === maxK) return 'Back cover';
+      var l = faces[2 * i - 1], r = faces[2 * i];
+      return (r && r.getAttribute('data-bk-spread')) || l.getAttribute('data-bk-label');
+    }
+
+    function countText() {
+      if (mode === 'phone') {
+        if (k === 0) return 'Cover';
+        if (k === maxK) return 'Back cover';
+        return 'Page ' + k + ' of ' + (maxK - 1);
+      }
+      if (k === 0) return 'Cover';
+      if (k === maxK) return 'Back cover';
+      return 'Pages ' + (2 * k - 1) + '\u2013' + (2 * k) + ' of ' + (faces.length - 2);
+    }
+
+    // v2: one dot per two-page spread in both layouts (cover, spreads, back cover)
+    function spreadStops() { return spreadDotsMode() ? Math.ceil(faces.length / 2) + 1 : stops(); }
+    function spreadLabel(i) {
+      if (!spreadDotsMode()) return stopLabel(i);
+      if (i === 0) return 'Cover';
+      if (i === spreadStops() - 1) return 'Back cover';
+      var l = faces[2 * i - 1], r = faces[2 * i];
+      return (r && r.getAttribute('data-bk-spread')) || (l && l.getAttribute('data-bk-label')) || ('Spread ' + i);
+    }
+    function currentSpread() { return (!spreadDotsMode() || mode === 'desk') ? k : Math.ceil(k / 2); }
+    function spreadTarget(s) { return (!spreadDotsMode() || mode === 'desk') ? s : (s === 0 ? 0 : Math.min(maxK, 2 * s - 1)); }
+
+    function buildDots() {
+      dotsEl.innerHTML = '';
+      if (spreadDotsMode()) {
+        for (var s = 0; s < spreadStops(); s++) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'bk-dot';
+          b.setAttribute('aria-label', 'Go to ' + spreadLabel(s).replace(/&rsquo;/g, '\u2019') + ' (' + (s + 1) + ' of ' + spreadStops() + ')');
+          (function (n) { b.addEventListener('click', function () { goTo(spreadTarget(n), mode === 'phone' ? 70 : 130); }, onEvt); })(s);
+          dotsEl.appendChild(b);
+        }
+        return;
+      }
+      for (var i = 0; i < stops(); i++) {
+        var d = document.createElement('button');
+        d.type = 'button';
+        d.className = 'bk-dot';
+        d.setAttribute('aria-label', 'Go to ' + stopLabel(i).replace(/&rsquo;/g, '\u2019'));
+        (function (n) { d.addEventListener('click', function () { goTo(n); }, onEvt); })(i);
+        dotsEl.appendChild(d);
+      }
+    }
+
+    function visibleFaces() {
+      if (mode === 'phone') return [k];
+      return [2 * k - 1, 2 * k];
+    }
+
+    function loadAround() {
+      var lo, hi;
+      if (mode === 'phone') { lo = k - 1; hi = k + 2; }
+      else { lo = 2 * k - 3; hi = 2 * k + 4; }
+      for (var i = Math.max(0, lo); i <= Math.min(faces.length - 1, hi); i++) {
+        faces[i].querySelectorAll('img[data-src]').forEach(function (img) {
+          if (img.getAttribute('data-srcset')) img.srcset = img.getAttribute('data-srcset');
+          img.src = img.getAttribute('data-src');
+          img.removeAttribute('data-src');
+          img.removeAttribute('data-srcset');
+        });
+        if (v2) faces[i].querySelectorAll('video[data-src]').forEach(function (v) {
+          v.src = v.getAttribute('data-src');
+          v.removeAttribute('data-src');
+          v.load();
+        });
+      }
+    }
+
+    // v2 video pages: play only while the page is showing and the book is on screen;
+    // reduced motion keeps the poster and never autoplays.
+    function syncVideos() {
+      if (!v2) return;
+      var vis = visibleFaces();
+      faces.forEach(function (f, i) {
+        f.querySelectorAll('video').forEach(function (v) {
+          var go = vis.indexOf(i) !== -1 && inView && !reduced() && !v.hasAttribute('data-src');
+          if (go) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); }
+          else if (!v.paused) v.pause();
+        });
+      });
+    }
+    if (v2) allFaces().forEach(function (f, i) {
+      f.querySelectorAll('video').forEach(function (v) {
+        v.muted = true;
+        v.setAttribute('playsinline', '');
+        if (reduced()) { v.removeAttribute('autoplay'); v.autoplay = false; }
+        v.addEventListener('play', function () {
+          if (reduced() || !inView || visibleFaces().indexOf(faces.indexOf(f)) === -1) v.pause();
+        });
+      });
+    });
+
+    function restack() {
+      leaves.forEach(function (l, i) {
+        if (l.classList.contains('is-turning')) return;
+        l.style.zIndex = l.classList.contains('is-flipped') ? (i + 1) : (leaves.length - i + 1);
+      });
+    }
+
+    function settle() {
+      var vis = visibleFaces();
+      faces.forEach(function (f, i) {
+        var on = vis.indexOf(i) !== -1;
+        f.toggleAttribute('inert', !on);
+        if (on) f.removeAttribute('aria-hidden'); else f.setAttribute('aria-hidden', 'true');
+      });
+      restack();
+      faces.forEach(function (f, i) {
+        if (f._sig === undefined) f._sig = !!f.querySelector('.bk-sig');
+        if (f._sig) f.classList.toggle('bk-sig-on', vis.indexOf(i) !== -1);
+      });
+      var state = mode === 'desk' ? (k === 0 ? 'closed-front' : (k === maxK ? 'closed-back' : 'open')) : (k === 0 ? 'closed-front' : (k === maxK ? 'end' : 'open'));
+      root.setAttribute('data-bk-state', state);
+      var flipped = k, remain = leaves.length - k;
+      bookEl.style.setProperty('--ls', String(mode === 'desk' ? Math.max(0, flipped - 1) : 0));
+      bookEl.style.setProperty('--rs', String(mode === 'desk' ? Math.max(0, remain - 1) : Math.max(0, maxK - k)));
+      btnPrev.disabled = k === 0;
+      btnNext.disabled = k === maxK;
+      if (btnClose) {
+        var shut = k === 0;
+        btnClose.classList.toggle('is-hidden', shut);
+        btnClose.setAttribute('aria-hidden', shut ? 'true' : 'false');
+        btnClose.tabIndex = shut ? -1 : 0;
+      }
+      Array.prototype.forEach.call(dotsEl.children, function (d, i) {
+        if (i === currentSpread()) d.setAttribute('aria-current', 'page'); else d.removeAttribute('aria-current');
+      });
+      countEl.textContent = countText();
+      root.style.setProperty('--prog', maxK ? (k / maxK).toFixed(3) : '0');
+      if (announce) live.textContent = countText() + ': ' + stopLabel(k).replace(/&rsquo;/g, '\u2019');
+      loadAround();
+      syncVideos();
+    }
+
+    function turn(leaf, forward) {
+      seq += 1;
+      leaf.classList.remove('turn-fwd', 'turn-back');
+      void leaf.offsetWidth;
+      leaf.classList.add('is-turning', forward ? 'turn-fwd' : 'turn-back');
+      leaf.style.zIndex = String(leaves.length + 10 + seq);
+      leaf.classList.toggle('is-flipped', forward);
+      if (reduced()) {
+        root.classList.remove('bk-fade');
+        void root.offsetWidth;
+        root.classList.add('bk-fade');
+      }
+      window.clearTimeout(leaf._t);
+      leaf._t = window.setTimeout(function () {
+        leaf.classList.remove('is-turning', 'turn-fwd', 'turn-back');
+        restack();
+      }, reduced() ? 20 : DUR + 60);
+    }
+
+    // Idle sway on the closed cover (technique after a CSS 3D shelf book): freeze the
+    // swaying angle before opening so the cover turns from where it is, then sway again
+    // only once the book has settled closed.
+    var idleTimer = null;
+    function idleOff() {
+      window.clearTimeout(idleTimer);
+      if (!root.classList.contains('bk-idle')) return;
+      var t = window.getComputedStyle(bookEl).transform;
+      bookEl.style.transform = t === 'none' ? '' : t;
+      root.classList.remove('bk-idle');
+      void bookEl.offsetWidth;
+      bookEl.style.transform = '';
+    }
+    function idleOnLater() {
+      window.clearTimeout(idleTimer);
+      if (reduced()) return;
+      idleTimer = window.setTimeout(function () {
+        if (k === 0) root.classList.add('bk-idle');
+      }, DUR + 150);
+    }
+
+    function step(dir) {
+      if (v2) leaves.forEach(function (l) { l.classList.remove('bk-nudging'); });
+      if (k === 0) { idleOff(); releaseDrag(); }
+      if (dir > 0 && k < maxK) { turn(leaves[k], true); k += 1; }
+      else if (dir < 0 && k > 0) { k -= 1; turn(leaves[k], false); }
+      else return false;
+      announce = true;
+      if (k === 0) idleOnLater();
+      if (!turnedOnce) { turnedOnce = true; root.classList.remove('bk-hint'); root.classList.add('bk-turned'); }
+      settle();
+      return true;
+    }
+
+    var jumpTimer = null;
+    function goTo(target, gap) {
+      window.clearTimeout(jumpTimer);
+      gap = gap == null ? 130 : gap;
+      target = Math.max(0, Math.min(maxK, target));
+      (function next() {
+        if (k === target) return;
+        step(target > k ? 1 : -1);
+        jumpTimer = window.setTimeout(next, reduced() ? 0 : gap);
+      })();
+    }
+
+    function faceIndexToStop(fi) {
+      return mode === 'phone' ? fi : Math.ceil(fi / 2);
+    }
+
+    // Closed book: drag (mouse) or a mostly-horizontal swipe (touch) turns it in 3D so the
+    // spine, page edges and back board show. A press that moves less than 6px stays a click.
+    var ROT_Y = 45, ROT_X = 12, THRESH = 6;
+    var rot = { y: 0, x: 0, v: 0 }, drag = null, inertiaRaf = null, returnTimer = null, suppressUntil = 0;
+    function baseAngles() { return mode === 'phone' ? { y: -2, x: 1 } : { y: -14, x: 3 }; }
+    function currentAngles() {
+      var t = window.getComputedStyle(bookEl).transform;
+      if (!t || t === 'none' || !window.DOMMatrix) return baseAngles();
+      var m = new DOMMatrix(t);
+      return { y: Math.atan2(m.m31, m.m11) * 180 / Math.PI, x: Math.atan2(m.m23, m.m22) * 180 / Math.PI };
+    }
+    function applyRot() {
+      var lim = mode === 'phone' ? 28 : ROT_Y; // phones: keep the turned cover inside the frame
+      rot.y = Math.max(-lim, Math.min(lim, rot.y));
+      rot.x = Math.max(-ROT_X, Math.min(ROT_X, rot.x));
+      bookEl.style.transform = (mode === 'desk' ? 'translateX(-25%) scale(0.9) ' : 'translateY(-10%) scale(0.8) ') +
+        'rotateX(' + rot.x.toFixed(2) + 'deg) rotateY(' + rot.y.toFixed(2) + 'deg)' + (mode === 'desk' ? ' translateX(-25%)' : '');
+    }
+    function stopMotion() {
+      if (inertiaRaf) { window.cancelAnimationFrame(inertiaRaf); inertiaRaf = null; }
+      window.clearTimeout(returnTimer); window.clearTimeout(idleTimer);
+    }
+    function beginRotate() {
+      stopMotion();
+      if (!root.classList.contains('bk-dragging')) {
+        var a = currentAngles();
+        rot.y = a.y; rot.x = a.x;
+        root.classList.remove('bk-idle', 'bk-return');
+        root.classList.add('bk-dragging');
+        applyRot();
+      }
+    }
+    function scheduleReturn(delay) {
+      window.clearTimeout(returnTimer);
+      if (reduced()) return; // reduced motion: the book stays where it was turned
+      returnTimer = window.setTimeout(function () {
+        if (k !== 0 || drag) return;
+        root.classList.add('bk-return');
+        root.classList.remove('bk-dragging');
+        bookEl.style.transform = '';
+        returnTimer = window.setTimeout(function () {
+          root.classList.remove('bk-return');
+          if (k === 0 && !reduced()) root.classList.add('bk-idle');
+        }, 1250);
+      }, delay);
+    }
+    function releaseDrag() {
+      stopMotion();
+      drag = null;
+      root.classList.remove('bk-return');
+      if (root.classList.contains('bk-dragging')) {
+        root.classList.remove('bk-dragging');
+        void bookEl.offsetWidth;
+        bookEl.style.transform = '';
+      }
+    }
+    function inertia() {
+      if (reduced() || Math.abs(rot.v) < 0.05) { scheduleReturn(900); return; }
+      (function tick() {
+        rot.y += rot.v;
+        rot.v *= 0.92;
+        var lim = mode === 'phone' ? 28 : ROT_Y;
+        if (rot.y > lim || rot.y < -lim) rot.v = 0;
+        applyRot();
+        if (Math.abs(rot.v) > 0.05) inertiaRaf = window.requestAnimationFrame(tick);
+        else { inertiaRaf = null; scheduleReturn(900); }
+      })();
+    }
+    bookEl.addEventListener('pointerdown', function (e) {
+      if (k !== 0 || (e.pointerType === 'mouse' && e.button !== 0)) return;
+      if (e.target.closest('button, a')) return;
+      drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, lx: e.clientX, lt: e.timeStamp, on: false, touch: e.pointerType !== 'mouse', y0: 0, x0: 0 };
+    }, onEvt);
+    bookEl.addEventListener('pointermove', function (e) {
+      if (!drag || e.pointerId !== drag.id) return;
+      var dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+      if (!drag.on) {
+        if (drag.touch && Math.abs(dy) > THRESH && Math.abs(dy) >= Math.abs(dx)) { drag = null; return; } // vertical: let the page scroll
+        if (Math.abs(dx) < THRESH && Math.abs(dy) < THRESH) return;
+        if (drag.touch && Math.abs(dx) < Math.abs(dy) * 1.2) return;
+        drag.on = true;
+        beginRotate();
+        drag.y0 = rot.y; drag.x0 = rot.x;
+        try { bookEl.setPointerCapture(e.pointerId); } catch (err) {}
+      }
+      var dt = Math.max(1, e.timeStamp - drag.lt);
+      var dStep = (e.clientX - drag.lx) * 0.32;
+      rot.v = rot.v * 0.4 + (dStep * 16 / dt) * 0.6;
+      drag.lx = e.clientX; drag.lt = e.timeStamp;
+      rot.y = drag.y0 + dx * 0.32;
+      rot.x = drag.x0 - dy * (drag.touch ? 0.06 : 0.12);
+      applyRot();
+    }, onEvt);
+    function endDrag(e) {
+      if (!drag || e.pointerId !== drag.id) return;
+      var was = drag.on;
+      if (was && e.timeStamp - drag.lt > 90) rot.v = 0;
+      drag = null;
+      if (!was) return;
+      suppressUntil = Date.now() + 400;
+      inertia();
+    }
+    bookEl.addEventListener('pointerup', endDrag, onEvt);
+    bookEl.addEventListener('dragstart', function (e) { if (k === 0) e.preventDefault(); }, onEvt);
+    bookEl.addEventListener('pointercancel', endDrag, onEvt);
+
+    btnPrev.addEventListener('click', function () { step(-1); }, onEvt);
+    btnNext.addEventListener('click', function () { step(1); }, onEvt);
+    var btnOpen = root.querySelector('[data-bk-open]');
+    if (btnOpen) btnOpen.addEventListener('click', function () {
+      if (k !== 0) return;
+      step(1);
+      root.focus({ preventScroll: true });
+    }, onEvt);
+    if (btnClose) btnClose.addEventListener('click', function () {
+      if (k === 0) return;
+      var hadFocus = document.activeElement === btnClose;
+      goTo(0, mode === 'phone' ? 60 : 110);
+      if (hadFocus) root.focus({ preventScroll: true });
+    }, onEvt);
+
+    root.addEventListener('click', function (e) {
+      if (Date.now() < suppressUntil && e.target.closest('.bk-book')) { e.preventDefault(); return; }
+      var go = e.target.closest('[data-bk-goto]');
+      if (go) { goTo(faceIndexToStop(parseInt(go.getAttribute('data-bk-goto'), 10))); return; }
+      if (e.target.closest('button, a, .bk-controls')) return;
+      var pg = e.target.closest('.bk-leaf');
+      if (!pg) return;
+      if (mode === 'desk') {
+        step(pg.classList.contains('is-flipped') ? -1 : 1);
+      } else {
+        var r = bookEl.getBoundingClientRect();
+        step(e.clientX - r.left < r.width * 0.35 ? -1 : 1);
+      }
+    }, onEvt);
+
+    root.addEventListener('keydown', function (e) {
+      if (e.target.closest && e.target.closest('.mood-lightbox')) return;
+      if (k === 0 && e.target === root && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+        e.preventDefault();
+        beginRotate();
+        rot.v = 0;
+        rot.y += e.key === 'ArrowRight' ? -9 : 9;
+        applyRot();
+        scheduleReturn(1600);
+        return;
+      }
+      if (k === 0 && e.target === root && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); step(1); return; }
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); step(1); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); step(-1); }
+      else if (e.key === 'Home' && e.target === root) { e.preventDefault(); goTo(0); }
+      else if (e.key === 'End' && e.target === root) { e.preventDefault(); goTo(maxK); }
+    }, onEvt);
+
+    var sx = 0, sy = 0, tracking = false;
+    bookEl.addEventListener('touchstart', function (e) {
+      if (!e.changedTouches[0] || k === 0) { tracking = false; return; }
+      tracking = true; sx = e.changedTouches[0].clientX; sy = e.changedTouches[0].clientY;
+    }, { passive: true, signal: ac.signal });
+    bookEl.addEventListener('touchend', function (e) {
+      if (!tracking || !e.changedTouches[0]) return;
+      tracking = false;
+      var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) step(dx < 0 ? 1 : -1);
+    }, { passive: true, signal: ac.signal });
+
+    if (wide && wide.addEventListener) wide.addEventListener('change', function () { announce = false; idleOff(); releaseDrag(); build(); if (k === 0) idleOnLater(); }, onEvt);
+    ['bk-3d-spine', 'bk-3d-fore', 'bk-3d-bottom', 'bk-3d-back'].forEach(function (c) {
+      var f = document.createElement('span');
+      f.className = 'bk-3d ' + c;
+      f.setAttribute('aria-hidden', 'true');
+      bookEl.appendChild(f);
+    });
+    build();
+    if (!reduced()) root.classList.add('bk-idle');
+    if (reduce && reduce.addEventListener) reduce.addEventListener('change', function () { if (reduced()) { idleOff(); stopMotion(); } else if (k === 0) root.classList.add('bk-idle'); syncVideos(); }, onEvt);
+
+    // v2: once per page load, when the closed book first comes into view, lift the cover a
+    // little from the spine and let it settle back, as a hint that it opens.
+    var nudged = false;
+    function nudge() {
+      if (nudged || k !== 0 || reduced() || drag || root.classList.contains('bk-dragging') || !leaves[0]) return;
+      nudged = true;
+      var leaf = leaves[0];
+      leaf.classList.add('bk-nudging');
+      leaf.addEventListener('animationend', function done(e) {
+        if (e.target !== leaf) return;
+        leaf.classList.remove('bk-nudging');
+        leaf.removeEventListener('animationend', done);
+      });
+      root.setAttribute('data-bk-nudged', '');
+    }
+    var vio = null;
+    if (v2 && 'IntersectionObserver' in window) {
+      vio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          inView = en.isIntersecting;
+          syncVideos();
+          if (en.isIntersecting && en.intersectionRatio >= 0.5 && !nudged) window.setTimeout(nudge, 450);
+        });
+      }, { threshold: [0, 0.5] });
+      vio.observe(bookEl);
+    } else if (v2) { inView = true; syncVideos(); }
+
+    // first view: a gentle corner peel says "turn me"
+    var io = null;
+    if ('IntersectionObserver' in window) {
+      io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting || hinted) return;
+          hinted = true;
+          io.disconnect();
+          if (!turnedOnce && !reduced()) window.setTimeout(function () { if (!turnedOnce) root.classList.add('bk-hint'); }, 700);
+        });
+      }, { threshold: 0.55 });
+      io.observe(bookEl);
+    }
+
+    if (options.nudgeOnStart && v2) {
+      window.setTimeout(function () { if (!nudged) nudge(); }, 500);
+    }
+
+    function destroy() {
+      ac.abort();
+      if (io) try { io.disconnect(); } catch (e) {}
+      if (typeof vio !== 'undefined' && vio) try { vio.disconnect(); } catch (e) {}
+      window.clearTimeout(jumpTimer);
+      window.clearTimeout(idleTimer);
+      window.clearTimeout(returnTimer);
+      clearLeafTimers();
+      stopMotion();
+      leaves.forEach(function (l) { l.remove(); });
+      leaves = [];
+      allFaces().forEach(function (f) { store.appendChild(f); });
+      Array.prototype.slice.call(bookEl.querySelectorAll('.bk-3d')).forEach(function (n) { n.remove(); });
+      root.classList.remove('bk-ready', 'bk-desk', 'bk-phone', 'bk-idle', 'bk-dragging', 'bk-return', 'bk-hint', 'bk-turned', 'bk-fade');
+      root.removeAttribute('data-bk-state');
+      root.removeAttribute('data-bk-nudged');
+      bookEl.style.transform = '';
+    }
+
+    return { destroy: destroy, goTo: goTo, step: step, nudge: nudge, root: root };
+  }
+
+
+  window.initAmandaRuthBook = initAmandaRuthBook;
+})();

@@ -26,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=49">
+<link rel="stylesheet" href="assets/css/style.css?v=51">
 </head>
 <body class="journeys-page">
 <header class="site-header">
@@ -50,25 +50,9 @@
   <div class="jn-grid" id="jn-grid"></div>
 </main>
 
-<div class="jn-overlay" id="jn-overlay" hidden>
-  <p class="jn-viewer-title" data-jn-title></p>
-  <button type="button" class="jn-close" data-jn-close aria-label="Close the brochure">Close</button>
-  <div class="jn-dialog" role="dialog" aria-modal="true" aria-label="Design brochure">
-    <div class="jn-stage" data-jn-stage></div>
-    <div class="jn-controls">
-      <button type="button" class="jn-arrow" data-jn-prev aria-label="Previous page">
-        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <div class="jn-progress">
-        <p class="jn-count" data-jn-count></p>
-        <div class="jn-dots" data-jn-dots role="group" aria-label="Go to a page"></div>
-      </div>
-      <button type="button" class="jn-arrow" data-jn-next aria-label="Next page">
-        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-    </div>
-  </div>
-  <p class="visually-hidden" aria-live="polite" data-jn-live></p>
+<div class="jn-book-overlay" id="jn-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="jn-book-title" aria-hidden="true">
+  <button type="button" class="jn-dismiss" data-jn-dismiss aria-label="Close the brochure">Close</button>
+  <div class="jn-book-host" data-jn-book-host></div>
 </div>
 
 <footer class="site-footer">
@@ -105,6 +89,7 @@
   </div>
 </footer>
 <script src="assets/js/main.js?v=26"></script>
-<script src="assets/js/journeys.js?v=1" defer></script>
+<script src="assets/js/book-engine.js?v=1"></script>
+<script src="assets/js/journeys.js?v=2" defer></script>
 </body>
 </html>

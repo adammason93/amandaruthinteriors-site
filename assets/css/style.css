@@ -5511,3 +5511,66 @@ body.jn-open { overflow: hidden; }
   .jn-close { top: 10px; right: 10px; }
   .jn-controls { gap: 10px; }
 }
+
+
+/* ---- Design Journeys book lightbox, preview only: gated on body.journeys-page ---- */
+.journeys-page .jn-book-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #f4efe6;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.journeys-page .jn-book-overlay[hidden] { display: none; }
+.journeys-page .jn-book-host { min-height: 100%; }
+.journeys-page .jn-book-overlay .section-book {
+  border-top: 0;
+  min-height: 100%;
+  padding-top: 56px;
+  padding-bottom: 40px;
+  box-sizing: border-box;
+}
+.journeys-page .jn-dismiss {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 210;
+  appearance: none;
+  background: rgba(253, 252, 251, 0.86);
+  border: 1px solid rgba(40, 28, 18, 0.18);
+  color: var(--ink);
+  padding: 0 14px;
+  height: 40px;
+  border-radius: 24px;
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.journeys-page .jn-dismiss:hover { background: var(--cream); }
+.journeys-page .jn-dismiss:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.journeys-page .jn-book-project {
+  color: var(--brown);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(168, 143, 104, 0.5);
+}
+.journeys-page .jn-book-project:hover { border-bottom-color: var(--gold); }
+/* In the lightbox, give the book a little more of the viewport than the in-page home book. */
+.journeys-page .jn-book-overlay .bk {
+  --bw: max(560px, min(960px, calc(100vw - 80px), calc((100vh - 140px) * 1.5), calc((100svh - 140px) * 1.5)));
+}
+@media (max-width: 899px) {
+  .journeys-page .jn-book-overlay .bk {
+    --bw: min(460px, calc(100vw - 40px), calc((100vh - 200px) * 0.75), calc((100svh - 200px) * 0.75));
+  }
+  .journeys-page .jn-book-overlay .section-book { padding-top: 64px; }
+}
+/* Phone: a landscape board is one full page, not two cropped halves. */
+.journeys-page .bk-phone .bk-half-l img {
+  width: 100%;
+  left: 0;
+  object-fit: contain;
+  background: #f6f0e6;
+}
