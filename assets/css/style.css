@@ -661,6 +661,17 @@ body.menu-open .nav-mobile { display: block; }
 .project-intro { align-items: center; }
 .project-intro .display em { font-style: italic; font-weight: inherit; }
 .project-intro .body p:last-child { margin-bottom: 0; }
+/* Project intro caps, preview only: gated on body.intro-caps-v2. style.css v=135 on project-*-caps-preview only.
+   Live pages stay on v=125. (v=130 is reserved for Design Journeys / portfolio-preview.)
+   Room-name capitals one step up from the surrounding 48px display (1.1em ≈ 52.8px), with a whisper of tracking
+   so they read slightly larger, not like the tighter About/Services 0.9em tagline caps. */
+body.intro-caps-v2 .project-intro .display .intro-caps {
+  font-size: 1.1em;
+  letter-spacing: 0.04em;
+  font-weight: inherit;
+  font-style: normal;
+}
+
 .gallery-2x2 {
   display: grid;
   grid-template-columns: 661fr 605fr;
