@@ -5574,3 +5574,14 @@ body.jn-open { overflow: hidden; }
   object-fit: contain;
   background: #f6f0e6;
 }
+
+/* ==========================================================
+   Signature v2 (preview only, body.sig-v2): Ruth's full
+   'Ruth Amanda Pickford' signature (assets/js/signature-v2.js).
+   ========================================================== */
+body.sig-v2 .section-about .home-sign svg.sig-draw { width: 340px; max-width: 100%; }
+body.sig-v2.page-about-us p.about-signature svg.sig-draw { width: 300px; max-width: 100%; }
+@media (max-width: 800px) {
+  body.sig-v2 .section-about .home-sign svg.sig-draw { width: 300px; }
+  body.sig-v2.page-about-us p.about-signature svg.sig-draw { width: 270px; }
+}
