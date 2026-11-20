@@ -4926,3 +4926,128 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
 @media (max-width: 360px) {
   .section-book--v2 .bk-dot { width: 21px; }
 }
+
+/* ==========================================================
+   Preview-only films (v11): Ruth's own Instagram reels.
+   Every rule hangs off a class only the preview pages carry:
+   .home-hero--reel, .section-book--v2 .bk-video-page, .section-process--film, .reel-feature
+   ========================================================== */
+/* Hero: the bedroom reveal. Phones: full-bleed portrait. Wider screens: the portrait film as a
+   tall centred column (shown at its own resolution, never stretched), edges feathered into a
+   blurred, darkened still of the same room. */
+.home-hero--reel .hero-slides { background: #241d18; }
+.home-hero--reel .hero-slide-video { background: transparent; }
+@media (min-width: 801px), (min-aspect-ratio: 3/4) {
+  .home-hero--reel .hero-slides::before {
+    content: "";
+    position: absolute;
+    inset: -80px;
+    background: url(../images/reels/hero-bedroom-reveal-poster.webp) center 40% / cover no-repeat;
+    filter: blur(38px) brightness(0.46) saturate(0.85);
+    z-index: 0;
+  }
+  .home-hero--reel .hero-media {
+    left: calc(50% - min(50%, 386px));
+    right: auto;
+    width: min(100%, 772px);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 16%, #000 84%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 16%, #000 84%, transparent 100%);
+  }
+  .home-hero--reel .hero-media img,
+  .home-hero--reel .hero-slide .hero-video { object-position: 50% 42%; }
+}
+/* keep the words crisp over a moving picture */
+.home-hero--reel .hero-slide-video::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 55% at 50% 42%, rgba(24, 18, 13, 0.42), rgba(24, 18, 13, 0.18) 70%, rgba(24, 18, 13, 0.3));
+  z-index: 2;
+  pointer-events: none;
+}
+.home-hero--reel .hero-content h1,
+.home-hero--reel .hero-content .hero-tag,
+.home-hero--reel .hero-content .hero-rotator { text-shadow: 0 1px 24px rgba(0, 0, 0, 0.35); }
+
+/* Book: mood boards on film (the existing data-book-v2 video support plays them only while the spread is open) */
+.section-book--v2 .bk-video-page .bk-full video { object-position: center 30%; }
+.section-book--v2 .bk-video-cap { position: absolute; left: 9cqw; right: 12cqw; bottom: 13cqw; z-index: 2; }
+.section-book--v2 .bk-video-cap .bk-kicker-light { margin-bottom: 2cqw; }
+.section-book--v2 .bk-video-cap .bk-deck-light { margin: 2.6cqw 0 0; line-height: 1.4; }
+@container (max-width: 300px) {
+  .section-book--v2 .bk-video-cap .bk-deck-light { font-size: max(10.5px, 3.4cqw); }
+}
+
+/* How we work: a mood board film beside the design step */
+.section-process--film .process-steps .process-step:nth-child(2) .process-num { background: var(--brown); border-color: var(--brown); color: var(--cream); }
+.section-process--film .process-film {
+  margin: 72px auto 0;
+  max-width: 940px;
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  gap: 64px;
+  align-items: center;
+  text-align: left;
+}
+.process-film-frame,
+.reel-feature-frame {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  padding: 12px;
+  background: #fbf8f2;
+  box-shadow: 0 0 0 1px rgba(168, 143, 104, 0.32), 0 34px 60px -34px rgba(40, 30, 20, 0.5);
+}
+.reel-feature-frame { aspect-ratio: 2 / 3; }
+.process-film-frame video,
+.reel-feature-frame video { display: block; width: 100%; height: 100%; object-fit: cover; background: #d9cfbf; }
+.process-film-frame::after,
+.reel-feature-frame::after { content: ""; position: absolute; inset: 5px; border: 1px solid rgba(168, 143, 104, 0.28); pointer-events: none; }
+.process-film-cap,
+.reel-feature-cap { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+.process-film-step,
+.reel-feature-kicker { font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); }
+.process-film-title,
+.reel-feature-title { font-size: 40px; font-weight: 300; line-height: 1.1; letter-spacing: 0.01em; color: var(--ink); }
+.reel-feature-rule { display: block; width: 56px; height: 1px; background: var(--gold); margin: 4px 0; }
+.process-film-text,
+.reel-feature-text { max-width: 470px; font-size: 19px; line-height: 1.6; font-style: italic; color: #4a4239; }
+.process-film-link,
+.reel-feature-link {
+  margin-top: 8px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid currentColor;
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--brown);
+  text-decoration: none;
+}
+.process-film-link:hover,
+.reel-feature-link:hover { color: var(--ink); }
+.process-film-link:focus-visible,
+.reel-feature-link:focus-visible { outline: 1px solid var(--gold); outline-offset: 4px; }
+
+/* Project pages (preview copies): the film beside the story */
+.reel-feature { background: var(--linen); padding: 88px 48px; border-top: 1px solid rgba(168, 143, 104, 0.18); }
+.reel-feature-inner {
+  margin: 0 auto;
+  max-width: 1040px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+  gap: 80px;
+  align-items: center;
+}
+.reel-feature-cap { order: -1; }
+
+@media (max-width: 800px) {
+  .section-process--film .process-film { grid-template-columns: 1fr; gap: 26px; max-width: 420px; margin-top: 18px; }
+  .process-film-frame { width: min(290px, 78vw); margin: 0 auto; }
+  .reel-feature { padding: 56px 24px; }
+  .reel-feature-inner { grid-template-columns: 1fr; gap: 28px; max-width: 420px; }
+  .reel-feature-cap { order: 0; }
+  .reel-feature-frame { width: min(300px, 80vw); margin: 0 auto; }
+  .process-film-title,
+  .reel-feature-title { font-size: 30px; }
+  .process-film-text,
+  .reel-feature-text { font-size: 17px; }
+}
