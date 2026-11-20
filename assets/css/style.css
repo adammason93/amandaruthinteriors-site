@@ -5642,6 +5642,194 @@ body.pp-v4 .next-project {
   body.pp-v4 .next-project { margin-top: 48px; }
 }
 
+/* ---- Dining Area image-option previews A–D, gated on body.pp-v4.pp-opt-*.
+   style.css v=172 on the option pages only (v=170 already cache-holds the
+   original pair gallery). Live pages stay on v=165. Intro typography is
+   unchanged from body.pp-v4. ---- */
+body.pp-v4.pp-opt-a .ppa-gallery,
+body.pp-v4.pp-opt-b .ppb-gallery,
+body.pp-v4.pp-opt-c .ppc-gallery,
+body.pp-v4.pp-opt-d .ppd-gallery {
+  max-width: var(--pp-max);
+  margin: 0 auto;
+  padding-left: var(--pp-pad);
+  padding-right: var(--pp-pad);
+}
+body.pp-v4.pp-opt-a .ppa-gallery img,
+body.pp-v4.pp-opt-b .ppb-gallery img,
+body.pp-v4.pp-opt-c .ppc-gallery img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  background: transparent;
+  flex: none;
+}
+
+/* A — Spacious: large centred hero, then offset singles with plenty of cream. */
+body.pp-v4.pp-opt-a .ppa-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 96px;
+}
+body.pp-v4.pp-opt-a .ppa-hero,
+body.pp-v4.pp-opt-a .ppa-shot {
+  margin: 0;
+  display: flex;
+}
+body.pp-v4.pp-opt-a .ppa-hero { justify-content: center; }
+body.pp-v4.pp-opt-a .ppa-hero img { max-height: min(70vh, 620px); }
+body.pp-v4.pp-opt-a .ppa-shot img { max-height: min(62vh, 540px); }
+body.pp-v4.pp-opt-a .ppa-left { justify-content: flex-start; }
+body.pp-v4.pp-opt-a .ppa-right { justify-content: flex-end; }
+body.pp-v4.pp-opt-a .next-project { margin-top: 104px; }
+
+/* B — Magazine: two staggered large+small groupings, mixed scale, generous margins. */
+body.pp-v4.pp-opt-b .ppb-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 112px;
+}
+body.pp-v4.pp-opt-b .ppb-group {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 28px;
+  width: 100%;
+}
+body.pp-v4.pp-opt-b .ppb-group img { flex: none; }
+body.pp-v4.pp-opt-b .ppb-large { max-height: min(62vh, 540px); }
+body.pp-v4.pp-opt-b .ppb-small { max-height: min(44vh, 390px); }
+body.pp-v4.pp-opt-b .ppb-group-a .ppb-small { margin-top: 72px; }
+body.pp-v4.pp-opt-b .ppb-group-b { flex-direction: row-reverse; }
+body.pp-v4.pp-opt-b .ppb-group-b .ppb-small { margin-top: 88px; }
+body.pp-v4.pp-opt-b .next-project { margin-top: 112px; }
+
+/* C — One at a time: each photo alone, centred, generous height, calm spacing. */
+body.pp-v4.pp-opt-c .ppc-gallery {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 112px;
+}
+body.pp-v4.pp-opt-c .ppc-shot {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+body.pp-v4.pp-opt-c .ppc-shot img { max-height: min(76vh, 660px); }
+body.pp-v4.pp-opt-c .next-project { margin-top: 120px; }
+
+/* D — Professional grid: tight edge-to-edge cluster, large left spanning two rows,
+   2x2 (or 1 spanning + 2) on the right, 8px gutters, whole group fits a laptop. */
+body.pp-v4.pp-opt-d .ppd-gallery {
+  --ppd-gap: 8px;
+  --ppd-h: min(76vh, 700px);
+  max-width: none;
+  padding-left: 36px;
+  padding-right: 36px;
+}
+body.pp-v4.pp-opt-d .ppd-feature {
+  display: grid;
+  gap: var(--ppd-gap);
+  height: var(--ppd-h);
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+body.pp-v4.pp-opt-d .ppd-feature > * {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  height: 100%;
+}
+body.pp-v4.pp-opt-d .ppd-feature-4,
+body.pp-v4.pp-opt-d .ppd-feature-5 {
+  grid-template-columns: 1.7fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+body.pp-v4.pp-opt-d .ppd-main {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+body.pp-v4.pp-opt-d .ppd-span {
+  grid-column: 2 / span 2;
+  grid-row: 2;
+}
+body.pp-v4.pp-opt-d .ppd-feature img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+}
+body.pp-v4.pp-opt-d .next-project { margin-top: 72px; }
+
+@media (max-width: 1100px) and (min-width: 801px) {
+  body.pp-v4.pp-opt-a .ppa-gallery { gap: 80px; }
+  body.pp-v4.pp-opt-b .ppb-gallery,
+  body.pp-v4.pp-opt-c .ppc-gallery { gap: 88px; }
+  body.pp-v4.pp-opt-b .ppb-group { gap: 22px; }
+  body.pp-v4.pp-opt-b .ppb-group-a .ppb-small { margin-top: 56px; }
+  body.pp-v4.pp-opt-b .ppb-group-b .ppb-small { margin-top: 68px; }
+  body.pp-v4.pp-opt-d .ppd-gallery { padding-left: 24px; padding-right: 24px; }
+}
+
+@media (max-width: 800px) {
+  body.pp-v4.pp-opt-a .ppa-gallery { gap: 56px; }
+  body.pp-v4.pp-opt-a .ppa-hero img,
+  body.pp-v4.pp-opt-a .ppa-shot img {
+    max-height: min(70vh, 640px);
+    margin-inline: auto;
+  }
+  body.pp-v4.pp-opt-a .ppa-left,
+  body.pp-v4.pp-opt-a .ppa-right { justify-content: center; }
+  body.pp-v4.pp-opt-a .next-project { margin-top: 64px; }
+
+  body.pp-v4.pp-opt-b .ppb-gallery { gap: 64px; }
+  body.pp-v4.pp-opt-b .ppb-group,
+  body.pp-v4.pp-opt-b .ppb-group-b {
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+  body.pp-v4.pp-opt-b .ppb-group-a .ppb-small,
+  body.pp-v4.pp-opt-b .ppb-group-b .ppb-small { margin-top: 0; }
+  body.pp-v4.pp-opt-b .ppb-large,
+  body.pp-v4.pp-opt-b .ppb-small {
+    max-height: min(70vh, 640px);
+    margin-inline: auto;
+  }
+  body.pp-v4.pp-opt-b .next-project { margin-top: 64px; }
+
+  body.pp-v4.pp-opt-c .ppc-gallery { gap: 64px; }
+  body.pp-v4.pp-opt-c .ppc-shot img { max-height: min(70vh, 640px); }
+  body.pp-v4.pp-opt-c .next-project { margin-top: 64px; }
+
+  body.pp-v4.pp-opt-d .ppd-gallery { padding-left: 16px; padding-right: 16px; }
+  body.pp-v4.pp-opt-d .ppd-feature-4,
+  body.pp-v4.pp-opt-d .ppd-feature-5 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    height: auto;
+  }
+  body.pp-v4.pp-opt-d .ppd-main {
+    grid-column: 1 / span 2;
+    grid-row: auto;
+    height: min(62vh, 520px);
+  }
+  body.pp-v4.pp-opt-d .ppd-span {
+    grid-column: 1 / span 2;
+    grid-row: auto;
+    height: min(38vh, 280px);
+  }
+  body.pp-v4.pp-opt-d .ppd-sm { height: min(34vh, 240px); }
+  body.pp-v4.pp-opt-d .next-project { margin-top: 48px; }
+}
+
 /* ---- Design Journeys brochure grid + viewer, preview only: gated on body.journeys-page ---- */
 .journeys-page { background: var(--cream); }
 .jn-intro {
