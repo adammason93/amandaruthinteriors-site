@@ -5077,3 +5077,11 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   .logo-big .footer-mark,
   .logo-big .footer-brand .footer-mark { width: 140px; }
 }
+
+/* ---- Instagram two-row grid, preview only: gated on body.insta-2row ---- */
+/* Six existing tiles: 3 across × 2 rows on desktop/tablet (tiles twice as wide). */
+body.insta-2row .ig-grid { grid-template-columns: repeat(3, 1fr); }
+/* Phone: 2 columns × 3 rows so the tiles stay comfortably large, not tiny. */
+@media (max-width: 800px) {
+  body.insta-2row .ig-grid { grid-template-columns: repeat(2, 1fr); }
+}
