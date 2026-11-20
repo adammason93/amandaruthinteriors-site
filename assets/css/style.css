@@ -4751,8 +4751,8 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
 .bk-about .bk-sc { margin-bottom: 1.4cqw; }
 .bk-about-approach { margin-top: 0; }
 .bk-about-foot { margin-top: auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 4cqw; }
-.bk-sig-wrap { display: block; flex: none; }
-.bk-sig { display: block; width: 27cqw; height: auto; overflow: visible; color: #4a3c30; }
+.bk-sig-wrap { display: block; flex: 0 1 44cqw; min-width: 0; }
+.bk-sig { display: block; width: 100%; height: auto; overflow: visible; color: #4a3c30; }
 .bk-about-link {
   margin-bottom: 0.6cqw;
   padding-bottom: 1cqw;
@@ -4768,6 +4768,12 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
 }
 .bk-about-link:hover { color: #2f2620; border-color: #2f2620; }
 .bk-about-link:focus-visible { outline: 1px solid #a88f68; outline-offset: 3px; }
+@media (max-width: 800px) {
+  /* full-name signature: own row on phones so it stays legible */
+  .bk-about-foot { flex-wrap: wrap; row-gap: 3cqw; }
+  .bk-sig-wrap { flex-basis: 60cqw; }
+  .bk-about-link { margin-left: auto; }
+}
 @keyframes bkSig { from { clip-path: inset(-20% 100% -20% 0); } to { clip-path: inset(-20% -6% -20% 0); } }
 @media (prefers-reduced-motion: no-preference) {
   .bk-about .bk-sig { clip-path: inset(-20% 100% -20% 0); }
