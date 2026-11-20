@@ -5051,3 +5051,15 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   .process-film-text,
   .reel-feature-text { font-size: 17px; }
 }
+
+/* ---- New AR monogram (v14), preview only: gated on body.logo-v2 ---- */
+.logo-v2 .home-hero .ar-mark { width: 176px; aspect-ratio: 883 / 738; height: auto; object-fit: contain; }
+.logo-v2 .bk-cv-mono { width: 26cqw; aspect-ratio: 883 / 738; }
+.logo-v2 .bk-bc-mono { width: 24cqw; aspect-ratio: 886 / 738; opacity: 1; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.35)); }
+.logo-v2 .footer-mark,
+.logo-v2 .footer-brand .footer-mark { width: 116px; height: auto; aspect-ratio: 886 / 738; opacity: 1; }
+@media (max-width: 800px) {
+  .logo-v2 .home-hero .ar-mark { width: 84px; max-width: 24vw; }
+  .logo-v2 .footer-mark,
+  .logo-v2 .footer-brand .footer-mark { width: 96px; }
+}
