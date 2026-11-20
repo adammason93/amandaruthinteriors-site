@@ -6216,64 +6216,183 @@ body.sig-v2.page-about-us p.about-signature svg.sig-draw { width: 300px; max-wid
   }
 }
 
-/* ---- Design Journeys v36: typeset pages like the home book (preview only) ---- */
-.journeys-page .jn-book .jn-chapter .bk-pg {
-  padding-top: 16cqw;
+/* ---- Design Journeys v42: lookbook spreads, imagery is the hero (preview only) ---- */
+.journeys-page .jn-book-overlay .jn-text .bk-pg {
+  padding: 16cqw 11cqw;
   justify-content: center;
+  align-items: stretch;
 }
-.journeys-page .jn-book .jn-chapter .bk-bignum {
-  margin-top: 2cqw;
-}
-.journeys-page .jn-book .jn-chapter .bk-display {
-  margin-top: 1cqw;
-}
-.journeys-page .jn-book .jn-plate-page .bk-pg {
-  padding-top: 12.5cqw;
-  padding-bottom: 12.5cqw;
-  justify-content: center;
-  min-height: 0;
-}
-.journeys-page .jn-book .jn-plate-page .bk-sc {
-  margin: 0 0 3cqw;
-}
-.journeys-page .jn-book .jn-mount,
-.journeys-page .jn-book .jn-print {
+.journeys-page .jn-book-overlay .jn-text-block {
   margin: auto 0;
   width: 100%;
-  min-width: 0;
-  min-height: 0;
-  flex: 1 1 auto;
+}
+.journeys-page .jn-book-overlay .jn-index {
+  margin: 0 0 5cqw;
+  font-size: max(10px, 2.35cqw);
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: #a88f68;
+}
+.journeys-page .jn-book-overlay .jn-text .bk-display {
+  margin: 0;
+  font-size: 10.4cqw;
+  line-height: 0.96;
+  font-weight: 300;
+}
+.journeys-page .jn-book-overlay .jn-text .bk-hair {
+  margin: 5cqw 0 0;
+}
+.journeys-page .jn-book-overlay .jn-text .bk-deck {
+  margin-top: 3.6cqw;
+}
+
+/* One discreet running head (top only); folio is the number alone. */
+.journeys-page .jn-book-overlay .bk-folio span { display: none; }
+.journeys-page .jn-book-overlay .bk-folio {
+  font-size: max(9px, 2.2cqw);
+}
+
+.journeys-page .jn-book-overlay .jn-hero .bk-pg {
+  padding: 8.5cqw 6cqw 10.5cqw;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 0;
 }
-.journeys-page .jn-book .jn-mount {
-  padding: 2.8cqw;
-  background: #fff;
-  box-shadow: 0 1px 2px rgba(40, 28, 18, 0.08), 0 4cqw 8cqw -4cqw rgba(40, 28, 18, 0.42);
+.journeys-page .jn-book-overlay .jn-hero .jn-kicker {
+  flex: none;
+  margin: 0 0 2.2cqw;
+  font-size: max(9px, 2.15cqw);
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #a88f68;
 }
-.journeys-page .jn-book .jn-mount img,
-.journeys-page .jn-book .jn-print img {
-  display: block;
+.journeys-page .jn-book-overlay .jn-hero .bk-cap,
+.journeys-page .jn-book-overlay .jn-stack .bk-cap {
+  flex: none;
+  margin: 1.8cqw 0 0;
+  font-size: max(10px, 2.3cqw);
+  font-style: italic;
+  color: #6b5f52;
+}
+.journeys-page .jn-book-overlay .jn-hero .jn-fill {
+  flex: 1 1 auto;
+  min-height: 0;
   width: 100%;
-  height: auto;
-  max-height: 100%;
+  position: relative;
+}
+.journeys-page .jn-book-overlay .jn-hero .jn-fill img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
+  object-position: center;
+  display: block;
 }
-.journeys-page .jn-book .jn-mount img {
-  background: #fff;
+.journeys-page .jn-book-overlay .jn-hero-cover .jn-fill img {
+  object-fit: cover;
 }
-.journeys-page .jn-book .jn-print {
-  padding: 0;
-  background: transparent;
-  box-shadow: none;
-}
-.journeys-page .jn-book .jn-print img {
+.journeys-page .jn-book-overlay .jn-hero-ink .jn-fill img {
   mix-blend-mode: multiply;
   background: transparent;
+  object-fit: contain;
 }
-.journeys-page .jn-book .jn-plate-page .bk-cap-rule {
-  margin-top: 3cqw;
-  margin-bottom: 0;
+
+.journeys-page .jn-book-overlay .jn-stack-page .jn-stack {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3cqw;
+}
+.journeys-page .jn-book-overlay .jn-stack .jn-slot {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.journeys-page .jn-book-overlay .jn-stack .jn-fill {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  position: relative;
+}
+.journeys-page .jn-book-overlay .jn-stack .jn-fill img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+.journeys-page .jn-book-overlay .jn-stack .jn-hero-cover .jn-fill img { object-fit: cover; }
+.journeys-page .jn-book-overlay .jn-stack .jn-hero-ink .jn-fill img {
+  mix-blend-mode: multiply;
+  background: transparent;
+  object-fit: contain;
+}
+.journeys-page .jn-book-overlay .jn-stack .jn-slot .bk-cap {
   flex: none;
+  margin: 1.2cqw 0 0;
+  position: static;
+  background: none;
+}
+
+/* Double-page bleed: one plate spans the desk spread (home-book .bk-half pattern). */
+.journeys-page .jn-book-overlay .jn-bleed .bk-pg {
+  padding: 8.5cqw 0 10cqw;
+}
+.journeys-page .jn-book-overlay .jn-bleed-head {
+  flex: none;
+  height: 5.4cqw;
+  padding: 0 8cqw;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-end;
+}
+.journeys-page .jn-book-overlay .jn-bleed-foot {
+  flex: none;
+  height: 4.8cqw;
+  padding: 0 8cqw;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+}
+.journeys-page .jn-book-overlay .jn-bleed .jn-kicker {
+  margin: 0;
+}
+.journeys-page .jn-book-overlay .jn-bleed .bk-cap {
+  margin: 0;
+}
+.journeys-page .jn-book-overlay .jn-bleed .jn-fill {
+  overflow: hidden;
+}
+.journeys-page .jn-book-overlay .jn-bleed .jn-fill img {
+  inset: auto;
+  top: 0;
+  height: 100%;
+  width: 200%;
+  max-width: none;
+  object-fit: contain;
+  object-position: center;
+}
+.journeys-page .jn-book-overlay .jn-bleed-l .jn-fill img { left: 0; right: auto; }
+.journeys-page .jn-book-overlay .jn-bleed-r .jn-fill img { left: -100%; right: auto; }
+
+/* Phone: keep the image area large. */
+@media (max-width: 899px) {
+  .journeys-page .jn-book-overlay .jn-hero .bk-pg {
+    padding: 9cqw 5.5cqw 11cqw;
+  }
+  .journeys-page .jn-book-overlay .jn-text .bk-pg {
+    padding: 14cqw 9cqw;
+  }
+  .journeys-page .jn-book-overlay .jn-text .bk-display {
+    font-size: 12.5cqw;
+  }
 }

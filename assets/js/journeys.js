@@ -295,15 +295,18 @@
     return d;
   }
 
-  function folioHtml(j, folio) {
-    return '<p class="bk-folio" aria-hidden="true"><b>' + pad2(folio) + "</b><span>" +
-      escapeHtml(runLabel(j)) + "</span></p>";
+  function runHtml(j) {
+    return '<p class="bk-run">' + escapeHtml(runLabel(j)) + "</p>";
   }
 
-  function plateImg(j, plate) {
+  function folioHtml(folio) {
+    return '<p class="bk-folio" aria-hidden="true"><b>' + pad2(folio) + "</b></p>";
+  }
+
+  function plateImg(j, plate, sizes) {
     var src = plateSrc(j.folder, plate.file);
     var srcset = plateSrcset(j.folder, plate.file);
-    var sizes = "(max-width: 899px) 86vw, min(42vw, 520px)";
+    sizes = sizes || "(max-width: 899px) 94vw, 48vw";
     return '<img data-src="' + src + '" data-srcset="' + srcset + '" sizes="' + sizes +
       '" alt="' + escapeHtml(plate.alt || "") + '" decoding="async">';
   }
@@ -312,73 +315,274 @@
     return plate.kind || ch.kind || "photo";
   }
 
-  function titlePage(j, ch, num, folio) {
+  /* Aspects of the 1800px plates, used only to pick a layout. */
+  var PLATE_AR = {
+    "alwoodley-living-room/concept": 1.20,
+    "alwoodley-living-room/ffe": 1.79,
+    "alwoodley-living-room/plan": 1.42,
+    "alwoodley-master-bedroom/concept": 2.24,
+    "alwoodley-master-bedroom/ffe": 1.76,
+    "alwoodley-master-bedroom/plan": 1.42,
+    "alwoodley-master-bedroom/headboard-elevation": 1.08,
+    "kitchen-dining/concept": 2.21,
+    "kitchen-dining/ffe": 1.75,
+    "kitchen-dining/elevations-2d-1": 3.50,
+    "kitchen-dining/elevations-2d-2": 3.34,
+    "kitchen-dining/visuals-3d-kitchen-1": 3.77,
+    "kitchen-dining/visuals-3d-kitchen-2": 3.47,
+    "living-room-proposal/concept": 2.52,
+    "living-room-proposal/ffe": 1.40,
+    "ripponden-ensuite/concept": 1.80,
+    "ripponden-master-bedroom/concept": 1.94,
+    "ripponden-master-bedroom/ffe": 1.88
+  };
+
+  function plateAR(j, plate) {
+    return PLATE_AR[j.folder + "/" + (plate.file || "")] || 1;
+  }
+
+  function isPhoneBook() {
+    return window.matchMedia("(max-width: 899px)").matches;
+  }
+
+  /* Wide concept / FF&E collages span both pages on the desk (not floor plans). */
+  function isSpreadCollage(j, ch, plate) {
+    var f = plate.file || "";
+    if (/plan/.test(f)) return false;
+    if (!/^(concept|ffe)$/.test(f) && plateKind(ch, plate) !== "ink") return false;
+    if (/elevation|headboard/.test(f)) return false;
+    return plateAR(j, plate) >= 1.38;
+  }
+
+  function isUltraWidePlate(j, plate) {
+    return plateAR(j, plate) >= 2.8;
+  }
+
+  function inferFit(ch, plate) {
+    var kind = plateKind(ch, plate);
+    var f = plate.file || "";
+    if (kind === "ink") return "contain";
+    if (/elevations-2d|elevations-scale|plan|sample|headboard/.test(f)) return "contain";
+    if (/visuals-3d-kitchen/.test(f)) return "contain";
+    if (/visuals-3d|finished/.test(f)) return "cover";
+    return "contain";
+  }
+
+  function textPage(j, ch, num, folio) {
     var line = ch.line
       ? '<p class="bk-deck">' + escapeHtml(ch.line) + "</p>"
       : "";
     return pageEl(
-      "bk-page bk-paper bk-room-text jn-chapter",
+      "bk-page bk-paper jn-text",
       '<div class="bk-pg">' +
-        '<p class="bk-run">' + escapeHtml(runLabel(j)) + "</p>" +
-        '<span class="bk-bignum" aria-hidden="true">' + num + "</span>" +
-        '<p class="bk-display">' + escapeHtml(ch.title) + "</p>" +
-        line +
-        '<span class="bk-hair" aria-hidden="true"></span>' +
+        runHtml(j) +
+        '<div class="jn-text-block">' +
+          (num ? '<p class="jn-index">' + num + "</p>" : "") +
+          '<p class="bk-display">' + escapeHtml(ch.title) + "</p>" +
+          '<span class="bk-hair" aria-hidden="true"></span>' +
+          line +
+        "</div>" +
       "</div>" +
-      folioHtml(j, folio),
+      folioHtml(folio),
       ch.title
     );
   }
 
-  function platePage(j, ch, plate, folio, withHeading, num) {
+  function heroPage(j, ch, plate, folio, opts) {
+    opts = opts || {};
     var kind = plateKind(ch, plate);
-    var figClass = kind === "ink" ? "jn-print" : "bk-mount jn-mount";
-    var heading = "";
-    if (withHeading) {
-      heading = '<p class="bk-sc">' + escapeHtml(num + " · " + ch.title) + "</p>";
-    }
+    var fit = opts.fit || inferFit(ch, plate);
+    var cls = "bk-page bk-paper jn-hero jn-hero-" + fit + (kind === "ink" ? " jn-hero-ink" : "");
+    var kicker = opts.kicker
+      ? '<p class="jn-kicker">' + escapeHtml(opts.kicker) + "</p>"
+      : "";
     var cap = plate.caption
-      ? '<p class="bk-cap bk-cap-rule">' + escapeHtml(plate.caption) + "</p>"
+      ? '<p class="bk-cap">' + escapeHtml(plate.caption) + "</p>"
       : "";
     return pageEl(
-      "bk-page bk-paper bk-plate-page jn-plate-page",
+      cls,
       '<div class="bk-pg">' +
-        '<p class="bk-run">' + escapeHtml(runLabel(j)) + "</p>" +
-        heading +
-        '<figure class="' + figClass + '">' + plateImg(j, plate) + "</figure>" +
+        runHtml(j) +
+        kicker +
+        '<figure class="jn-fill">' + plateImg(j, plate) + "</figure>" +
         cap +
       "</div>" +
-      folioHtml(j, folio),
+      folioHtml(folio),
       plate.caption || ch.title
     );
   }
 
-  function chapterFaces(j, ch, chIndex, folio) {
+  function stackPage(j, ch, plates, folio, opts) {
+    opts = opts || {};
+    var kicker = opts.kicker
+      ? '<p class="jn-kicker">' + escapeHtml(opts.kicker) + "</p>"
+      : "";
+    var figures = plates.map(function (plate) {
+      var kind = plateKind(ch, plate);
+      var cls = "jn-slot jn-hero-contain" + (kind === "ink" ? " jn-hero-ink" : "");
+      var cap = plate.caption
+        ? '<figcaption class="bk-cap">' + escapeHtml(plate.caption) + "</figcaption>"
+        : "";
+      return '<figure class="' + cls + '"><div class="jn-fill">' + plateImg(j, plate) + "</div>" + cap + "</figure>";
+    }).join("");
+    return pageEl(
+      "bk-page bk-paper jn-hero jn-stack-page",
+      '<div class="bk-pg">' +
+        runHtml(j) +
+        kicker +
+        '<div class="jn-stack">' + figures + "</div>" +
+      "</div>" +
+      folioHtml(folio),
+      ch.title
+    );
+  }
+
+  /* One image across both pages of a desk spread, like the home-book .bk-half. */
+  function bleedPages(j, ch, plate, folio, opts) {
+    opts = opts || {};
+    var kind = plateKind(ch, plate);
+    var cls = "bk-page bk-paper jn-hero jn-bleed jn-hero-contain" + (kind === "ink" ? " jn-hero-ink" : "");
+    var img = plateImg(j, plate, "(max-width: 899px) 94vw, 96vw");
+    var kicker = opts.title
+      ? '<p class="jn-kicker">' + escapeHtml(opts.title) + "</p>"
+      : "";
+    var capSrc = plate.caption || opts.line || "";
+    var cap = capSrc ? '<p class="bk-cap">' + escapeHtml(capSrc) + "</p>" : "";
+    var left = pageEl(
+      cls + " jn-bleed-l",
+      '<div class="bk-pg">' +
+        runHtml(j) +
+        '<div class="jn-bleed-head">' + kicker + "</div>" +
+        '<figure class="jn-fill">' + img + "</figure>" +
+        '<div class="jn-bleed-foot"></div>' +
+      "</div>" +
+      folioHtml(folio),
+      opts.title || plate.caption || ch.title
+    );
+    var right = pageEl(
+      cls + " jn-bleed-r",
+      '<div class="bk-pg">' +
+        runHtml(j) +
+        '<div class="jn-bleed-head"></div>' +
+        '<figure class="jn-fill">' + img + "</figure>" +
+        '<div class="jn-bleed-foot">' + cap + "</div>" +
+      "</div>" +
+      folioHtml(folio + 1),
+      plate.caption || ch.title
+    );
+    return [left, right];
+  }
+
+  function chapterFaces(j, ch, chIndex, folio, flipText) {
     var faces = [];
-    var plates = ch.plates || [];
+    var plates = (ch.plates || []).slice();
     var num = pad2(chIndex);
-    if (!plates.length) return { faces: faces, folio: folio };
-    if (plates.length % 2 === 1) {
-      faces.push(titlePage(j, ch, num, folio++));
-      plates.forEach(function (plate) {
-        faces.push(platePage(j, ch, plate, folio++, false, num));
-      });
-    } else {
-      faces.push(platePage(j, ch, plates[0], folio++, true, num));
-      plates.slice(1).forEach(function (plate) {
-        faces.push(platePage(j, ch, plate, folio++, false, num));
-      });
+    var n = plates.length;
+    var usedText = false;
+    var phone = isPhoneBook();
+    if (!n) return { faces: faces, folio: folio, usedText: usedText };
+
+    function pushText() {
+      faces.push(textPage(j, ch, num, folio++));
+      usedText = true;
     }
-    return { faces: faces, folio: folio };
+    function pushHero(plate, kicker) {
+      faces.push(heroPage(j, ch, plate, folio++, { kicker: kicker || "" }));
+    }
+    function pushStack(pair, kicker) {
+      faces.push(stackPage(j, ch, pair, folio++, { kicker: kicker || "" }));
+    }
+    function pushBleed(plate, title) {
+      var pair = bleedPages(j, ch, plate, folio, { title: title || "", line: ch.line || "" });
+      faces.push(pair[0], pair[1]);
+      folio += 2;
+    }
+
+    if (n === 1) {
+      if (!phone && isSpreadCollage(j, ch, plates[0])) {
+        pushBleed(plates[0], ch.title);
+        return { faces: faces, folio: folio, usedText: usedText };
+      }
+      /* Phone: keep the full wide collage on one leaf, with the chapter title as a kicker. */
+      if (phone && isSpreadCollage(j, ch, plates[0])) {
+        pushHero(plates[0], ch.title);
+        return { faces: faces, folio: folio, usedText: usedText };
+      }
+      if (flipText) {
+        pushHero(plates[0]);
+        pushText();
+      } else {
+        pushText();
+        pushHero(plates[0]);
+      }
+      return { faces: faces, folio: folio, usedText: usedText };
+    }
+
+    if (n === 2) {
+      if (!phone && (isUltraWidePlate(j, plates[0]) || isUltraWidePlate(j, plates[1]))) {
+        plates.forEach(function (p, i) {
+          if (isUltraWidePlate(j, p)) pushBleed(p, i === 0 ? ch.title : "");
+          else {
+            pushText();
+            pushHero(p);
+          }
+        });
+        return { faces: faces, folio: folio, usedText: usedText };
+      }
+      pushHero(plates[0], ch.title);
+      pushHero(plates[1]);
+      return { faces: faces, folio: folio, usedText: usedText };
+    }
+
+    if (n === 3) {
+      pushHero(plates[0], ch.title);
+      pushStack(plates.slice(1));
+      return { faces: faces, folio: folio, usedText: usedText };
+    }
+
+    var queue = plates;
+    var kickUsed = false;
+    if (n % 2 === 1) {
+      pushText();
+      pushHero(queue[0]);
+      queue = queue.slice(1);
+      kickUsed = true;
+    }
+    while (queue.length) {
+      if (!phone && isUltraWidePlate(j, queue[0])) {
+        pushBleed(queue.shift(), kickUsed ? "" : ch.title);
+        kickUsed = true;
+        continue;
+      }
+      var a = queue.shift();
+      if (queue.length && (phone || !isUltraWidePlate(j, queue[0]))) {
+        pushHero(a, kickUsed ? "" : ch.title);
+        kickUsed = true;
+        pushHero(queue.shift());
+      } else if (queue.length) {
+        pushText();
+        pushHero(a, kickUsed ? "" : ch.title);
+        kickUsed = true;
+      } else {
+        pushText();
+        pushHero(a, kickUsed ? "" : ch.title);
+        kickUsed = true;
+      }
+    }
+    return { faces: faces, folio: folio, usedText: usedText };
   }
 
   function innerFaces(j) {
     var faces = [];
     var folio = 1;
+    var textFlips = 0;
     (j.chapters || []).forEach(function (ch, i) {
-      var out = chapterFaces(j, ch, i + 1, folio);
+      var n = (ch.plates || []).length;
+      var flip = n === 1 && (textFlips % 2 === 1);
+      var out = chapterFaces(j, ch, i + 1, folio, flip);
       faces = faces.concat(out.faces);
       folio = out.folio;
+      if (out.usedText) textFlips += 1;
     });
     return faces;
   }
