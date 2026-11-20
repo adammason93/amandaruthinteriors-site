@@ -5079,9 +5079,11 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
 }
 
 /* ---- Instagram two-row grid, preview only: gated on body.insta-2row ---- */
-/* Six existing tiles: 3 across × 2 rows on desktop/tablet (tiles twice as wide). */
-body.insta-2row .ig-grid { grid-template-columns: repeat(3, 1fr); }
-/* Phone: 2 columns × 3 rows so the tiles stay comfortably large, not tiny. */
+/* Desktop/iPad: 4 across × 2 rows; tiles slightly shorter than square (85% height). */
+body.insta-2row .ig-grid { grid-template-columns: repeat(4, 1fr); }
+body.insta-2row .ig-grid a { aspect-ratio: 20 / 17; }
+/* Phone: 3 across × 2 rows (6 tiles); hide tiles 7 and 8. Same shorter tiles. */
 @media (max-width: 800px) {
-  body.insta-2row .ig-grid { grid-template-columns: repeat(2, 1fr); }
+  body.insta-2row .ig-grid { grid-template-columns: repeat(3, 1fr); }
+  body.insta-2row .ig-grid > :nth-child(n+7) { display: none; }
 }

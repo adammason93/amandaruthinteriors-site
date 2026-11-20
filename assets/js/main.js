@@ -353,7 +353,8 @@ function revealLoadedImage(img) {
   var grid = document.querySelector('[data-instagram-feed], .section-instagram .ig-grid');
   if (!grid) return;
   var FEED = 'https://feeds.behold.so/zqerimg2uGGnb2QIHjU0';
-  var TILES = 6;
+  var attrTiles = parseInt(grid.getAttribute('data-instagram-tiles'), 10);
+  var TILES = attrTiles > 0 ? attrTiles : 6;
 
   function altFrom(post) {
     var cap = (post.prunedCaption || post.caption || '').replace(/\s+/g, ' ').trim();
