@@ -1,7 +1,7 @@
 /* Design Journeys — preview only. Loaded solely by portfolio-preview.html.
-   To add another brochure: put WebP files in assets/images/journeys/<id>/
+   To add another brochure: put cropped plates in assets/images/journeys/<id>/plates/
    (name-1200.webp and name-1800.webp, plus cover-hero.webp) and push a
-   new object onto JOURNEYS below. */
+   new object, with chapters, onto JOURNEYS below. */
 (function () {
   var ROOT = "assets/images/journeys/";
 
@@ -13,12 +13,22 @@
       tag: "Concept to completion",
       projectUrl: "project-living-room-alwoodley.html",
       folder: "alwoodley-living-room",
-      pages: [
-        { file: "concept", label: "Design concept", alt: "Mood board for a living room in Alwoodley" },
-        { file: "plan", label: "Floor plan", alt: "Furniture floor plan of the Alwoodley living room" },
-        { file: "ffe", label: "Furniture and finishes", alt: "Furniture and finishes proposal for the Alwoodley living room" },
-        { file: "elevations-2d", label: "Elevations", alt: "Two-dimensional elevations of the Alwoodley living room" },
-        { file: "visuals-3d", label: "Three-dimensional visuals", alt: "Three-dimensional visuals of the Alwoodley living room" }
+      chapters: [
+        { title: "Design Concept", kind: "ink", plates: [{ file: "concept", alt: "Mood board for a living room in Alwoodley" }] },
+        { title: "Floor Plan", line: "Living Room Floor Plan", kind: "ink", plates: [{ file: "plan", alt: "Furniture floor plan of the Alwoodley living room" }] },
+        { title: "Furniture and finishes", line: "FF&E Proposal", kind: "ink", plates: [{ file: "ffe", alt: "Furniture and finishes proposal for the Alwoodley living room" }] },
+        { title: "Elevations", kind: "photo", plates: [
+          { file: "elevations-2d-1", alt: "Chair elevation of the Alwoodley living room", caption: "Chair Elevation" },
+          { file: "elevations-2d-2", alt: "Television wall elevation of the Alwoodley living room", caption: "TV Wall Elevation" },
+          { file: "elevations-2d-3", alt: "Sofa elevation of the Alwoodley living room", caption: "Sofa Elevation" },
+          { file: "elevations-2d-4", alt: "Window elevation of the Alwoodley living room", caption: "Window Elevation" }
+        ] },
+        { title: "3D Visuals", line: "3D Elevations", kind: "photo", plates: [
+          { file: "visuals-3d-1", alt: "Three-dimensional view of the Alwoodley living room" },
+          { file: "visuals-3d-2", alt: "Three-dimensional view of the television wall" },
+          { file: "visuals-3d-3", alt: "Three-dimensional view of the seating" },
+          { file: "visuals-3d-4", alt: "Three-dimensional view of the window wall" }
+        ] }
       ]
     },
     {
@@ -28,17 +38,36 @@
       tag: "Concept to completion",
       projectUrl: "project-master-bedroom-alwoodley.html",
       folder: "alwoodley-master-bedroom",
-      pages: [
-        { file: "concept", label: "Design concept", alt: "Mood board for a master bedroom in Alwoodley" },
-        { file: "plan", label: "Floor plan", alt: "Furniture floor plan of the Alwoodley master bedroom" },
-        { file: "headboard-elevation", label: "Headboard elevation", alt: "Technical elevation of the headboard wall" },
-        { file: "ffe", label: "Furniture and finishes", alt: "Furniture and finishes proposal for the Alwoodley master bedroom" },
-        { file: "elevations-2d", label: "Elevations", alt: "Two-dimensional elevations of the Alwoodley master bedroom" },
-        { file: "visuals-3d", label: "Three-dimensional visuals", alt: "Three-dimensional visuals of the Alwoodley master bedroom" },
-        { file: "finished-1", label: "The finished room", alt: "The finished master bedroom in Alwoodley" },
-        { file: "finished-2", label: "The finished room", alt: "Details of the finished Alwoodley master bedroom" },
-        { file: "finished-3", label: "The finished room", alt: "The dressing table in the finished Alwoodley master bedroom" },
-        { file: "finished-4", label: "The finished room", alt: "Close details from the finished Alwoodley master bedroom" }
+      chapters: [
+        { title: "Design Concept", kind: "ink", plates: [{ file: "concept", alt: "Mood board for a master bedroom in Alwoodley" }] },
+        { title: "Floor Plan", line: "Floor Plan", kind: "ink", plates: [{ file: "plan", alt: "Furniture floor plan of the Alwoodley master bedroom" }] },
+        { title: "Elevation for Headboard", kind: "ink", plates: [{ file: "headboard-elevation", alt: "Technical elevation of the headboard wall", caption: "Master Bedroom — Headboard Wall" }] },
+        { title: "Furniture and finishes", line: "FF&E Proposal", kind: "ink", plates: [{ file: "ffe", alt: "Furniture and finishes proposal for the Alwoodley master bedroom" }] },
+        { title: "Elevations", kind: "photo", plates: [
+          { file: "elevations-2d-1", alt: "Headboard elevation of the Alwoodley master bedroom", caption: "Headboard Elevation" },
+          { file: "elevations-2d-2", alt: "Window elevation of the Alwoodley master bedroom", caption: "Window Elevation" },
+          { file: "elevations-2d-3", alt: "Door elevation of the Alwoodley master bedroom", caption: "Door Elevation" },
+          { file: "elevations-2d-4", alt: "Wardrobe door elevation of the Alwoodley master bedroom", caption: "Wardrobe Door Elevation" }
+        ] },
+        { title: "3D Visuals", line: "3D Elevations", kind: "photo", plates: [
+          { file: "visuals-3d-1", alt: "Three-dimensional view of the Alwoodley master bedroom" },
+          { file: "visuals-3d-2", alt: "Three-dimensional view of the window wall" },
+          { file: "visuals-3d-3", alt: "Three-dimensional view of the dressing wall" },
+          { file: "visuals-3d-4", alt: "Three-dimensional view of the doorway" }
+        ] },
+        { title: "Final Images", kind: "photo", plates: [
+          { file: "finished-1-1", alt: "The finished master bedroom in Alwoodley" },
+          { file: "finished-1-2", alt: "The finished master bedroom in Alwoodley" },
+          { file: "finished-2-1", alt: "Details of the finished Alwoodley master bedroom" },
+          { file: "finished-2-2", alt: "Details of the finished Alwoodley master bedroom" },
+          { file: "finished-2-3", alt: "Details of the finished Alwoodley master bedroom" },
+          { file: "finished-3-1", alt: "The dressing table in the finished Alwoodley master bedroom" },
+          { file: "finished-3-2", alt: "The dressing table in the finished Alwoodley master bedroom" },
+          { file: "finished-3-3", alt: "The dressing table in the finished Alwoodley master bedroom" },
+          { file: "finished-4-1", alt: "Close details from the finished Alwoodley master bedroom" },
+          { file: "finished-4-2", alt: "Close details from the finished Alwoodley master bedroom" },
+          { file: "finished-4-3", alt: "Close details from the finished Alwoodley master bedroom" }
+        ] }
       ]
     },
     {
@@ -48,13 +77,32 @@
       tag: "Concept to completion",
       projectUrl: "project-master-ensuite.html",
       folder: "ripponden-ensuite",
-      pages: [
-        { file: "concept", label: "Design concept", alt: "Mood board for a master en-suite in Ripponden" },
-        { file: "plan-samples", label: "Plans and sample board", alt: "Elevations and a sample board for the Ripponden en-suite" },
-        { file: "elevations-2d", label: "Elevations", alt: "Two-dimensional elevations of the Ripponden en-suite" },
-        { file: "visuals-3d", label: "Three-dimensional visuals", alt: "Three-dimensional visuals of the Ripponden en-suite" },
-        { file: "finished-1", label: "The finished room", alt: "The finished master en-suite in Ripponden" },
-        { file: "finished-2", label: "The finished room", alt: "Details of the finished Ripponden en-suite" }
+      chapters: [
+        { title: "Design Concept", kind: "ink", plates: [{ file: "concept", alt: "Mood board for a master en-suite in Ripponden" }] },
+        { title: "Floor Plans and Moodboard", plates: [
+          { file: "plan-samples-1", kind: "ink", alt: "Floor plans for the Ripponden en-suite" },
+          { file: "plan-samples-2", kind: "photo", alt: "A sample board for the Ripponden en-suite" }
+        ] },
+        { title: "Elevations", kind: "photo", plates: [
+          { file: "elevations-2d-1", alt: "Shower elevation of the Ripponden en-suite", caption: "Shower Elevation" },
+          { file: "elevations-2d-2", alt: "Sink elevation of the Ripponden en-suite", caption: "Sink Elevation" },
+          { file: "elevations-2d-3", alt: "Bath elevation of the Ripponden en-suite", caption: "Bath Elevation" },
+          { file: "elevations-2d-4", alt: "Door elevation of the Ripponden en-suite", caption: "Door Elevation" }
+        ] },
+        { title: "3D Visuals", line: "3D Elevations", kind: "photo", plates: [
+          { file: "visuals-3d-1", alt: "Three-dimensional view of the Ripponden en-suite" },
+          { file: "visuals-3d-2", alt: "Three-dimensional view of the vanity" },
+          { file: "visuals-3d-3", alt: "Three-dimensional view of the shower" },
+          { file: "visuals-3d-4", alt: "Three-dimensional view of the door" }
+        ] },
+        { title: "Final Images", kind: "photo", plates: [
+          { file: "finished-1-1", alt: "The finished master en-suite in Ripponden" },
+          { file: "finished-1-2", alt: "The finished master en-suite in Ripponden" },
+          { file: "finished-1-3", alt: "The finished master en-suite in Ripponden" },
+          { file: "finished-2-1", alt: "Details of the finished Ripponden en-suite" },
+          { file: "finished-2-2", alt: "Details of the finished Ripponden en-suite" },
+          { file: "finished-2-3", alt: "Details of the finished Ripponden en-suite" }
+        ] }
       ]
     },
     {
@@ -64,14 +112,29 @@
       tag: "Concept to completion",
       projectUrl: "project-master-bedroom.html",
       folder: "ripponden-master-bedroom",
-      pages: [
-        { file: "concept", label: "Design concept", alt: "Mood board for a master bedroom in Ripponden" },
-        { file: "plan-samples", label: "Plans and sample board", alt: "Floor plan and a sample board for the Ripponden master bedroom" },
-        { file: "ffe", label: "Furniture and finishes", alt: "Furniture and finishes proposal for the Ripponden master bedroom" },
-        { file: "elevations-2d", label: "Elevations", alt: "Two-dimensional elevations of the Ripponden master bedroom" },
-        { file: "finished-1", label: "The finished room", alt: "The finished master bedroom in Ripponden" },
-        { file: "finished-2", label: "The finished room", alt: "The dressing table in the finished Ripponden master bedroom" },
-        { file: "finished-3", label: "The finished room", alt: "Details of the finished Ripponden master bedroom" }
+      chapters: [
+        { title: "Design Concept", kind: "ink", plates: [{ file: "concept", alt: "Mood board for a master bedroom in Ripponden" }] },
+        { title: "Floor Plans and Moodboard", plates: [
+          { file: "plan-samples-1", kind: "ink", alt: "Floor plan for the Ripponden master bedroom" },
+          { file: "plan-samples-2", kind: "photo", alt: "A sample board for the Ripponden master bedroom" }
+        ] },
+        { title: "Furniture and finishes", line: "FF&E Proposal", kind: "ink", plates: [{ file: "ffe", alt: "Furniture and finishes proposal for the Ripponden master bedroom" }] },
+        { title: "Elevations", kind: "photo", plates: [
+          { file: "elevations-2d-1", alt: "Elevation of the Ripponden master bedroom", caption: "Dressing Table Elevation" },
+          { file: "elevations-2d-2", alt: "Elevation of the Ripponden master bedroom", caption: "Headboard Elevation" },
+          { file: "elevations-2d-3", alt: "Elevation of the Ripponden master bedroom", caption: "Door Elevation" },
+          { file: "elevations-2d-4", alt: "Elevation of the Ripponden master bedroom", caption: "Window Elevation" }
+        ] },
+        { title: "Final Images", kind: "photo", plates: [
+          { file: "finished-1-1", alt: "The finished master bedroom in Ripponden" },
+          { file: "finished-1-2", alt: "The finished master bedroom in Ripponden" },
+          { file: "finished-2-1", alt: "The dressing table in the finished Ripponden master bedroom" },
+          { file: "finished-2-2", alt: "The dressing table in the finished Ripponden master bedroom" },
+          { file: "finished-2-3", alt: "The dressing table in the finished Ripponden master bedroom" },
+          { file: "finished-3-1", alt: "Details of the finished Ripponden master bedroom" },
+          { file: "finished-3-2", alt: "Details of the finished Ripponden master bedroom" },
+          { file: "finished-3-3", alt: "Details of the finished Ripponden master bedroom" }
+        ] }
       ]
     },
     {
@@ -81,13 +144,23 @@
       tag: "Design proposal",
       projectUrl: "",
       folder: "kitchen-dining",
-      pages: [
-        { file: "concept", label: "Design concept", alt: "Mood board for a kitchen and dining proposal" },
-        { file: "elevations-scale", label: "To-scale elevations", alt: "To-scale elevations for the kitchen and dining proposal" },
-        { file: "ffe", label: "Furniture and finishes", alt: "Furniture and finishes proposal for the kitchen and dining" },
-        { file: "elevations-2d", label: "Elevations", alt: "Two-dimensional elevations of the kitchen and dining proposal" },
-        { file: "visuals-3d-kitchen", label: "Three-dimensional visuals", alt: "Three-dimensional visuals of the proposed kitchen and dining space" },
-        { file: "visuals-3d-dining", label: "Three-dimensional visuals", alt: "Three-dimensional visuals of the proposed dining area" }
+      chapters: [
+        { title: "Design Concept", kind: "ink", plates: [{ file: "concept", alt: "Mood board for a kitchen and dining proposal" }] },
+        { title: "To Scale Elevations", kind: "ink", plates: [
+          { file: "elevations-scale-1", alt: "To-scale elevations of the kitchen", caption: "Kitchen" },
+          { file: "elevations-scale-2", alt: "To-scale elevations of the picture wall", caption: "Picture Wall & Temple Elevations" }
+        ] },
+        { title: "Furniture and finishes", line: "FF&E Proposal", kind: "ink", plates: [{ file: "ffe", alt: "Furniture and finishes proposal for the kitchen and dining" }] },
+        { title: "2D Elevations", kind: "photo", plates: [
+          { file: "elevations-2d-1", alt: "Two-dimensional elevations of the kitchen and dining proposal", caption: "Kitchen, Kitchen Island, Dining Table & Bi-fold Window Elevation" },
+          { file: "elevations-2d-2", alt: "Two-dimensional elevations of the kitchen and dining proposal" }
+        ] },
+        { title: "3D Visuals", line: "3D Elevations", kind: "photo", plates: [
+          { file: "visuals-3d-kitchen-1", alt: "Three-dimensional view of the proposed kitchen and dining space" },
+          { file: "visuals-3d-kitchen-2", alt: "Three-dimensional view of the proposed kitchen and dining space" },
+          { file: "visuals-3d-dining-1", alt: "Three-dimensional view of the proposed dining area" },
+          { file: "visuals-3d-dining-2", alt: "Three-dimensional view of the proposed dining area" }
+        ] }
       ]
     },
     {
@@ -97,12 +170,25 @@
       tag: "Design proposal",
       projectUrl: "",
       folder: "living-room-proposal",
-      pages: [
-        { file: "concept", label: "Design concept", alt: "Mood board for a living room proposal" },
-        { file: "samples", label: "Sample board", alt: "A sample board of fabrics and finishes for the living room proposal" },
-        { file: "ffe", label: "Furniture and finishes", alt: "Furniture and finishes proposal for the living room" },
-        { file: "elevations-2d", label: "Elevations", alt: "Two-dimensional elevations of the living room proposal" },
-        { file: "visuals-3d", label: "Three-dimensional visuals", alt: "Three-dimensional visuals of the proposed living room" }
+      chapters: [
+        { title: "Design Concept", kind: "ink", plates: [{ file: "concept", alt: "Mood board for a living room proposal" }] },
+        { title: "Moodboard", kind: "photo", plates: [
+          { file: "samples-1", alt: "A sample board of fabrics and finishes for the living room proposal" },
+          { file: "samples-2", alt: "A sample board of fabrics and finishes for the living room proposal" }
+        ] },
+        { title: "Furniture and finishes", line: "FF&E Moodboard", kind: "ink", plates: [{ file: "ffe", alt: "Furniture and finishes proposal for the living room" }] },
+        { title: "2D Elevations", kind: "photo", plates: [
+          { file: "elevations-2d-1", alt: "Two-dimensional elevation of the proposed living room" },
+          { file: "elevations-2d-2", alt: "Two-dimensional elevation of the proposed living room" },
+          { file: "elevations-2d-3", alt: "Two-dimensional elevation of the proposed living room" },
+          { file: "elevations-2d-4", alt: "Two-dimensional elevation of the proposed living room" }
+        ] },
+        { title: "3D Visuals", line: "3D Elevations", kind: "photo", plates: [
+          { file: "visuals-3d-1", alt: "Three-dimensional view of the proposed living room" },
+          { file: "visuals-3d-2", alt: "Three-dimensional view of the proposed living room" },
+          { file: "visuals-3d-3", alt: "Three-dimensional view of the proposed living room" },
+          { file: "visuals-3d-4", alt: "Three-dimensional view of the proposed living room" }
+        ] }
       ]
     }
   ];
@@ -184,44 +270,119 @@
   }
 
 
-  function boardSrc(folder, file) {
-    return ROOT + folder + "/" + file + "-1200.webp";
+  function plateSrc(folder, file) {
+    return ROOT + folder + "/plates/" + file + "-1200.webp";
   }
-  function boardSrcset(folder, file) {
-    var base = ROOT + folder + "/" + file;
-    return base + "-1200.webp 1200w, " + base + "-1800.webp 1800w, " + base + "-2100.webp 2100w";
+  function plateSrcset(folder, file) {
+    var base = ROOT + folder + "/plates/" + file;
+    return base + "-1200.webp 1200w, " + base + "-1800.webp 1800w";
   }
 
-  function pageEl(html, label, spread) {
+  function runLabel(j) {
+    if (!j.place) return j.title;
+    return j.title + " · " + j.place.split(",")[0];
+  }
+
+  function pad2(n) {
+    return (n < 10 ? "0" : "") + n;
+  }
+
+  function pageEl(className, html, label) {
     var d = document.createElement("div");
-    d.className = "bk-page bk-bleed";
+    d.className = className;
     d.setAttribute("data-bk-label", label);
-    if (spread) d.setAttribute("data-bk-spread", spread);
     d.innerHTML = html;
     return d;
   }
 
-  function spreadFaces(j, page) {
-    var src = boardSrc(j.folder, page.file);
-    var srcset = boardSrcset(j.folder, page.file);
-    var sizes = "(max-width: 899px) 96vw, min(1400px, 94vw)";
-    var img = function (alt) {
-      return '<img data-src="' + src + '" data-srcset="' + srcset + '" sizes="' + sizes +
-        '" width="1800" height="1273" alt="' + escapeHtml(alt || "") + '" decoding="async">';
-    };
-    var left = pageEl(
-      '<div class="bk-pg"><div class="jn-board-well">' + img(page.alt) + "</div></div>",
-      page.label
-    );
-    left.className = "bk-page bk-paper jn-board-page jn-board-l";
-    var right = pageEl(
-      '<div class="bk-pg"><div class="jn-board-well">' + img("") + "</div></div>",
-      page.label,
-      page.label
-    );
-    right.className = "bk-page bk-paper jn-board-page jn-board-r";
-    return [left, right];
+  function folioHtml(j, folio) {
+    return '<p class="bk-folio" aria-hidden="true"><b>' + pad2(folio) + "</b><span>" +
+      escapeHtml(runLabel(j)) + "</span></p>";
   }
+
+  function plateImg(j, plate) {
+    var src = plateSrc(j.folder, plate.file);
+    var srcset = plateSrcset(j.folder, plate.file);
+    var sizes = "(max-width: 899px) 86vw, min(42vw, 520px)";
+    return '<img data-src="' + src + '" data-srcset="' + srcset + '" sizes="' + sizes +
+      '" alt="' + escapeHtml(plate.alt || "") + '" decoding="async">';
+  }
+
+  function plateKind(ch, plate) {
+    return plate.kind || ch.kind || "photo";
+  }
+
+  function titlePage(j, ch, num, folio) {
+    var line = ch.line
+      ? '<p class="bk-deck">' + escapeHtml(ch.line) + "</p>"
+      : "";
+    return pageEl(
+      "bk-page bk-paper bk-room-text jn-chapter",
+      '<div class="bk-pg">' +
+        '<p class="bk-run">' + escapeHtml(runLabel(j)) + "</p>" +
+        '<span class="bk-bignum" aria-hidden="true">' + num + "</span>" +
+        '<p class="bk-display">' + escapeHtml(ch.title) + "</p>" +
+        line +
+        '<span class="bk-hair" aria-hidden="true"></span>' +
+      "</div>" +
+      folioHtml(j, folio),
+      ch.title
+    );
+  }
+
+  function platePage(j, ch, plate, folio, withHeading, num) {
+    var kind = plateKind(ch, plate);
+    var figClass = kind === "ink" ? "jn-print" : "bk-mount jn-mount";
+    var heading = "";
+    if (withHeading) {
+      heading = '<p class="bk-sc">' + escapeHtml(num + " · " + ch.title) + "</p>";
+    }
+    var cap = plate.caption
+      ? '<p class="bk-cap bk-cap-rule">' + escapeHtml(plate.caption) + "</p>"
+      : "";
+    return pageEl(
+      "bk-page bk-paper bk-plate-page jn-plate-page",
+      '<div class="bk-pg">' +
+        '<p class="bk-run">' + escapeHtml(runLabel(j)) + "</p>" +
+        heading +
+        '<figure class="' + figClass + '">' + plateImg(j, plate) + "</figure>" +
+        cap +
+      "</div>" +
+      folioHtml(j, folio),
+      plate.caption || ch.title
+    );
+  }
+
+  function chapterFaces(j, ch, chIndex, folio) {
+    var faces = [];
+    var plates = ch.plates || [];
+    var num = pad2(chIndex);
+    if (!plates.length) return { faces: faces, folio: folio };
+    if (plates.length % 2 === 1) {
+      faces.push(titlePage(j, ch, num, folio++));
+      plates.forEach(function (plate) {
+        faces.push(platePage(j, ch, plate, folio++, false, num));
+      });
+    } else {
+      faces.push(platePage(j, ch, plates[0], folio++, true, num));
+      plates.slice(1).forEach(function (plate) {
+        faces.push(platePage(j, ch, plate, folio++, false, num));
+      });
+    }
+    return { faces: faces, folio: folio };
+  }
+
+  function innerFaces(j) {
+    var faces = [];
+    var folio = 1;
+    (j.chapters || []).forEach(function (ch, i) {
+      var out = chapterFaces(j, ch, i + 1, folio);
+      faces = faces.concat(out.faces);
+      folio = out.folio;
+    });
+    return faces;
+  }
+
 
   function coverFace(j) {
     var d = document.createElement("div");
@@ -418,14 +579,10 @@
     host.innerHTML = bookShell(j);
     var store = host.querySelector("[data-bk-pages]");
     store.appendChild(coverFace(j));
-    j.pages.forEach(function (p) {
-      var pair = spreadFaces(j, p);
-      store.appendChild(pair[0]);
-      store.appendChild(pair[1]);
-    });
+    innerFaces(j).forEach(function (face) { store.appendChild(face); });
     store.appendChild(backFace());
     var root = host.querySelector("[data-book]");
-    activeBook = window.initAmandaRuthBook(root, { mergeSpreadFaces: true, nudgeOnStart: false });
+    activeBook = window.initAmandaRuthBook(root, { mergeSpreadFaces: false, nudgeOnStart: false });
     var btnClose = root.querySelector("[data-bk-close]");
     if (btnClose) {
       btnClose.addEventListener("click", function (e) {
