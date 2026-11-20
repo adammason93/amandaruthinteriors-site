@@ -3117,6 +3117,9 @@ body.header-compact .site-header { margin-bottom: 74px; }
   color: var(--brown);
 }
 .page-about-us .caps { font-size: 0.8em; letter-spacing: 0.12em; }
+/* preview (about-preview, body.about-caps-v2): match the live Our Services tagline caps (0.9em) */
+.about-caps-v2.page-about-us .about-intro-lead .caps,
+.about-caps-v2.page-about-us .approach-copy .display .caps { font-size: 0.9em; letter-spacing: 0.12em; }
 .page-about-us .about-rule {
   display: block;
   width: 56px;
