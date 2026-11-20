@@ -3454,23 +3454,30 @@ body.header-compact .site-header { margin-bottom: 74px; }
 @media (max-width: 800px) { .page-our-services .svc-intro-body p { text-align: left; } }
 
 /* ==========================================================
-   Ruth's notes 20 Nov (preview only, v=55)
-   body.svc-v2       -> our-services-preview: italic tagline words, new AR mark in the intro panel
-   body.square-corners -> our-services-preview?corners=square: straight-edged photos for comparison
-   body.sections-v2  -> ruth-preview: Our Services after the flip book on a lighter ivory so the two read apart
+   Ruth's notes 20 Nov (live): Our Services tagline in italic caps,
+   new taupe AR monogram replaces the old masked AR on Our Services,
+   About Us, Contact and Thank-you; square photo corners on Our Services;
+   home Our Services on cream after the sand flip book.
    ========================================================== */
-.svc-v2.page-our-services .svc-intro-lead .caps { font-style: italic; font-weight: 400; letter-spacing: 0.14em; }
-.svc-v2.page-our-services .svc-mark {
-  width: 68px;
+.page-our-services .svc-intro-lead .caps { font-style: italic; font-weight: 400; letter-spacing: 0.14em; }
+.page-our-services .svc-mark,
+.page-about-us .about-mark,
+.enquiry-mark,
+.thank-you-mark {
   aspect-ratio: 856 / 701;
   background: url("../images/brand/ar-taupe-240.webp") center / contain no-repeat;
   -webkit-mask: none;
   mask: none;
 }
-@media (max-width: 800px) { .svc-v2.page-our-services .svc-mark { width: 58px; } }
-.square-corners.page-our-services .svc-intro-card,
-.square-corners.page-our-services .svc-stage img { border-radius: 0; }
-.sections-v2 .section-book--sand + .section-services { background: var(--cream); border-top: 0; }
+.page-our-services .svc-mark,
+.page-about-us .about-mark { width: 68px; }
+@media (max-width: 800px) {
+  .page-our-services .svc-mark,
+  .page-about-us .about-mark { width: 58px; }
+}
+.page-our-services .svc-intro-card,
+.page-our-services .svc-stage img { border-radius: 0; }
+.section-book--sand + .section-services { background: var(--cream); border-top: 0; }
 
 /* ==========================================================
    Signature (v25): Ruth's signature as a vector that writes
