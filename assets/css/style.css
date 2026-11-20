@@ -656,11 +656,11 @@ body.menu-open .nav-mobile { display: block; }
 }
 .project-intro .display { font-size: 48px; line-height: 1.2; color: var(--brown-soft); margin: 0; font-weight: 300; }
 .project-intro .body { font-size: 16px; line-height: 1.7; color: var(--brown-soft); }
-/* Project intro v2 (preview only, body.intro-v2): Ruth's Alwoodley master bedroom pattern.
+/* Project intro: Ruth's Alwoodley master bedroom pattern.
    Room title in caps, italic accent phrases, description centred beside the lead. */
-body.intro-v2 .project-intro { align-items: center; }
-body.intro-v2 .project-intro .display em { font-style: italic; font-weight: inherit; }
-body.intro-v2 .project-intro .body p:last-child { margin-bottom: 0; }
+.project-intro { align-items: center; }
+.project-intro .display em { font-style: italic; font-weight: inherit; }
+.project-intro .body p:last-child { margin-bottom: 0; }
 .gallery-2x2 {
   display: grid;
   grid-template-columns: 661fr 605fr;
@@ -5210,7 +5210,7 @@ body.photo-polish .folio-grid .folio-caption {
 }
 
 
-/* ---- Gallery feature, preview only: gated on body.gallery-feature. style.css v=112. Live pages stay on v=105. (v=110 is portfolio-preview.) ---- */
+/* ---- Gallery feature: gated on body.gallery-feature (live project pages). 16px/10px gaps between photos and before the next-project banner. ---- */
 /* One taller portrait room view on the left, two smaller photos stacked on the right, heights matched.
    Gaps (between photos, and before the next-project banner) match the About Us photo-polish gap: 16px desktop/iPad, 10px phones. */
 body.gallery-feature .gallery-feature {
