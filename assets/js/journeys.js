@@ -123,36 +123,36 @@
       hit.setAttribute("data-jn-open", String(i));
       hit.setAttribute("aria-label", "Open the " + j.title + (j.place ? " in " + j.place : "") + " brochure");
 
-      var cover = document.createElement("span");
-      cover.className = "jn-card-cover";
-      var img = document.createElement("img");
-      img.src = ROOT + j.folder + "/cover-hero.webp";
-      img.alt = "";
-      img.width = 900;
-      img.height = 1200;
-      img.loading = i > 2 ? "lazy" : "eager";
-      img.decoding = "async";
-      var scrim = document.createElement("span");
-      scrim.className = "jn-card-scrim";
-      scrim.setAttribute("aria-hidden", "true");
-      var logo = document.createElement("img");
-      logo.className = "jn-card-logo";
-      logo.src = "assets/images/brand/ar-cream-240.webp";
-      logo.srcset = "assets/images/brand/ar-cream-240.webp 240w, assets/images/brand/ar-cream-480.webp 480w";
-      logo.sizes = "56px";
-      logo.alt = "";
-      logo.width = 240;
-      logo.height = 200;
+      var stage = document.createElement("span");
+      stage.className = "jn-mini-stage";
+      stage.innerHTML =
+        '<span class="jn-mini-book" aria-hidden="true">' +
+          '<span class="bk-page bk-cover jn-mini-cover">' +
+            '<span class="bk-pg">' +
+              '<span class="bk-cv-photo"><img src="' + ROOT + j.folder + '/cover-hero.webp" width="900" height="1200" alt="" decoding="async" loading="eager"></span>' +
+              '<span class="bk-cv-scrim"></span>' +
+              '<span class="bk-cv-sheen"></span>' +
+              '<span class="bk-cv-spine"></span>' +
+              '<span class="bk-cv-logo">' +
+                '<img class="bk-cv-mono" src="assets/images/brand/ar-cream-480.webp" srcset="assets/images/brand/ar-cream-240.webp 240w, assets/images/brand/ar-cream-480.webp 480w" sizes="80px" width="883" height="738" alt="">' +
+                '<img class="bk-cv-word" src="assets/images/logo-header-desktop-a.webp" width="2400" height="622" alt="">' +
+              "</span>" +
+            "</span>" +
+          "</span>" +
+          '<span class="jn-mini-spine"></span>' +
+          '<span class="jn-mini-fore"></span>' +
+          '<span class="jn-mini-bottom"></span>' +
+          '<span class="jn-mini-back"></span>' +
+        "</span>";
+      hit.appendChild(stage);
+
       var meta = document.createElement("span");
       meta.className = "jn-card-meta";
       meta.innerHTML = '<span class="jn-tag">' + escapeHtml(j.tag) + "</span>" +
-        "<span class=\"jn-card-title\">" + escapeHtml(j.title) + "</span>" +
+        '<span class="jn-card-title">' + escapeHtml(j.title) + "</span>" +
         (j.place ? '<span class="jn-card-place">' + escapeHtml(j.place) + "</span>" : "");
-      cover.appendChild(img);
-      cover.appendChild(scrim);
-      cover.appendChild(logo);
-      cover.appendChild(meta);
-      hit.appendChild(cover);
+      hit.appendChild(meta);
+      hit.addEventListener("click", function () { openJourney(i); });
 
       var foot = document.createElement("div");
       foot.className = "jn-card-foot";
@@ -170,7 +170,6 @@
         a.textContent = "View the finished room";
         foot.appendChild(a);
       }
-      hit.addEventListener("click", function () { openJourney(i); });
       card.appendChild(hit);
       card.appendChild(foot);
       grid.appendChild(card);
@@ -210,14 +209,16 @@
         '" width="1800" height="1273" alt="' + escapeHtml(alt || "") + '" decoding="async">';
     };
     var left = pageEl(
-      '<div class="bk-pg"><div class="bk-half bk-half-l">' + img(page.alt) + "</div></div>",
+      '<div class="bk-pg"><div class="jn-board-well">' + img(page.alt) + "</div></div>",
       page.label
     );
+    left.className = "bk-page bk-paper jn-board-page jn-board-l";
     var right = pageEl(
-      '<div class="bk-pg"><div class="bk-half bk-half-r">' + img("") + "</div></div>",
+      '<div class="bk-pg"><div class="jn-board-well">' + img("") + "</div></div>",
       page.label,
       page.label
     );
+    right.className = "bk-page bk-paper jn-board-page jn-board-r";
     return [left, right];
   }
 
