@@ -3478,6 +3478,10 @@ body.header-compact .site-header { margin-bottom: 74px; }
 .page-our-services .svc-intro-card,
 .page-our-services .svc-stage img { border-radius: 0; }
 .section-book--sand + .section-services { background: var(--cream); border-top: 0; }
+/* About Us square photo corners: preview only (about-preview), gated on body.about-square */
+.about-square.page-about-us .about-intro-card,
+.about-square.page-about-us .about-story-photo,
+.about-square.page-about-us .about-story-photo img { border-radius: 0; }
 
 /* ==========================================================
    Signature (v25): Ruth's signature as a vector that writes
