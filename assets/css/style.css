@@ -5477,6 +5477,171 @@ body.gallery-v3 .next-project { margin-top: 16px; }
   body.gallery-v3 .next-project { margin-top: 10px; }
 }
 
+/* ---- Project page redesign v4, preview only: gated on body.pp-v4. style.css v=170 on
+   project-dining-area-redesign-preview only. Live project pages stay on v=165 / gallery-v3.
+   Caps typography previews stay on v=135. A caps live push should now use v>=180 (not 155 or 170).
+   A later redesign live push should use v=175 if caps has not gone first, otherwise v>=185.
+   One shared content width; natural-ratio images; no cropped dark hero. ---- */
+body.pp-v4 {
+  --pp-max: 1120px;
+  --pp-pad: 48px;
+  --pp-gutter: 12px;
+  --pp-row-gap: 56px;
+  --pp-ink: #3f3a36;
+  --pp-body: #4f4943;
+  --pp-mute: #8a8176;
+}
+body.pp-v4 .pp-intro,
+body.pp-v4 .pp-gallery {
+  max-width: var(--pp-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--pp-pad);
+  padding-right: var(--pp-pad);
+}
+body.pp-v4 .pp-intro {
+  padding-top: 56px;
+  padding-bottom: 56px;
+}
+body.pp-v4 .pp-title {
+  margin: 0 0 40px;
+}
+body.pp-v4 .pp-title h1 {
+  margin: 0 0 8px;
+  font-family: var(--font);
+  font-weight: 300;
+  font-size: 48px;
+  line-height: 1.1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--pp-ink);
+}
+body.pp-v4 .pp-place {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--pp-mute);
+}
+body.pp-v4 .pp-copy {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px 80px;
+  align-items: start;
+}
+body.pp-v4 .pp-copy .display {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.35;
+  font-weight: 300;
+  color: var(--pp-ink);
+}
+body.pp-v4 .pp-copy .display .intro-caps {
+  font-size: 1.08em;
+  letter-spacing: 0.04em;
+  font-weight: inherit;
+  font-style: normal;
+}
+body.pp-v4 .pp-copy .display em {
+  font-style: italic;
+  font-weight: inherit;
+}
+body.pp-v4 .pp-copy .body {
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--pp-body);
+  padding-top: 4px;
+}
+body.pp-v4 .pp-copy .body p { margin: 0; }
+
+body.pp-v4 .pp-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-row-gap);
+}
+body.pp-v4 .pp-row-pair {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--pp-gutter);
+  width: 100%;
+}
+body.pp-v4 .pp-row-pair img {
+  display: block;
+  height: auto;
+  flex: none;
+  object-fit: contain;
+  background: transparent;
+}
+body.pp-v4 .pp-row-pair img:nth-child(1) {
+  width: calc((100% - var(--pp-gutter)) * var(--ar1) / (var(--ar1) + var(--ar2)));
+}
+body.pp-v4 .pp-row-pair img:nth-child(2) {
+  width: calc((100% - var(--pp-gutter)) * var(--ar2) / (var(--ar1) + var(--ar2)));
+}
+body.pp-v4 .pp-row-single {
+  display: flex;
+  justify-content: center;
+}
+body.pp-v4 .pp-row-single img {
+  width: auto;
+  max-width: calc((100% - var(--pp-gutter)) / 2);
+  height: auto;
+  max-height: min(72vh, 680px);
+  object-fit: contain;
+}
+
+body.pp-v4 .next-project {
+  margin-top: 80px;
+}
+
+@media (max-width: 1100px) and (min-width: 801px) {
+  body.pp-v4 {
+    --pp-pad: 36px;
+    --pp-row-gap: 40px;
+  }
+  body.pp-v4 .pp-title h1 { font-size: 40px; }
+  body.pp-v4 .pp-copy { gap: 40px 48px; }
+  body.pp-v4 .pp-copy .display { font-size: 26px; }
+}
+
+@media (max-width: 800px) {
+  body.pp-v4 {
+    --pp-pad: 20px;
+    --pp-gutter: 10px;
+    --pp-row-gap: 28px;
+  }
+  body.pp-v4 .pp-intro {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+  body.pp-v4 .pp-title { margin-bottom: 36px; }
+  body.pp-v4 .pp-title h1 { font-size: 28px; letter-spacing: 0.16em; }
+  body.pp-v4 .pp-copy {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  body.pp-v4 .pp-copy .display { font-size: 26px; }
+  body.pp-v4 .pp-copy .body { padding-top: 0; font-size: 16px; }
+  body.pp-v4 .pp-row-pair {
+    flex-direction: column;
+    width: 100%;
+  }
+  body.pp-v4 .pp-row-pair img,
+  body.pp-v4 .pp-row-pair img:nth-child(1),
+  body.pp-v4 .pp-row-pair img:nth-child(2),
+  body.pp-v4 .pp-row-single img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: min(70vh, 640px);
+    margin-inline: auto;
+  }
+  body.pp-v4 .next-project { margin-top: 48px; }
+}
+
 /* ---- Design Journeys brochure grid + viewer, preview only: gated on body.journeys-page ---- */
 .journeys-page { background: var(--cream); }
 .jn-intro {
