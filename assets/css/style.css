@@ -3460,6 +3460,8 @@ body.header-compact .site-header { margin-bottom: 74px; }
    home Our Services on cream after the sand flip book.
    ========================================================== */
 .page-our-services .svc-intro-lead .caps { font-style: italic; font-weight: 400; letter-spacing: 0.14em; }
+/* preview (our-services-preview, body.svc-tag-v2): upright caps, one size larger */
+.svc-tag-v2.page-our-services .svc-intro-lead .caps { font-style: normal; font-weight: 300; font-size: 0.9em; letter-spacing: 0.12em; }
 .page-our-services .svc-mark,
 .page-about-us .about-mark,
 .enquiry-mark,
