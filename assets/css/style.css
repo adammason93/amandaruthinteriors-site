@@ -3454,6 +3454,25 @@ body.header-compact .site-header { margin-bottom: 74px; }
 @media (max-width: 800px) { .page-our-services .svc-intro-body p { text-align: left; } }
 
 /* ==========================================================
+   Ruth's notes 20 Nov (preview only, v=55)
+   body.svc-v2       -> our-services-preview: italic tagline words, new AR mark in the intro panel
+   body.square-corners -> our-services-preview?corners=square: straight-edged photos for comparison
+   body.sections-v2  -> ruth-preview: Our Services after the flip book on a lighter ivory so the two read apart
+   ========================================================== */
+.svc-v2.page-our-services .svc-intro-lead .caps { font-style: italic; font-weight: 400; letter-spacing: 0.14em; }
+.svc-v2.page-our-services .svc-mark {
+  width: 68px;
+  aspect-ratio: 856 / 701;
+  background: url("../images/brand/ar-taupe-240.webp") center / contain no-repeat;
+  -webkit-mask: none;
+  mask: none;
+}
+@media (max-width: 800px) { .svc-v2.page-our-services .svc-mark { width: 58px; } }
+.square-corners.page-our-services .svc-intro-card,
+.square-corners.page-our-services .svc-stage img { border-radius: 0; }
+.sections-v2 .section-book--sand + .section-services { background: var(--cream); border-top: 0; }
+
+/* ==========================================================
    Signature (v25): Ruth's signature as a vector that writes
    itself (assets/js/signature.js). Home intro + About card.
    ========================================================== */
@@ -5585,22 +5604,3 @@ body.sig-v2.page-about-us p.about-signature svg.sig-draw { width: 300px; max-wid
   body.sig-v2 .section-about .home-sign svg.sig-draw { width: 300px; }
   body.sig-v2.page-about-us p.about-signature svg.sig-draw { width: 270px; }
 }
-
-/* ==========================================================
-   Ruth's notes 20 Nov (preview only, v=55)
-   body.svc-v2       -> our-services-preview: italic tagline words, new AR mark in the intro panel
-   body.square-corners -> our-services-preview?corners=square: straight-edged photos for comparison
-   body.sections-v2  -> ruth-preview: Our Services after the flip book on a lighter ivory so the two read apart
-   ========================================================== */
-.svc-v2.page-our-services .svc-intro-lead .caps { font-style: italic; font-weight: 400; letter-spacing: 0.14em; }
-.svc-v2.page-our-services .svc-mark {
-  width: 68px;
-  aspect-ratio: 856 / 701;
-  background: url("../images/brand/ar-taupe-240.webp") center / contain no-repeat;
-  -webkit-mask: none;
-  mask: none;
-}
-@media (max-width: 800px) { .svc-v2.page-our-services .svc-mark { width: 58px; } }
-.square-corners.page-our-services .svc-intro-card,
-.square-corners.page-our-services .svc-stage img { border-radius: 0; }
-.sections-v2 .section-book--sand + .section-services { background: var(--cream); border-top: 0; }
