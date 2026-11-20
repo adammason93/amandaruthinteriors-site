@@ -5063,3 +5063,15 @@ svg.sig-draw { display: block; height: auto; overflow: visible; }
   .footer-mark,
   .footer-brand .footer-mark { width: 96px; }
 }
+
+/* ---- Bigger AR monogram (~+22%), preview only: gated on body.logo-big ---- */
+.logo-big .home-hero .ar-mark { width: 216px; }
+.logo-big .bk-cv-mono { width: 30cqw; }
+.logo-big .bk-bc-mono { width: 28cqw; }
+.logo-big .footer-mark,
+.logo-big .footer-brand .footer-mark { width: 136px; }
+@media (max-width: 800px) {
+  .logo-big .home-hero .ar-mark { width: 104px; max-width: 28vw; }
+  .logo-big .footer-mark,
+  .logo-big .footer-brand .footer-mark { width: 112px; }
+}
