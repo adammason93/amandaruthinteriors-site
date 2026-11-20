@@ -656,6 +656,11 @@ body.menu-open .nav-mobile { display: block; }
 }
 .project-intro .display { font-size: 48px; line-height: 1.2; color: var(--brown-soft); margin: 0; font-weight: 300; }
 .project-intro .body { font-size: 16px; line-height: 1.7; color: var(--brown-soft); }
+/* Project intro v2 (preview only, body.intro-v2): Ruth's Alwoodley master bedroom pattern.
+   Room title in caps, italic accent phrases, description centred beside the lead. */
+body.intro-v2 .project-intro { align-items: center; }
+body.intro-v2 .project-intro .display em { font-style: italic; font-weight: inherit; }
+body.intro-v2 .project-intro .body p:last-child { margin-bottom: 0; }
 .gallery-2x2 {
   display: grid;
   grid-template-columns: 661fr 605fr;
