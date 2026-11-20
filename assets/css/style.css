@@ -5368,8 +5368,8 @@ body.gallery-feature .gallery-feature-side img {
   }
 }
 
-/* ---- Gallery v3, preview only: gated on body.gallery-v3. style.css v=160 on project-*-layout-preview only.
-   Live pages stay on v=150. (v=155 is reserved for the caps live push; v=130 is Design Journeys; v=135 is caps previews.)
+/* ---- Gallery v3: live on body.gallery-v3 (style.css v=165). Caps typography previews stay on body.gallery-feature + v=135 and keep the older short-gallery markup.
+   The next caps live push should use style.css v>=170 (not 155). v=130 is Design Journeys; v=135 is caps previews.
    Row types chosen from each photo's natural aspect ratio so images are not cropped:
    full-width landscape, portrait pair, portrait+landscape, single centred portrait.
    Heights are capped so a row cannot fill a laptop screen. Gaps 16px desktop/iPad, 10px phones. */
