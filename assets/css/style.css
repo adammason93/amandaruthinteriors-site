@@ -5295,6 +5295,81 @@ body.gallery-feature .next-project { margin-top: 16px; }
   body.gallery-feature .next-project { margin-top: 10px; }
 }
 
+/* ---- Gallery short, preview only: gated on body.gallery-short. style.css v=145 on project-*-short-preview only.
+   Live pages stay on v=125. (v=130 is Design Journeys, v=135 is caps previews, v=140 is reserved for a caps live push.)
+   Cap the featured group so the tall left photo + two stacked right photos fit on a laptop screen.
+   Left column is a 3:4 portrait sized from the cap (narrower than the live 1.2fr column); right stack matches that height.
+   Gaps stay 16px desktop/iPad, 10px phones. */
+body.gallery-short .gallery-feature {
+  --gallery-short-h: min(78vh, 760px);
+  display: grid;
+  grid-template-columns: minmax(0, calc(var(--gallery-short-h) * 3 / 4)) minmax(0, 1fr);
+  gap: 16px;
+  max-width: 1280px;
+  margin: 0 auto;
+  height: var(--gallery-short-h);
+  align-items: stretch;
+  min-height: 0;
+}
+body.gallery-short .gallery-feature-main {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  aspect-ratio: auto;
+  object-fit: cover;
+  display: block;
+  min-width: 0;
+  min-height: 0;
+}
+body.gallery-short .gallery-feature-side {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+body.gallery-short .gallery-feature-side img {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 1100px) and (min-width: 801px) {
+  /* iPad / small laptop: a slightly shorter cap so the 3:4 left column leaves comfortable room for the right stack. */
+  body.gallery-short .gallery-feature {
+    --gallery-short-h: min(70vh, 620px);
+  }
+}
+
+@media (max-width: 800px) {
+  body.gallery-short .gallery-feature {
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: 10px;
+  }
+  body.gallery-short .gallery-feature-main {
+    width: 100%;
+    height: auto;
+    max-height: 70vh;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+  }
+  body.gallery-short .gallery-feature-side {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    gap: 10px;
+    height: auto;
+  }
+  body.gallery-short .gallery-feature-side img {
+    aspect-ratio: 3 / 4;
+    height: auto;
+  }
+}
+
 /* ---- Design Journeys brochure grid + viewer, preview only: gated on body.journeys-page ---- */
 .journeys-page { background: var(--cream); }
 .jn-intro {
