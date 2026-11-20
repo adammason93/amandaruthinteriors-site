@@ -5833,21 +5833,11 @@ body.pp-v4.pp-opt-d .next-project { margin-top: 72px; }
 
 
 
-/* ---- Project grid previews, gated on body.pp-v4.pp-grid. style.css v=185 on
-   project-*-grid-preview (and the two option-d pages that share this layout).
-   Live project pages stay on v=165. Option A–C stay on v=172. Intro typography
-   is unchanged from body.pp-v4. Every gallery block is capped to fit below the
-   sticky header on a 1280x800 / 1440x900 laptop, with a little cream above and
-   below: --ppd-h = min(720px, 100vh - header - 80px). Width is sized from that
-   height so a 1+2x2 or a 4-across row of 3:4 tiles stays on one screen. Lone
-   landscapes are centred at natural ratio with a tighter max-height, never a
-   full-width column taller than the viewport. Live project pages are on v=180. A later live push of this tighter
-   fit-on-screen grid should use v>=185 if caps has not gone first; a later
-   caps typography push should use v>=190. ---- */
+/* ---- Project grid on live project pages, gated on body.pp-v4.pp-grid
+   (without .pp-fit). These are the original taller as-sent blocks from
+   style.css v=175 / live v=180. ---- */
 body.pp-v4.pp-grid .ppd-gallery {
   --ppd-gap: 8px;
-  --ppd-h: min(720px, calc(100vh - var(--header-h) - 80px));
-  --ppd-land-h: min(var(--ppd-h), 640px, 70vh);
   max-width: none;
   margin: 0 auto;
   padding-left: 36px;
@@ -5857,14 +5847,14 @@ body.pp-v4.pp-grid .ppd-gallery {
   gap: 40px;
 }
 
-/* 5 portraits: large left + 2x2, cells at 3:4, the whole group is only as
-   tall as --ppd-h and is centred (width comes from the height). */
+/* 5 portraits: large left + 2x2, cells sized at 3:4 so a sofa / bath / room
+   is shown whole rather than as a tight zoom. */
 body.pp-v4.pp-grid .ppd-feature {
   display: grid;
   gap: var(--ppd-gap);
+  width: 100%;
   min-height: 0;
   overflow: hidden;
-  margin-inline: auto;
 }
 body.pp-v4.pp-grid .ppd-feature > * {
   min-width: 0;
@@ -5875,10 +5865,8 @@ body.pp-v4.pp-grid .ppd-feature > * {
 body.pp-v4.pp-grid .ppd-feature-5 {
   grid-template-columns: 2fr 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  width: min(100%, calc(var(--ppd-h) * 3 / 2));
-  aspect-ratio: 3 / 2;
   height: auto;
-  max-height: var(--ppd-h);
+  aspect-ratio: 3 / 2;
 }
 body.pp-v4.pp-grid .ppd-main {
   grid-column: 1;
@@ -5893,13 +5881,12 @@ body.pp-v4.pp-grid .ppd-feature img {
   object-fit: cover;
 }
 
-/* 4 portraits: 4-across at 3:4 (shorter than a 2x2 of the same tiles). */
+/* 4 portraits: even 2x2 at 3:4. Establishing shot is first (top left). */
 body.pp-v4.pp-grid .ppd-quad {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: var(--ppd-gap);
-  width: min(100%, calc(var(--ppd-h) * 3 + 3 * var(--ppd-gap)));
-  margin-inline: auto;
+  width: 100%;
 }
 body.pp-v4.pp-grid .ppd-quad img {
   display: block;
@@ -5909,13 +5896,12 @@ body.pp-v4.pp-grid .ppd-quad img {
   object-fit: cover;
 }
 
-/* 3 portraits: 3-across at 3:4, capped so the row cannot exceed --ppd-h. */
+/* 3 portraits: even 3-across at 3:4, so a vanity / chair / orchid stays whole. */
 body.pp-v4.pp-grid .ppd-row-3 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: var(--ppd-gap);
-  width: min(100%, calc(var(--ppd-h) * 2.25 + 2 * var(--ppd-gap)));
-  margin-inline: auto;
+  width: 100%;
   height: auto;
 }
 body.pp-v4.pp-grid .ppd-row-3 img {
@@ -5926,23 +5912,20 @@ body.pp-v4.pp-grid .ppd-row-3 img {
   object-fit: cover;
 }
 
-/* A single landscape, centred, natural ratio, capped so the whole bed / sofa
-   / room is visible on a laptop without scrolling the image. */
+/* Full-width landscape at natural ratio — no crop, so the whole bed / sofa /
+   room stays visible. */
 body.pp-v4.pp-grid .ppd-land {
   margin: 0;
-  display: flex;
-  justify-content: center;
 }
 body.pp-v4.pp-grid .ppd-land img {
   display: block;
-  width: auto;
+  width: 100%;
   height: auto;
-  max-width: 100%;
-  max-height: var(--ppd-land-h);
   object-fit: contain;
 }
 
-/* Featured portrait at natural ratio, also capped to the block budget. */
+/* A single featured portrait at natural ratio, capped so it does not fill
+   several screens. */
 body.pp-v4.pp-grid .ppd-one {
   margin: 0;
   display: flex;
@@ -5953,27 +5936,25 @@ body.pp-v4.pp-grid .ppd-one img {
   width: auto;
   height: auto;
   max-width: 100%;
-  max-height: var(--ppd-h);
+  max-height: min(86vh, 800px);
   object-fit: contain;
 }
+/* A modest natural-ratio frame for a detail shot that should not dominate. */
 body.pp-v4.pp-grid .ppd-one-detail img {
-  max-height: min(48vh, 420px, var(--ppd-h));
+  max-height: min(48vh, 420px);
 }
 
-/* Side-by-side landscapes at natural ratio, capped as a group. */
+/* Side-by-side landscapes (or similar-ratio photos) at natural ratio. */
 body.pp-v4.pp-grid .ppd-pair {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--ppd-gap);
   align-items: start;
-  width: min(100%, calc(var(--ppd-land-h) * 3.2 + var(--ppd-gap)));
-  margin-inline: auto;
 }
 body.pp-v4.pp-grid .ppd-pair img {
   display: block;
   width: 100%;
   height: auto;
-  max-height: var(--ppd-land-h);
   object-fit: contain;
 }
 body.pp-v4.pp-grid .next-project { margin-top: 72px; }
@@ -5982,29 +5963,24 @@ body.pp-v4.pp-grid .next-project { margin-top: 72px; }
   body.pp-v4.pp-grid .ppd-gallery { padding-left: 24px; padding-right: 24px; }
 }
 
-/* Phones: no image taller than ~75vh. Portrait groups go 2-up where sensible.
-   Natural ratios, no cover crops. */
+/* Phones: stack in DOM order at each photo's natural ratio. No cover crops. */
 @media (max-width: 800px) {
   body.pp-v4.pp-grid .ppd-gallery {
     padding-left: 16px;
     padding-right: 16px;
-    gap: 20px;
+    gap: 28px;
   }
   body.pp-v4.pp-grid .ppd-feature,
   body.pp-v4.pp-grid .ppd-feature-5,
   body.pp-v4.pp-grid .ppd-quad,
   body.pp-v4.pp-grid .ppd-row-3,
   body.pp-v4.pp-grid .ppd-pair {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto;
+    display: flex;
+    flex-direction: column;
     height: auto;
-    width: 100%;
-    max-height: none;
     aspect-ratio: auto;
     overflow: visible;
-    gap: 8px;
-    margin-inline: 0;
+    gap: 28px;
   }
   body.pp-v4.pp-grid .ppd-feature > *,
   body.pp-v4.pp-grid .ppd-main,
@@ -6016,16 +5992,6 @@ body.pp-v4.pp-grid .next-project { margin-top: 72px; }
     overflow: visible;
     min-height: 0;
   }
-  body.pp-v4.pp-grid .ppd-main {
-    grid-column: 1 / span 2;
-    grid-row: auto;
-  }
-  /* A leftover third image on a 3-across row sits centred, not stranded half-width. */
-  body.pp-v4.pp-grid .ppd-row-3 img:last-child:nth-child(odd) {
-    grid-column: 1 / span 2;
-    max-width: 75%;
-    justify-self: center;
-  }
   body.pp-v4.pp-grid .ppd-feature img,
   body.pp-v4.pp-grid .ppd-quad img,
   body.pp-v4.pp-grid .ppd-row-3 img,
@@ -6036,15 +6002,226 @@ body.pp-v4.pp-grid .next-project { margin-top: 72px; }
     width: 100%;
     height: auto;
     max-width: 100%;
+    max-height: none;
+    aspect-ratio: auto;
+    object-fit: contain;
+  }
+  body.pp-v4.pp-grid .ppd-one { justify-content: center; }
+  body.pp-v4.pp-grid .next-project { margin-top: 48px; }
+}
+
+/* ---- Project grid previews, gated on body.pp-v4.pp-grid.pp-fit. style.css v=186 on
+   project-*-grid-preview (and the two option-d pages that share this layout).
+   Live project pages stay on v=165. Option A–C stay on v=172. Intro typography
+   is unchanged from body.pp-v4. Every gallery block is capped to fit below the
+   sticky header on a 1280x800 / 1440x900 laptop, with a little cream above and
+   below: --ppd-h = min(720px, 100vh - header - 80px). Width is sized from that
+   height so a 1+2x2 or a 4-across row of 3:4 tiles stays on one screen. Lone
+   landscapes are centred at natural ratio with a tighter max-height, never a
+   full-width column taller than the viewport. Live project pages are on v=180. A later live push of this tighter
+   fit-on-screen grid should use v>=185 if caps has not gone first; a later
+   caps typography push should use v>=190. ---- */
+body.pp-v4.pp-grid.pp-fit .ppd-gallery {
+  --ppd-gap: 8px;
+  --ppd-h: min(720px, calc(100vh - var(--header-h) - 80px));
+  --ppd-land-h: min(var(--ppd-h), 640px, 70vh);
+  max-width: none;
+  margin: 0 auto;
+  padding-left: 36px;
+  padding-right: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* 5 portraits: large left + 2x2, cells at 3:4, the whole group is only as
+   tall as --ppd-h and is centred (width comes from the height). */
+body.pp-v4.pp-grid.pp-fit .ppd-feature {
+  display: grid;
+  gap: var(--ppd-gap);
+  min-height: 0;
+  overflow: hidden;
+  margin-inline: auto;
+}
+body.pp-v4.pp-grid.pp-fit .ppd-feature > * {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  height: 100%;
+}
+body.pp-v4.pp-grid.pp-fit .ppd-feature-5 {
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  width: min(100%, calc(var(--ppd-h) * 3 / 2));
+  aspect-ratio: 3 / 2;
+  height: auto;
+  max-height: var(--ppd-h);
+}
+body.pp-v4.pp-grid.pp-fit .ppd-main {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+body.pp-v4.pp-grid.pp-fit .ppd-feature img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+}
+
+/* 4 portraits: 4-across at 3:4 (shorter than a 2x2 of the same tiles). */
+body.pp-v4.pp-grid.pp-fit .ppd-quad {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: var(--ppd-gap);
+  width: min(100%, calc(var(--ppd-h) * 3 + 3 * var(--ppd-gap)));
+  margin-inline: auto;
+}
+body.pp-v4.pp-grid.pp-fit .ppd-quad img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+/* 3 portraits: 3-across at 3:4, capped so the row cannot exceed --ppd-h. */
+body.pp-v4.pp-grid.pp-fit .ppd-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--ppd-gap);
+  width: min(100%, calc(var(--ppd-h) * 2.25 + 2 * var(--ppd-gap)));
+  margin-inline: auto;
+  height: auto;
+}
+body.pp-v4.pp-grid.pp-fit .ppd-row-3 img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+/* A single landscape, centred, natural ratio, capped so the whole bed / sofa
+   / room is visible on a laptop without scrolling the image. */
+body.pp-v4.pp-grid.pp-fit .ppd-land {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+body.pp-v4.pp-grid.pp-fit .ppd-land img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: var(--ppd-land-h);
+  object-fit: contain;
+}
+
+/* Featured portrait at natural ratio, also capped to the block budget. */
+body.pp-v4.pp-grid.pp-fit .ppd-one {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+body.pp-v4.pp-grid.pp-fit .ppd-one img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: var(--ppd-h);
+  object-fit: contain;
+}
+body.pp-v4.pp-grid.pp-fit .ppd-one-detail img {
+  max-height: min(48vh, 420px, var(--ppd-h));
+}
+
+/* Side-by-side landscapes at natural ratio, capped as a group. */
+body.pp-v4.pp-grid.pp-fit .ppd-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ppd-gap);
+  align-items: start;
+  width: min(100%, calc(var(--ppd-land-h) * 3.2 + var(--ppd-gap)));
+  margin-inline: auto;
+}
+body.pp-v4.pp-grid.pp-fit .ppd-pair img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: var(--ppd-land-h);
+  object-fit: contain;
+}
+body.pp-v4.pp-grid.pp-fit .next-project { margin-top: 72px; }
+
+@media (max-width: 1100px) and (min-width: 801px) {
+  body.pp-v4.pp-grid.pp-fit .ppd-gallery { padding-left: 24px; padding-right: 24px; }
+}
+
+/* Phones: no image taller than ~75vh. Portrait groups go 2-up where sensible.
+   Natural ratios, no cover crops. */
+@media (max-width: 800px) {
+  body.pp-v4.pp-grid.pp-fit .ppd-gallery {
+    padding-left: 16px;
+    padding-right: 16px;
+    gap: 20px;
+  }
+  body.pp-v4.pp-grid.pp-fit .ppd-feature,
+  body.pp-v4.pp-grid.pp-fit .ppd-feature-5,
+  body.pp-v4.pp-grid.pp-fit .ppd-quad,
+  body.pp-v4.pp-grid.pp-fit .ppd-row-3,
+  body.pp-v4.pp-grid.pp-fit .ppd-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    height: auto;
+    width: 100%;
+    max-height: none;
+    aspect-ratio: auto;
+    overflow: visible;
+    gap: 8px;
+    margin-inline: 0;
+  }
+  body.pp-v4.pp-grid.pp-fit .ppd-feature > *,
+  body.pp-v4.pp-grid.pp-fit .ppd-main,
+  body.pp-v4.pp-grid.pp-fit .ppd-quad > *,
+  body.pp-v4.pp-grid.pp-fit .ppd-row-3 > *,
+  body.pp-v4.pp-grid.pp-fit .ppd-pair > * {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    min-height: 0;
+  }
+  body.pp-v4.pp-grid.pp-fit .ppd-main {
+    grid-column: 1 / span 2;
+    grid-row: auto;
+  }
+  /* A leftover third image on a 3-across row sits centred, not stranded half-width. */
+  body.pp-v4.pp-grid.pp-fit .ppd-row-3 img:last-child:nth-child(odd) {
+    grid-column: 1 / span 2;
+    max-width: 75%;
+    justify-self: center;
+  }
+  body.pp-v4.pp-grid.pp-fit .ppd-feature img,
+  body.pp-v4.pp-grid.pp-fit .ppd-quad img,
+  body.pp-v4.pp-grid.pp-fit .ppd-row-3 img,
+  body.pp-v4.pp-grid.pp-fit .ppd-pair img,
+  body.pp-v4.pp-grid.pp-fit .ppd-land img,
+  body.pp-v4.pp-grid.pp-fit .ppd-one img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
     max-height: 75vh;
     aspect-ratio: auto;
     object-fit: contain;
   }
-  body.pp-v4.pp-grid .ppd-land,
-  body.pp-v4.pp-grid .ppd-one {
+  body.pp-v4.pp-grid.pp-fit .ppd-land,
+  body.pp-v4.pp-grid.pp-fit .ppd-one {
     justify-content: center;
   }
-  body.pp-v4.pp-grid .next-project { margin-top: 48px; }
+  body.pp-v4.pp-grid.pp-fit .next-project { margin-top: 48px; }
 }
 
 /* ---- Design Journeys brochure grid + viewer, preview only: gated on body.journeys-page ---- */
