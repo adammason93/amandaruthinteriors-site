@@ -5399,7 +5399,7 @@ body.jn-open { overflow: hidden; }
   z-index: 1;
   padding: 0 6%;
 }
-.jn-cover-copy .jn-tag { color: var(--cream); border-color: rgba(253,252,251,0.55); margin-bottom: 12px; }
+.jn-cover-copy .jn-tag { color: var(--cream); border-color: rgba(253,252,251,0.55); margin: 0 auto 12px; }
 .jn-cover-copy h2 {
   margin: 0;
   font-size: clamp(32px, 5vw, 56px);
