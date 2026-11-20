@@ -5782,3 +5782,253 @@ body.sig-v2.page-about-us p.about-signature svg.sig-draw { width: 300px; max-wid
   left: 0;
   object-fit: fill;
 }
+
+
+/* ---- Design Journeys v30: printed pages, FLIP open, idle shelf tilt (preview only) ---- */
+.journeys-page .jn-grid {
+  perspective: 1200px;
+}
+.journeys-page .jn-mini-idle {
+  display: block;
+  transform-origin: 50% 72%;
+  will-change: transform;
+}
+@keyframes jnIdleA {
+  0%, 100% { transform: rotateX(0deg) rotateY(0deg); }
+  50% { transform: rotateX(2.4deg) rotateY(-5.2deg); }
+}
+@keyframes jnIdleB {
+  0%, 100% { transform: rotateX(0.4deg) rotateY(1.2deg); }
+  50% { transform: rotateX(-1.6deg) rotateY(4.4deg); }
+}
+@keyframes jnIdleC {
+  0%, 100% { transform: rotateX(1deg) rotateY(-1.4deg); }
+  50% { transform: rotateX(3deg) rotateY(-4.6deg); }
+}
+@keyframes jnIdleD {
+  0%, 100% { transform: rotateX(0deg) rotateY(0.6deg); }
+  50% { transform: rotateX(-2.2deg) rotateY(-3.8deg); }
+}
+@keyframes jnIdleE {
+  0%, 100% { transform: rotateX(0.8deg) rotateY(-0.8deg); }
+  50% { transform: rotateX(2.6deg) rotateY(3.6deg); }
+}
+@keyframes jnIdleF {
+  0%, 100% { transform: rotateX(-0.4deg) rotateY(-1.8deg); }
+  50% { transform: rotateX(1.8deg) rotateY(-5deg); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .journeys-page .jn-card:nth-child(1) .jn-mini-idle { animation: jnIdleA 7.6s ease-in-out 0.2s infinite; }
+  .journeys-page .jn-card:nth-child(2) .jn-mini-idle { animation: jnIdleB 9.2s ease-in-out 1.15s infinite; }
+  .journeys-page .jn-card:nth-child(3) .jn-mini-idle { animation: jnIdleC 8.1s ease-in-out 0.55s infinite; }
+  .journeys-page .jn-card:nth-child(4) .jn-mini-idle { animation: jnIdleD 10.1s ease-in-out 1.7s infinite; }
+  .journeys-page .jn-card:nth-child(5) .jn-mini-idle { animation: jnIdleE 7.9s ease-in-out 0.35s infinite; }
+  .journeys-page .jn-card:nth-child(6) .jn-mini-idle { animation: jnIdleF 9.7s ease-in-out 2.05s infinite; }
+}
+.journeys-page.jn-animating .jn-mini-idle,
+.journeys-page.jn-open .jn-mini-idle,
+.journeys-page .jn-card:hover .jn-mini-idle {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .journeys-page .jn-mini-idle { animation: none !important; }
+}
+.journeys-page .jn-mini-stage::after {
+  content: "";
+  display: block;
+  width: 72%;
+  height: 18px;
+  margin: 2px auto 0;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 40%, rgba(40, 28, 18, 0.16), rgba(40, 28, 18, 0) 70%);
+  pointer-events: none;
+}
+.journeys-page .jn-card {
+  transition: transform 0.65s cubic-bezier(0.22, 0.82, 0.24, 1), opacity 0.65s ease;
+}
+.journeys-page .jn-card.jn-recede {
+  transform: scale(0.94) translateY(14px);
+  opacity: 0.3;
+  pointer-events: none;
+}
+.journeys-page .jn-card.jn-chosen .jn-card-meta,
+.journeys-page .jn-card.jn-chosen .jn-card-foot {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.journeys-page .jn-slot-hidden {
+  visibility: hidden;
+}
+.journeys-page .jn-flyer,
+.jn-flyer {
+  pointer-events: none;
+  z-index: 230;
+}
+.jn-flyer .jn-mini-book {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+/* Lightbox: a table, not a grey void. Book takes more of the screen. */
+.journeys-page .jn-book-overlay {
+  background: transparent;
+  transition: background 0.55s ease;
+}
+.journeys-page .jn-book-overlay[data-jn-phase="opening"],
+.journeys-page .jn-book-overlay[data-jn-phase="closing"] {
+  background: rgba(236, 228, 214, 0.42);
+}
+.journeys-page .jn-book-overlay[data-jn-phase="open"] {
+  background: #ece4d6;
+}
+.journeys-page .jn-book-overlay .section-book {
+  padding-top: 28px;
+  padding-bottom: 18px;
+  background: transparent;
+}
+.journeys-page .jn-book-overlay .bk {
+  --bw: min(1280px, calc(100vw - 32px), calc((100vh - 92px) * 1.5), calc((100svh - 92px) * 1.5));
+}
+@media (max-width: 899px) {
+  .journeys-page .jn-book-overlay .bk {
+    --bw: min(520px, calc(100vw - 20px), calc((100vh - 148px) * 0.75), calc((100svh - 148px) * 0.75));
+  }
+  .journeys-page .jn-book-overlay .section-book { padding-top: 52px; }
+}
+.journeys-page .jn-book-overlay .bk-opener { display: none; }
+.journeys-page .jn-book-waiting .bk-stage,
+.journeys-page .jn-book-waiting .bk-intro,
+.journeys-page .jn-book-waiting .bk-controls {
+  opacity: 0;
+}
+.journeys-page .jn-dismiss {
+  background: rgba(253, 252, 251, 0.92);
+  border: 1px solid rgba(168, 143, 104, 0.45);
+  color: var(--brown);
+  letter-spacing: 0.14em;
+  font-size: 12px;
+}
+.journeys-page .jn-book-overlay .bk-controls {
+  margin-top: 18px;
+}
+.journeys-page .jn-book-overlay .bk-arrow-btn {
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(168, 143, 104, 0.5);
+  background: rgba(253, 252, 251, 0.94);
+  color: var(--brown);
+  box-shadow: 0 4px 14px rgba(40, 28, 18, 0.06);
+}
+.journeys-page .jn-book-overlay .bk-arrow-btn:hover:not(:disabled) {
+  background: var(--brown);
+  color: var(--cream);
+  border-color: var(--brown);
+}
+.journeys-page .jn-book-overlay .bk-count {
+  font-style: italic;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  color: var(--brown);
+}
+.journeys-page .jn-book-overlay .bk-dot::before {
+  background: rgba(168, 143, 104, 0.45);
+}
+.journeys-page .jn-book-overlay .bk-dot[aria-current="page"]::before {
+  background: var(--brown);
+}
+.journeys-page .jn-book-overlay .bk-close {
+  border: 1px solid rgba(168, 143, 104, 0.5);
+  background: rgba(253, 252, 251, 0.94);
+  color: var(--brown);
+  letter-spacing: 0.12em;
+}
+.journeys-page .jn-book-overlay .bk-close:hover {
+  background: var(--brown);
+  color: var(--cream);
+  border-color: var(--brown);
+}
+
+/* Inner boards are the page — full-bleed, no white card on cream. */
+.journeys-page .jn-board-page {
+  background: #fbf7f0;
+}
+.journeys-page .jn-board-page .bk-pg { padding: 0; }
+.journeys-page .jn-board-page .jn-board-well {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: transparent;
+}
+.journeys-page .jn-board-l .jn-board-well,
+.journeys-page .jn-board-r .jn-board-well { left: 0; right: 0; top: 0; bottom: 0; }
+.journeys-page .jn-board-well img {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 200%;
+  max-width: none;
+  object-fit: contain;
+  object-position: center center;
+  display: block;
+  image-rendering: auto;
+}
+.journeys-page .jn-board-l .jn-board-well img { left: 0; }
+.journeys-page .jn-board-r .jn-board-well img { left: -100%; }
+.journeys-page .bk-phone .jn-board-l .jn-board-well {
+  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  aspect-ratio: auto;
+  transform: none;
+}
+.journeys-page .bk-phone .jn-board-l .jn-board-well img {
+  width: 100%;
+  height: 100%;
+  left: 0;
+  object-fit: contain;
+}
+
+/* Soft, fading gutter — not a hard grey band. */
+.journeys-page .jn-book-overlay .bk-front::before {
+  background: linear-gradient(90deg,
+    rgba(40, 28, 18, 0.12) 0,
+    rgba(40, 28, 18, 0.05) 6%,
+    rgba(40, 28, 18, 0) 16%,
+    rgba(255, 255, 255, 0) 88%,
+    rgba(255, 255, 255, 0.16) 100%);
+}
+.journeys-page .jn-book-overlay .bk-back::before {
+  background: linear-gradient(270deg,
+    rgba(40, 28, 18, 0.12) 0,
+    rgba(40, 28, 18, 0.05) 6%,
+    rgba(40, 28, 18, 0) 16%,
+    rgba(255, 255, 255, 0) 88%,
+    rgba(255, 255, 255, 0.16) 100%);
+}
+.journeys-page .jn-book-overlay .bk-desk[data-bk-state="open"] .bk-stage::after {
+  left: 8%;
+  right: 8%;
+  bottom: -36px;
+  height: 58px;
+  background: radial-gradient(ellipse at 50% 30%, rgba(40, 28, 18, 0.28), transparent 72%);
+  opacity: 1;
+}
+.journeys-page .jn-book-overlay .bk-leaf.is-turning.turn-fwd .bk-front,
+.journeys-page .jn-book-overlay .bk-leaf.is-turning.turn-back .bk-back {
+  box-shadow: -18px 0 28px -12px rgba(40, 28, 18, 0.22);
+}
+.journeys-page .jn-book-overlay .turn-fwd .bk-front::after {
+  background: linear-gradient(90deg, rgba(40, 28, 18, 0.04), rgba(40, 28, 18, 0.28));
+}
+@media (prefers-reduced-motion: reduce) {
+  .journeys-page .jn-card,
+  .journeys-page .jn-card.jn-recede,
+  .journeys-page .jn-book-overlay,
+  .jn-flyer {
+    transition: none !important;
+  }
+}

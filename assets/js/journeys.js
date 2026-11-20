@@ -116,6 +116,7 @@
     JOURNEYS.forEach(function (j, i) {
       var card = document.createElement("article");
       card.className = "jn-card";
+      card.setAttribute("data-jn-index", String(i));
 
       var hit = document.createElement("button");
       hit.type = "button";
@@ -126,7 +127,7 @@
       var stage = document.createElement("span");
       stage.className = "jn-mini-stage";
       stage.innerHTML =
-        '<span class="jn-mini-book" aria-hidden="true">' +
+        '<span class="jn-mini-idle"><span class="jn-mini-book" aria-hidden="true">' +
           '<span class="bk-page bk-cover jn-mini-cover">' +
             '<span class="bk-pg">' +
               '<span class="bk-cv-photo"><img src="' + ROOT + j.folder + '/cover-hero.webp" width="900" height="1200" alt="" decoding="async" loading="eager"></span>' +
@@ -143,7 +144,7 @@
           '<span class="jn-mini-fore"></span>' +
           '<span class="jn-mini-bottom"></span>' +
           '<span class="jn-mini-back"></span>' +
-        "</span>";
+        "</span></span>";
       hit.appendChild(stage);
 
       var meta = document.createElement("span");
@@ -188,7 +189,7 @@
   }
   function boardSrcset(folder, file) {
     var base = ROOT + folder + "/" + file;
-    return base + "-1200.webp 1200w, " + base + "-1800.webp 1800w";
+    return base + "-1200.webp 1200w, " + base + "-1800.webp 1800w, " + base + "-2100.webp 2100w";
   }
 
   function pageEl(html, label, spread) {
@@ -203,7 +204,7 @@
   function spreadFaces(j, page) {
     var src = boardSrc(j.folder, page.file);
     var srcset = boardSrcset(j.folder, page.file);
-    var sizes = "(max-width: 899px) 92vw, 920px";
+    var sizes = "(max-width: 899px) 96vw, min(1400px, 94vw)";
     var img = function (alt) {
       return '<img data-src="' + src + '" data-srcset="' + srcset + '" sizes="' + sizes +
         '" width="1800" height="1273" alt="' + escapeHtml(alt || "") + '" decoding="async">';
@@ -304,21 +305,115 @@
   var btnDismiss = overlay.querySelector("[data-jn-dismiss]");
   var lastFocus = null;
   var activeBook = null;
+  var activeIndex = -1;
+  var animating = false;
+  var flyEl = null;
+  var reduceMq = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
 
-  function closeJourney() {
-    if (activeBook && activeBook.destroy) activeBook.destroy();
-    activeBook = null;
-    if (host) host.innerHTML = "";
-    overlay.setAttribute("hidden", "");
-    overlay.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("jn-open");
-    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  function reduced() {
+    return !!(reduceMq && reduceMq.matches);
   }
 
-  function openJourney(i) {
-    if (!window.initAmandaRuthBook) return;
-    var j = JOURNEYS[i];
-    lastFocus = document.activeElement;
+  function cardEl(i) {
+    return grid.querySelector('.jn-card[data-jn-index="' + i + '"]');
+  }
+  function miniBook(i) {
+    var c = cardEl(i);
+    return c ? c.querySelector(".jn-mini-book") : null;
+  }
+  function idleWrap(i) {
+    var book = miniBook(i);
+    return book && book.parentElement && book.parentElement.classList.contains("jn-mini-idle")
+      ? book.parentElement
+      : book;
+  }
+  function coverEl(root) {
+    return root.querySelector(".bk-cover") || root.querySelector("[data-bk-book]");
+  }
+  function setPhase(name) {
+    document.body.classList.toggle("jn-open", name !== "idle");
+    document.body.classList.toggle("jn-animating", name === "opening" || name === "closing");
+    document.body.classList.toggle("jn-book-open", name === "open");
+    if (name === "idle") {
+      document.body.classList.remove("jn-open", "jn-animating", "jn-book-open");
+    }
+    if (overlay) overlay.setAttribute("data-jn-phase", name);
+  }
+  function recedeOthers(i, on) {
+    Array.prototype.forEach.call(grid.querySelectorAll(".jn-card"), function (c) {
+      var idx = c.getAttribute("data-jn-index");
+      c.classList.toggle("jn-chosen", on && idx === String(i));
+      c.classList.toggle("jn-recede", on && idx !== String(i));
+    });
+  }
+  function freezeIdle(i) {
+    var idle = idleWrap(i);
+    if (!idle) return;
+    var tr = window.getComputedStyle(idle).transform;
+    idle.style.animation = "none";
+    idle.style.transform = tr === "none" ? "" : tr;
+  }
+  function unfreezeIdle(i) {
+    var idle = idleWrap(i);
+    if (!idle) return;
+    idle.style.animation = "";
+    idle.style.transform = "";
+  }
+  function removeFlyer() {
+    if (flyEl && flyEl.parentNode) flyEl.parentNode.removeChild(flyEl);
+    flyEl = null;
+  }
+  function makeFlyer(book, rect) {
+    var wrap = document.createElement("span");
+    wrap.className = "jn-flyer";
+    var clone = book.cloneNode(true);
+    clone.classList.remove("jn-slot-hidden");
+    clone.style.width = "100%";
+    clone.style.height = "100%";
+    clone.style.margin = "0";
+    clone.style.animation = "none";
+    wrap.appendChild(clone);
+    wrap.style.position = "fixed";
+    wrap.style.left = rect.left + "px";
+    wrap.style.top = rect.top + "px";
+    wrap.style.width = rect.width + "px";
+    wrap.style.height = rect.height + "px";
+    wrap.style.margin = "0";
+    wrap.style.zIndex = "230";
+    wrap.style.transformOrigin = "top left";
+    wrap.style.pointerEvents = "none";
+    document.body.appendChild(wrap);
+    return wrap;
+  }
+  function flyTo(flyer, fromRect, toRect, ms, done) {
+    var dx = toRect.left - fromRect.left;
+    var dy = toRect.top - fromRect.top;
+    var sx = toRect.width / Math.max(1, fromRect.width);
+    var sy = toRect.height / Math.max(1, fromRect.height);
+    flyer.style.left = fromRect.left + "px";
+    flyer.style.top = fromRect.top + "px";
+    flyer.style.width = fromRect.width + "px";
+    flyer.style.height = fromRect.height + "px";
+    flyer.style.transition = "none";
+    flyer.style.transform = "translate(0,0) scale(1)";
+    void flyer.offsetWidth;
+    flyer.style.transition = "transform " + ms + "ms cubic-bezier(0.22, 0.82, 0.24, 1)";
+    flyer.style.transform = "translate(" + dx + "px," + dy + "px) scale(" + sx + "," + sy + ")";
+    var settled = false;
+    function finish() {
+      if (settled) return;
+      settled = true;
+      flyer.removeEventListener("transitionend", onEnd);
+      window.clearTimeout(fallback);
+      done();
+    }
+    function onEnd(e) {
+      if (e.target === flyer && e.propertyName === "transform") finish();
+    }
+    flyer.addEventListener("transitionend", onEnd);
+    var fallback = window.setTimeout(finish, ms + 60);
+  }
+  function mountBook(j) {
     if (activeBook && activeBook.destroy) activeBook.destroy();
     host.innerHTML = bookShell(j);
     var store = host.querySelector("[data-bk-pages]");
@@ -330,19 +425,151 @@
     });
     store.appendChild(backFace());
     var root = host.querySelector("[data-book]");
-    activeBook = window.initAmandaRuthBook(root, { mergeSpreadFaces: true, nudgeOnStart: true });
-    overlay.removeAttribute("hidden");
-    overlay.setAttribute("aria-hidden", "false");
-    document.body.classList.add("jn-open");
-    if (root && root.focus) root.focus({ preventScroll: true });
+    activeBook = window.initAmandaRuthBook(root, { mergeSpreadFaces: true, nudgeOnStart: false });
+    var btnClose = root.querySelector("[data-bk-close]");
+    if (btnClose) {
+      btnClose.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        closeJourney();
+      }, true);
+    }
+    return root;
+  }
+  function teardownOverlay() {
+    removeFlyer();
+    if (activeIndex >= 0) {
+      var source = miniBook(activeIndex);
+      if (source) source.classList.remove("jn-slot-hidden");
+      unfreezeIdle(activeIndex);
+    }
+    if (activeBook && activeBook.destroy) activeBook.destroy();
+    activeBook = null;
+    if (host) host.innerHTML = "";
+    overlay.setAttribute("hidden", "");
+    overlay.setAttribute("aria-hidden", "true");
+    recedeOthers(0, false);
+    Array.prototype.forEach.call(grid.querySelectorAll(".jn-card"), function (c) {
+      c.classList.remove("jn-chosen", "jn-recede", "jn-slot-empty");
+    });
+    setPhase("idle");
+    animating = false;
+    activeIndex = -1;
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
 
-  if (btnDismiss) btnDismiss.addEventListener("click", closeJourney);
+  function closeJourney() {
+    if (overlay.hasAttribute("hidden") && !animating) return;
+    if (animating && overlay.getAttribute("data-jn-phase") === "closing") return;
+    var i = activeIndex;
+    var source = miniBook(i);
+    if (reduced() || !source) {
+      teardownOverlay();
+      return;
+    }
+    animating = true;
+    setPhase("closing");
+    recedeOthers(i, true);
+    var root = host && host.querySelector("[data-book]");
+
+    function flyBack(fromRect) {
+      var last = fromRect;
+      if (!last || last.width < 8) {
+        var cover = root && coverEl(root);
+        last = cover ? cover.getBoundingClientRect() : null;
+      }
+      if (!last || last.width < 8) {
+        last = { left: window.innerWidth / 2 - 90, top: window.innerHeight / 2 - 120, width: 180, height: 240 };
+      }
+      var first = source.getBoundingClientRect();
+      removeFlyer();
+      flyEl = makeFlyer(source, last);
+      if (root) root.classList.add("jn-book-waiting");
+      flyTo(flyEl, last, first, 560, function () {
+        teardownOverlay();
+      });
+    }
+
+    var state = root && root.getAttribute("data-bk-state");
+    var count = root && root.querySelector("[data-bk-count]");
+    var txt = count ? (count.textContent || "") : "";
+    var nearStart = /Cover/.test(txt) || /Pages 1/.test(txt) || /Page 1 /.test(txt);
+    if (state && state !== "closed-front" && activeBook && activeBook.goTo && nearStart) {
+      activeBook.goTo(0, 0);
+      var t0 = Date.now();
+      (function wait() {
+        if ((root.getAttribute("data-bk-state") === "closed-front") || Date.now() - t0 > 1200) flyBack();
+        else window.setTimeout(wait, 40);
+      })();
+      return;
+    }
+    // Mid-book: start the cover from the open spread's box so the book never blanks out.
+    var spreadBox = root && root.querySelector(".bk-stage");
+    var from = spreadBox ? spreadBox.getBoundingClientRect() : null;
+    if (from && from.width > 8 && state !== "closed-front") {
+      // Use the cover's aspect (3:4) centred on the spread, so it doesn't stretch.
+      var h = from.height;
+      var w = h * 0.75;
+      from = { left: from.left + (from.width - w) / 2, top: from.top, width: w, height: h };
+    }
+    flyBack(from);
+  }
+
+  function openJourney(i) {
+    if (!window.initAmandaRuthBook || animating) return;
+    var j = JOURNEYS[i];
+    var source = miniBook(i);
+    lastFocus = document.activeElement;
+    activeIndex = i;
+
+    if (reduced() || !source) {
+      setPhase("open");
+      recedeOthers(i, true);
+      overlay.removeAttribute("hidden");
+      overlay.setAttribute("aria-hidden", "false");
+      var root = mountBook(j);
+      if (activeBook && activeBook.step) activeBook.step(1);
+      if (root && root.focus) root.focus({ preventScroll: true });
+      return;
+    }
+
+    animating = true;
+    freezeIdle(i);
+    setPhase("opening");
+    recedeOthers(i, true);
+    var first = source.getBoundingClientRect();
+    source.classList.add("jn-slot-hidden");
+    var card = cardEl(i);
+    if (card) card.classList.add("jn-slot-empty");
+    flyEl = makeFlyer(source, first);
+
+    overlay.removeAttribute("hidden");
+    overlay.setAttribute("aria-hidden", "false");
+    var root = mountBook(j);
+    root.classList.add("jn-book-waiting");
+
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        var cover = coverEl(root);
+        var last = cover ? cover.getBoundingClientRect() : first;
+        flyTo(flyEl, first, last, 640, function () {
+          root.classList.remove("jn-book-waiting");
+          removeFlyer();
+          setPhase("open");
+          if (activeBook && activeBook.step) activeBook.step(1);
+          animating = false;
+          if (root && root.focus) root.focus({ preventScroll: true });
+        });
+      });
+    });
+  }
+
+  if (btnDismiss) btnDismiss.addEventListener("click", function () { closeJourney(); });
   overlay.addEventListener("click", function (e) {
     if (e.target === overlay) closeJourney();
   });
   document.addEventListener("keydown", function (e) {
-    if (overlay.hasAttribute("hidden")) return;
+    if (overlay.hasAttribute("hidden") && !animating) return;
     if (e.key === "Escape") { e.preventDefault(); closeJourney(); }
   });
 
