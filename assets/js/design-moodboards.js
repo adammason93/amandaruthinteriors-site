@@ -31,6 +31,10 @@
     var hinted = false;
     var turnedOnce = false;
     var announce = false;
+    // Book v2 (test page only, marked with data-book-v2): page dots per spread on phones too,
+    // a one-off cover nudge, and video pages that play only while their spread is open.
+    var v2 = root.hasAttribute('data-book-v2');
+    var inView = false;
 
 
     function isDesk() { return !wide || wide.matches; }
@@ -111,8 +115,31 @@
       return 'Pages ' + (2 * k - 1) + '\u2013' + (2 * k) + ' of ' + (faces.length - 2);
     }
 
+    // v2: one dot per two-page spread in both layouts (cover, spreads, back cover)
+    function spreadStops() { return v2 ? Math.ceil(faces.length / 2) + 1 : stops(); }
+    function spreadLabel(i) {
+      if (!v2) return stopLabel(i);
+      if (i === 0) return 'Cover';
+      if (i === spreadStops() - 1) return 'Back cover';
+      var l = faces[2 * i - 1], r = faces[2 * i];
+      return (r && r.getAttribute('data-bk-spread')) || (l && l.getAttribute('data-bk-label')) || ('Spread ' + i);
+    }
+    function currentSpread() { return (!v2 || mode === 'desk') ? k : Math.ceil(k / 2); }
+    function spreadTarget(s) { return (!v2 || mode === 'desk') ? s : (s === 0 ? 0 : Math.min(maxK, 2 * s - 1)); }
+
     function buildDots() {
       dotsEl.innerHTML = '';
+      if (v2) {
+        for (var s = 0; s < spreadStops(); s++) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'bk-dot';
+          b.setAttribute('aria-label', 'Go to ' + spreadLabel(s).replace(/&rsquo;/g, '\u2019') + ' (' + (s + 1) + ' of ' + spreadStops() + ')');
+          (function (n) { b.addEventListener('click', function () { goTo(spreadTarget(n), mode === 'phone' ? 70 : 130); }); })(s);
+          dotsEl.appendChild(b);
+        }
+        return;
+      }
       for (var i = 0; i < stops(); i++) {
         var d = document.createElement('button');
         d.type = 'button';
@@ -139,8 +166,37 @@
           img.removeAttribute('data-src');
           img.removeAttribute('data-srcset');
         });
+        if (v2) faces[i].querySelectorAll('video[data-src]').forEach(function (v) {
+          v.src = v.getAttribute('data-src');
+          v.removeAttribute('data-src');
+          v.load();
+        });
       }
     }
+
+    // v2 video pages: play only while the page is showing and the book is on screen;
+    // reduced motion keeps the poster and never autoplays.
+    function syncVideos() {
+      if (!v2) return;
+      var vis = visibleFaces();
+      faces.forEach(function (f, i) {
+        f.querySelectorAll('video').forEach(function (v) {
+          var go = vis.indexOf(i) !== -1 && inView && !reduced() && !v.hasAttribute('data-src');
+          if (go) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); }
+          else if (!v.paused) v.pause();
+        });
+      });
+    }
+    if (v2) faces.forEach(function (f, i) {
+      f.querySelectorAll('video').forEach(function (v) {
+        v.muted = true;
+        v.setAttribute('playsinline', '');
+        if (reduced()) { v.removeAttribute('autoplay'); v.autoplay = false; }
+        v.addEventListener('play', function () {
+          if (reduced() || !inView || visibleFaces().indexOf(faces.indexOf(f)) === -1) v.pause();
+        });
+      });
+    });
 
     function restack() {
       leaves.forEach(function (l, i) {
@@ -175,12 +231,13 @@
         btnClose.tabIndex = shut ? -1 : 0;
       }
       Array.prototype.forEach.call(dotsEl.children, function (d, i) {
-        if (i === k) d.setAttribute('aria-current', 'page'); else d.removeAttribute('aria-current');
+        if (i === currentSpread()) d.setAttribute('aria-current', 'page'); else d.removeAttribute('aria-current');
       });
       countEl.textContent = countText();
       root.style.setProperty('--prog', maxK ? (k / maxK).toFixed(3) : '0');
       if (announce) live.textContent = countText() + ': ' + stopLabel(k).replace(/&rsquo;/g, '\u2019');
       loadAround();
+      syncVideos();
     }
 
     function turn(leaf, forward) {
@@ -224,6 +281,7 @@
     }
 
     function step(dir) {
+      if (v2) leaves.forEach(function (l) { l.classList.remove('bk-nudging'); });
       if (k === 0) { idleOff(); releaseDrag(); }
       if (dir > 0 && k < maxK) { turn(leaves[k], true); k += 1; }
       else if (dir < 0 && k > 0) { k -= 1; turn(leaves[k], false); }
@@ -426,7 +484,33 @@
     });
     build();
     if (!reduced()) root.classList.add('bk-idle');
-    if (reduce && reduce.addEventListener) reduce.addEventListener('change', function () { if (reduced()) { idleOff(); stopMotion(); } else if (k === 0) root.classList.add('bk-idle'); });
+    if (reduce && reduce.addEventListener) reduce.addEventListener('change', function () { if (reduced()) { idleOff(); stopMotion(); } else if (k === 0) root.classList.add('bk-idle'); syncVideos(); });
+
+    // v2: once per page load, when the closed book first comes into view, lift the cover a
+    // little from the spine and let it settle back, as a hint that it opens.
+    var nudged = false;
+    function nudge() {
+      if (nudged || k !== 0 || reduced() || drag || root.classList.contains('bk-dragging') || !leaves[0]) return;
+      nudged = true;
+      var leaf = leaves[0];
+      leaf.classList.add('bk-nudging');
+      leaf.addEventListener('animationend', function done(e) {
+        if (e.target !== leaf) return;
+        leaf.classList.remove('bk-nudging');
+        leaf.removeEventListener('animationend', done);
+      });
+      root.setAttribute('data-bk-nudged', '');
+    }
+    if (v2 && 'IntersectionObserver' in window) {
+      var vio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          inView = en.isIntersecting;
+          syncVideos();
+          if (en.isIntersecting && en.intersectionRatio >= 0.5 && !nudged) window.setTimeout(nudge, 450);
+        });
+      }, { threshold: [0, 0.5] });
+      vio.observe(bookEl);
+    } else if (v2) { inView = true; syncVideos(); }
 
     // first view: a gentle corner peel says "turn me"
     if ('IntersectionObserver' in window) {
