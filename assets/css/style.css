@@ -5125,6 +5125,86 @@ body.insta-2row .ig-grid a { aspect-ratio: 20 / 17; }
 }
 
 
+/* ---- Photo polish, preview only: gated on body.photo-polish (about-preview + portfolio-grid-preview). style.css v=75. Live pages stay on v=65. ---- */
+/* About Us: a slim cream gap between the Our Approach photo row and the Our Latest Project banner. */
+body.photo-polish .cta-banner { margin-top: 16px; }
+@media (max-width: 800px) {
+  body.photo-polish .cta-banner { margin-top: 10px; }
+}
+
+/* Portfolio Completed Projects: every tile in a row shares the same top, image height, and caption start. */
+body.photo-polish .folio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-flow: row;
+  gap: 28px 20px;
+  align-items: start;
+  justify-content: stretch;
+}
+body.photo-polish .folio-grid .tile-wide,
+body.photo-polish .folio-grid .tile-std,
+body.photo-polish .folio-grid .tile-tall {
+  grid-column: auto;
+}
+body.photo-polish .folio-grid .project-card.folio {
+  height: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+body.photo-polish .folio-grid .folio-media,
+body.photo-polish .folio-grid .tile-wide .folio-media,
+body.photo-polish .folio-grid .tile-tall .folio-media,
+body.photo-polish .folio-grid .tile-std .folio-media {
+  aspect-ratio: 3 / 4;
+  width: 100%;
+}
+body.photo-polish .folio-grid .folio-caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 3.6em;
+}
+
+@media (max-width: 1100px) and (min-width: 801px) {
+  body.photo-polish .folio-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 16px;
+  }
+  body.photo-polish .folio-grid .tile-wide,
+  body.photo-polish .folio-grid .tile-std,
+  body.photo-polish .folio-grid .tile-tall {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 800px) {
+  body.photo-polish .folio-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  body.photo-polish .folio-grid .tile-wide,
+  body.photo-polish .folio-grid .tile-std,
+  body.photo-polish .folio-grid .tile-tall {
+    grid-column: auto;
+  }
+  body.photo-polish .folio-grid .folio-media,
+  body.photo-polish .folio-grid .tile-wide .folio-media,
+  body.photo-polish .folio-grid .tile-tall .folio-media,
+  body.photo-polish .folio-grid .tile-std .folio-media {
+    aspect-ratio: 4 / 3;
+  }
+  body.photo-polish .project-card.folio { height: auto; }
+}
+
+@media (min-width: 700px) and (max-width: 800px) {
+  /* Override the live 2-col / 260px-tall card rule; phones and small tablets stack. */
+  body.photo-polish .folio-grid { grid-template-columns: 1fr; }
+  body.photo-polish .project-card.folio { height: auto; }
+}
+
+
 /* ---- Design Journeys brochure grid + viewer, preview only: gated on body.journeys-page ---- */
 .journeys-page { background: var(--cream); }
 .jn-intro {
