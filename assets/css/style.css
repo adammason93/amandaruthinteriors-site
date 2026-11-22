@@ -6010,7 +6010,7 @@ body.pp-v4.pp-grid .next-project { margin-top: 72px; }
   body.pp-v4.pp-grid .next-project { margin-top: 48px; }
 }
 
-/* ---- Project grid previews, gated on body.pp-v4.pp-grid.pp-fit. style.css v=188 on
+/* ---- Project grid previews, gated on body.pp-v4.pp-grid.pp-fit. style.css v=189 on
    project-*-grid-preview (and the two option-d pages that share this layout).
    Live project pages stay on v=165. Option A–C stay on v=172. Intro typography
    is unchanged from body.pp-v4. Every gallery block is capped to fit below the
@@ -6031,7 +6031,7 @@ body.pp-v4.pp-grid.pp-fit .ppd-gallery {
   padding-right: 36px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: var(--ppd-gap);
 }
 
 /* 5 portraits: large left + 2x2, cells at 3:4, the whole group is only as
@@ -6170,7 +6170,14 @@ body.pp-v4.pp-grid.pp-fit .ppd-mix img {
   display: block;
   width: 100%;
   height: auto;
+}
+body.pp-v4.pp-grid.pp-fit .ppd-mix img:first-child {
+  aspect-ratio: var(--ppd-mix-a) / 1;
   object-fit: contain;
+}
+body.pp-v4.pp-grid.pp-fit .ppd-mix img:last-child {
+  aspect-ratio: var(--ppd-mix-b) / 1;
+  object-fit: cover;
 }
 
 /* Landscape + two 3:4 portraits in one row, filling the gallery width. */
@@ -6196,6 +6203,24 @@ body.pp-v4.pp-grid.pp-fit .ppd-lpp img:not(:first-child) {
   width: 100%;
   height: auto;
   aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+
+/* Two portraits filling the gallery width, height matched to a 3-across 3:4
+   row so the pair stays under --ppd-h. Slightly wider than 3:4, cover. */
+body.pp-v4.pp-grid.pp-fit .ppd-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ppd-gap);
+  width: min(100%, calc(var(--ppd-h) * 2.25 + 2 * var(--ppd-gap)));
+  margin-inline: auto;
+}
+body.pp-v4.pp-grid.pp-fit .ppd-row-2 img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1.132 / 1;
   object-fit: cover;
 }
 
@@ -6252,7 +6277,7 @@ body.pp-v4.pp-grid.pp-fit .next-project { margin-top: 72px; }
   body.pp-v4.pp-grid.pp-fit .ppd-gallery {
     padding-left: 16px;
     padding-right: 16px;
-    gap: 20px;
+    gap: var(--ppd-gap);
   }
   body.pp-v4.pp-grid.pp-fit .ppd-feature,
   body.pp-v4.pp-grid.pp-fit .ppd-feature-5,
@@ -6262,7 +6287,8 @@ body.pp-v4.pp-grid.pp-fit .next-project { margin-top: 72px; }
   body.pp-v4.pp-grid.pp-fit .ppd-mix,
   body.pp-v4.pp-grid.pp-fit .ppd-lpp,
   body.pp-v4.pp-grid.pp-fit .ppd-land-stack,
-  body.pp-v4.pp-grid.pp-fit .ppd-duo {
+  body.pp-v4.pp-grid.pp-fit .ppd-duo,
+  body.pp-v4.pp-grid.pp-fit .ppd-row-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto;
@@ -6282,7 +6308,8 @@ body.pp-v4.pp-grid.pp-fit .next-project { margin-top: 72px; }
   body.pp-v4.pp-grid.pp-fit .ppd-mix > *,
   body.pp-v4.pp-grid.pp-fit .ppd-lpp > *,
   body.pp-v4.pp-grid.pp-fit .ppd-land-stack > *,
-  body.pp-v4.pp-grid.pp-fit .ppd-duo > * {
+  body.pp-v4.pp-grid.pp-fit .ppd-duo > *,
+  body.pp-v4.pp-grid.pp-fit .ppd-row-2 > * {
     width: 100%;
     height: auto;
     overflow: visible;
@@ -6308,6 +6335,7 @@ body.pp-v4.pp-grid.pp-fit .next-project { margin-top: 72px; }
   body.pp-v4.pp-grid.pp-fit .ppd-lpp img,
   body.pp-v4.pp-grid.pp-fit .ppd-land-stack img,
   body.pp-v4.pp-grid.pp-fit .ppd-duo img,
+  body.pp-v4.pp-grid.pp-fit .ppd-row-2 img,
   body.pp-v4.pp-grid.pp-fit .ppd-land img,
   body.pp-v4.pp-grid.pp-fit .ppd-one img {
     display: block;
