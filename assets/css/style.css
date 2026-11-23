@@ -6353,6 +6353,129 @@ body.pp-v4.pp-grid.pp-fit .next-project { margin-top: 72px; }
   body.pp-v4.pp-grid.pp-fit .next-project { margin-top: 48px; }
 }
 
+/* ---- Align-preview grid, gated on body.pp-v4.pp-grid.pp-fit.pp-align.
+   Preview pages: /project-*-align-preview, style.css?v=193.
+   Live project pages stay on v=190 without .pp-align, so these rules do not
+   apply there. A later live push of this alignment should use v>=194; a later
+   caps typography push should use v>=197. Never reuse 182/186/188/189/190.
+
+   On desktop (min-width 801px) every row fills the gallery content box;
+   every tile in a row shares the same top and bottom; horizontal and
+   vertical gaps stay exactly 8px. Row height is the natural layout
+   aspect, then capped at --ppd-h so laptop screens keep the fit-on-screen
+   budget. Images use object-fit: cover with existing object-position so
+   crops stay small and subjects stay whole. Phone behaviour is unchanged
+   (the existing pp-fit max-width: 800px rules still apply). ---- */
+@media (min-width: 801px) {
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-gallery {
+    container-type: inline-size;
+    container-name: ppd;
+  }
+
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-pair,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-row-3,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-row-2,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-quad,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-mix,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-lpp,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-land-stack,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-duo,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-feature,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-feature-5 {
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+    align-items: stretch;
+    justify-items: stretch;
+    min-height: 0;
+    aspect-ratio: auto;
+    overflow: hidden;
+  }
+
+  /* Two 3:2 landscapes. Height = column width / 1.5, capped at --ppd-h. */
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-pair {
+    height: min(var(--ppd-h), calc((100cqi - var(--ppd-gap)) / 3));
+    max-height: none;
+  }
+  /* Three 3:4 portraits. */
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-row-3 {
+    height: min(var(--ppd-h), calc((100cqi - 2 * var(--ppd-gap)) * 4 / 9));
+    max-height: none;
+  }
+  /* Two-up details: same row height as a 3-across 3:4 row. */
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-row-2 {
+    height: min(var(--ppd-h), calc((100cqi - 2 * var(--ppd-gap)) * 4 / 9));
+    max-height: none;
+  }
+  /* Four 3:4 portraits in one row. */
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-quad {
+    height: min(var(--ppd-h), calc((100cqi - 3 * var(--ppd-gap)) / 3));
+    max-height: none;
+  }
+  /* Landscape + portrait at the page's --ppd-mix-a / --ppd-mix-b. */
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-mix {
+    height: min(var(--ppd-h), calc((100cqi - var(--ppd-gap)) / (var(--ppd-mix-a) + var(--ppd-mix-b))));
+    max-height: none;
+  }
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-lpp {
+    height: min(var(--ppd-h), calc((100cqi - 2 * var(--ppd-gap)) / (var(--ppd-lpp-a) + 1.5)));
+    max-height: none;
+  }
+  /* 3:2 landscape + two stacked 3:2 landscapes. */
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-land-stack {
+    height: min(var(--ppd-h), calc((100cqi - var(--ppd-gap)) / 2.25));
+    max-height: none;
+  }
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-duo {
+    height: min(var(--ppd-h), calc((100cqi - var(--ppd-gap)) * 2 / 3));
+    max-height: none;
+  }
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-feature-5 {
+    height: min(var(--ppd-h), calc(100cqi * 2 / 3));
+    max-height: none;
+  }
+
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-pair img,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-row-3 img,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-row-2 img,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-quad img,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-mix img,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-lpp img,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-land-stack img,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-duo img,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-feature img,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-feature-5 img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    aspect-ratio: auto;
+    object-fit: cover;
+    align-self: stretch;
+    justify-self: stretch;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-land,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-one {
+    width: 100%;
+    margin: 0;
+    display: block;
+  }
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-land img,
+  body.pp-v4.pp-grid.pp-fit.pp-align .ppd-one img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: none;
+    max-height: var(--ppd-h);
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+}
+
 /* ---- Design Journeys brochure grid + viewer, preview only: gated on body.journeys-page ---- */
 .journeys-page { background: var(--cream); }
 .jn-intro {
