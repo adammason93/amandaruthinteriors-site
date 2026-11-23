@@ -6478,13 +6478,40 @@ body.pp-v4.pp-grid.pp-fit .next-project { margin-top: 72px; }
 
 /* ---- Media-preview tiles (photos + video), gated on
    body.pp-v4.pp-grid.pp-fit.pp-align.pp-media. Preview pages:
-   /project-*-media-preview, style.css?v=197. Live project pages stay
+   /project-*-media-preview, style.css?v=198. Live project pages stay
    on v=194 without .pp-media, so these rules do not apply there.
-   A later live push of this media should use v>=198; a later caps
-   typography push should use v>=201. Video tiles follow the same
-   alignment rules as images: they fill the cell, share the row's
-   top and bottom, and use object-fit: cover. ---- */
+   A later live push of this media should use v>=199; a later caps
+   typography push should use v>=202.
+
+   Videos follow the same alignment rules as images: they fill the
+   cell, share the row's top and bottom, and use object-fit: cover.
+   Mixed-aspect rows (.ppd-row-mix) size each column to the tile's
+   own ratio so 9:16 films are not forced into a 3:4 crop. ---- */
 @media (min-width: 801px) {
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-row-mix {
+    display: grid;
+    gap: var(--ppd-gap);
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+    align-items: stretch;
+    justify-items: stretch;
+    min-height: 0;
+    aspect-ratio: auto;
+    overflow: hidden;
+    height: min(var(--ppd-h), calc((100cqi - var(--ppd-mix-gaps) * var(--ppd-gap)) / var(--ppd-mix-sum)));
+    max-height: none;
+  }
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-row-mix.ppd-mix-psp {
+    --ppd-mix-sum: 2.0577;
+    --ppd-mix-gaps: 2;
+    grid-template-columns: 0.75fr 0.5577fr 0.75fr;
+  }
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-row-mix.ppd-mix-vsv {
+    --ppd-mix-sum: 1.876;
+    --ppd-mix-gaps: 2;
+    grid-template-columns: 0.563fr 0.75fr 0.563fr;
+  }
   body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-pair video,
   body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-row-3 video,
   body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-row-2 video,
@@ -6492,7 +6519,9 @@ body.pp-v4.pp-grid.pp-fit .next-project { margin-top: 72px; }
   body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-mix video,
   body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-lpp video,
   body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-land-stack video,
-  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-duo video {
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-duo video,
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-row-mix video,
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-row-mix img {
     display: block;
     width: 100%;
     height: 100%;
@@ -6508,6 +6537,30 @@ body.pp-v4.pp-grid.pp-fit .next-project { margin-top: 72px; }
   }
 }
 @media (max-width: 800px) {
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-row-mix {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    height: auto;
+    width: 100%;
+    max-height: none;
+    aspect-ratio: auto;
+    overflow: visible;
+    gap: 8px;
+    margin-inline: 0;
+  }
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-row-mix > * {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    min-height: 0;
+  }
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-row-mix > :last-child:nth-child(odd),
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-row-3 > :last-child:nth-child(odd) {
+    grid-column: 1 / span 2;
+    max-width: 75%;
+    justify-self: center;
+  }
   body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-gallery video {
     display: block;
     width: 100%;
