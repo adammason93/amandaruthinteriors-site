@@ -6476,6 +6476,50 @@ body.pp-v4.pp-grid.pp-fit .next-project { margin-top: 72px; }
   }
 }
 
+/* ---- Media-preview tiles (photos + video), gated on
+   body.pp-v4.pp-grid.pp-fit.pp-align.pp-media. Preview pages:
+   /project-*-media-preview, style.css?v=197. Live project pages stay
+   on v=194 without .pp-media, so these rules do not apply there.
+   A later live push of this media should use v>=198; a later caps
+   typography push should use v>=201. Video tiles follow the same
+   alignment rules as images: they fill the cell, share the row's
+   top and bottom, and use object-fit: cover. ---- */
+@media (min-width: 801px) {
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-pair video,
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-row-3 video,
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-row-2 video,
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-quad video,
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-mix video,
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-lpp video,
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-land-stack video,
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-duo video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    aspect-ratio: auto;
+    object-fit: cover;
+    align-self: stretch;
+    justify-self: stretch;
+    min-width: 0;
+    min-height: 0;
+    background: #ece7e0;
+  }
+}
+@media (max-width: 800px) {
+  body.pp-v4.pp-grid.pp-fit.pp-align.pp-media .ppd-gallery video {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 75vh;
+    aspect-ratio: auto;
+    object-fit: contain;
+    background: #ece7e0;
+  }
+}
+
 /* ---- Design Journeys brochure grid + viewer, preview only: gated on body.journeys-page ---- */
 .journeys-page { background: var(--cream); }
 .jn-intro {
