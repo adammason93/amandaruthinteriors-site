@@ -6476,12 +6476,11 @@ body.pp-v4.pp-grid.pp-fit .next-project { margin-top: 72px; }
   }
 }
 
-/* ---- Media-preview tiles (photos + video), gated on
-   body.pp-v4.pp-grid.pp-fit.pp-align.pp-media. Preview pages:
-   /project-*-media-preview, style.css?v=198. Live project pages stay
-   on v=194 without .pp-media, so these rules do not apply there.
-   A later live push of this media should use v>=199; a later caps
-   typography push should use v>=202.
+/* ---- Media tiles (photos + video), gated on
+   body.pp-v4.pp-grid.pp-fit.pp-align.pp-media. Live on
+   /project-master-bedroom-alwoodley at style.css?v=199. Other live
+   project pages stay without .pp-media, so these rules do not apply
+   there. A later caps typography push should use v>=202.
 
    Videos follow the same alignment rules as images: they fill the
    cell, share the row's top and bottom, and use object-fit: cover.

@@ -68,10 +68,10 @@
 <script>document.documentElement.classList.add("hero-js")</script>
 <link rel="preload" as="image" href="assets/images/8c6e1d_a92d08758bfa42d99b1d7a2fa7d37a16~mv2.webp" imagesrcset="assets/images/hero/8c6e1d_a92d08758bfa42d99b1d7a2fa7d37a16-mv2-960.webp 960w, assets/images/hero/8c6e1d_a92d08758bfa42d99b1d7a2fa7d37a16-mv2-1600.webp 1600w, assets/images/8c6e1d_a92d08758bfa42d99b1d7a2fa7d37a16~mv2.webp 1800w" imagesizes="100vw" fetchpriority="high">
 <script>(function(){if(!("onpagereveal" in window)&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("pt-fade")})();</script>
-<link rel="stylesheet" href="assets/css/style.css?v=194">
+<link rel="stylesheet" href="assets/css/style.css?v=199">
 
 </head>
-<body class="pp-v4 pp-grid pp-fit pp-align">
+<body class="pp-v4 pp-grid pp-fit pp-align pp-media">
 <header class="site-header">
   <div class="header-inner">
     <a class="logo" href="index.html"><picture><source media="(max-width: 800px)" srcset="assets/images/logo-header-mobile-a.webp"><img src="assets/images/logo-header-desktop-a.webp" alt="Amanda Ruth Interiors" width="516" height="143"></picture></a>
@@ -106,6 +106,16 @@
     <img class="ppd-row-img" src="assets/images/8c6e1d_4ade4ca9274b4ef992de8a3260e9e49a~mv2.webp" alt="Master Bedroom in Alwoodley, West Yorkshire — bedside pendant, nightstand and bed" width="1800" height="2400" decoding="async" data-tile="master-bedroom-alwoodley-quad-1" style="object-position:48% 55%">
     <img class="ppd-row-img" src="assets/images/8c6e1d_ff180469e8694aac80df04880552ce67~mv2.webp" alt="Master Bedroom in Alwoodley, West Yorkshire — chandelier" width="1800" height="2400" decoding="async" data-tile="master-bedroom-alwoodley-quad-2" style="object-position:50% 45%">
     <img class="ppd-row-img" src="assets/images/8c6e1d_d0fa9da5ba944023a22ca27822c21703~mv2.webp" alt="Master Bedroom in Alwoodley, West Yorkshire — chest of drawers" width="1800" height="2400" decoding="async" data-tile="master-bedroom-alwoodley-quad-3" style="object-position:50% 48%">
+  </div>
+  <div class="ppd-row-mix ppd-mix-psp">
+    <img class="ppd-row-img" src="assets/media/master-bedroom-alwoodley/mba-still-pendants.webp" alt="Master Bedroom in Alwoodley, West Yorkshire — glass pendants against the wallpapered alcove" width="1275" height="1700" decoding="async" loading="lazy" data-tile="master-bedroom-alwoodley-new-pendants" style="object-position:50% 45%">
+    <video class="ppd-row-img" muted loop playsinline preload="none" poster="assets/media/master-bedroom-alwoodley/mba-video-room-tour-poster.webp" data-src="assets/media/master-bedroom-alwoodley/mba-video-room-tour.mp4" data-webm="assets/media/master-bedroom-alwoodley/mba-video-room-tour.webm" width="464" height="832" data-tile="master-bedroom-alwoodley-video-room-tour" style="object-position:50% 52%" aria-label="Master Bedroom in Alwoodley, West Yorkshire — a short film of the bedroom, bench and dressing table"></video>
+    <img class="ppd-row-img" src="assets/media/master-bedroom-alwoodley/mba-still-dressing-table.webp" alt="Master Bedroom in Alwoodley, West Yorkshire — dressing table, chair and garden window" width="1500" height="2000" decoding="async" loading="lazy" data-tile="master-bedroom-alwoodley-new-dressing" style="object-position:48% 50%">
+  </div>
+  <div class="ppd-row-mix ppd-mix-vsv">
+    <video class="ppd-row-img" muted loop playsinline preload="none" poster="assets/media/master-bedroom-alwoodley/mba-video-tv-wall-poster.webp" data-src="assets/media/master-bedroom-alwoodley/mba-video-tv-wall.mp4" data-webm="assets/media/master-bedroom-alwoodley/mba-video-tv-wall.webm" width="608" height="1080" data-tile="master-bedroom-alwoodley-video-tv-wall" style="object-position:50% 42%" aria-label="Master Bedroom in Alwoodley, West Yorkshire — a short film of the television wall"></video>
+    <img class="ppd-row-img" src="assets/media/master-bedroom-alwoodley/mba-still-styling.webp" alt="Master Bedroom in Alwoodley, West Yorkshire — orchid, tissue box and vase on the dressing table" width="1500" height="2000" decoding="async" loading="lazy" data-tile="master-bedroom-alwoodley-new-styling" style="object-position:50% 50%">
+    <video class="ppd-row-img" muted loop playsinline preload="none" poster="assets/media/master-bedroom-alwoodley/mba-video-bench-poster.webp" data-src="assets/media/master-bedroom-alwoodley/mba-video-bench.mp4" data-webm="assets/media/master-bedroom-alwoodley/mba-video-bench.webm" width="608" height="1080" data-tile="master-bedroom-alwoodley-video-bench" style="object-position:50% 62%" aria-label="Master Bedroom in Alwoodley, West Yorkshire — a short film of the bench at the foot of the bed"></video>
   </div>
 </div>
 
@@ -152,5 +162,59 @@
 </footer>
 <script src="assets/js/main.js?v=26"></script>
 <script src="assets/js/reel-video.js?v=1" defer></script>
+
+<script>
+(function () {
+  var videos = document.querySelectorAll('.ppd-gallery video[data-src]');
+  if (!videos.length) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) {
+    videos.forEach(function (v) {
+      v.removeAttribute('autoplay');
+      try { v.pause(); } catch (e) {}
+    });
+    return;
+  }
+  function loadVideo(v) {
+    if (v.dataset.loaded) return;
+    var webm = v.getAttribute('data-webm');
+    var src = v.getAttribute('data-src');
+    if (webm) {
+      var s = document.createElement('source');
+      s.src = webm;
+      s.type = 'video/webm';
+      v.appendChild(s);
+    }
+    if (src) {
+      var s2 = document.createElement('source');
+      s2.src = src;
+      s2.type = 'video/mp4';
+      v.appendChild(s2);
+    }
+    v.dataset.loaded = '1';
+    v.load();
+  }
+  function playInView(v) {
+    loadVideo(v);
+    var tryPlay = function () { v.muted = true; v.play().catch(function () {}); };
+    if (v.readyState >= 2) tryPlay();
+    else v.addEventListener('canplay', tryPlay, { once: true });
+  }
+  function pauseOut(v) {
+    try { v.pause(); } catch (e) {}
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) playInView(e.target);
+        else pauseOut(e.target);
+      });
+    }, { threshold: 0.25 });
+    videos.forEach(function (v) { io.observe(v); });
+  } else {
+    videos.forEach(playInView);
+  }
+})();
+</script>
 </body>
 </html>
